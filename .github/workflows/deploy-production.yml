@@ -23,4 +23,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CHAT_APP_1D2FE }}'
           channelId: live
-          projectId: chat-app
+          projectId: chat-app-1d2fe
