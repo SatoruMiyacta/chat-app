@@ -4,7 +4,5 @@ describe("sample test", () => {
   it("sample", () => {
     expect(true).toBe(true);
   });
-  it("sample", () => {
-    expect(true).toBe(true);
-  });
+
 });
