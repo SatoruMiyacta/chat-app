@@ -15,6 +15,11 @@
     "test": "firebase emulators:exec --only firestore 'vitest run'"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@fortawesome/free-brands-svg-icons": "^6.2.0",
+    "@fortawesome/free-regular-svg-icons": "^6.2.0",
+    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "firebase": "^9.12.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -37,6 +42,7 @@
     "babel-loader": "^8.2.5",
     "eslint": "^8.25.0",
     "eslint-plugin-react": "^7.31.10",
+    "storybook-css-modules": "^1.0.8",
     "typescript": "^4.6.4",
     "vite": "^3.1.0",
     "vitest": "^0.24.3"
