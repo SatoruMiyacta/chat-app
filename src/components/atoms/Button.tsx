@@ -9,7 +9,7 @@ interface ButtonProps {
   isDisabled?: boolean;
 }
 
-export default ({
+const Button = ({
   color,
   variant,
   isFullWidth = false,
@@ -44,3 +44,4 @@ export default ({
     </button>
   );
 };
+export default Button;
