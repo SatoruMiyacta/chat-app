@@ -1,0 +1,263 @@
+.input {
+  height: 48px;
+  width: 390px;
+  padding-left: 16px;
+  border-radius: 5px;
+  color: #333;
+}
+
+input:not(.filled):hover {
+  background: rgba(163, 167, 174, 0.03);
+}
+
+.textfiled {
+  position: relative;
+}
+
+.label {
+  color: #8c8a8a;
+  pointer-events: none;
+}
+
+.icon {
+  color: #8c8a8a;
+}
+
+input.outlined {
+  border-color: #b4b4b4;
+}
+
+.outlined .iconNone + .label {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+}
+
+.outlined .icon {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+}
+
+.icon + label .outlined {
+  padding-left: 48px;
+}
+
+.outlined .icon.label {
+  position: absolute;
+  top: 50%;
+  left: 48px;
+  transform: translateY(-50%);
+}
+
+.primary.outlined:focus + .label {
+  position: absolute;
+  top: 0;
+  left: 16px;
+  transform: translate(-15%, -50%) scale(0.75);
+  padding: 0 6px;
+  background: #fff;
+  color: #ff971d;
+  transition: all 0.2s ease;
+}
+
+.primary.outlined:focus {
+  border-color: #ff971d;
+}
+
+.black.outlined:focus + .label {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  transform: translate(-15%, -50%) scale(0.75);
+  padding: 0 6px;
+  background: #fff;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.black.outlined:focus {
+  border-color: #333;
+  color: #333;
+}
+
+input.standard {
+  padding-left: 0;
+  border: none;
+  border-bottom: solid 1px #d4d4d4;
+  border-radius: 0;
+}
+
+.standard .iconNone + .label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.standard .icon {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.icon + label .standard {
+  padding-left: 32px;
+}
+
+.standard .icon.label {
+  position: absolute;
+  top: 50%;
+  left: 32px;
+  transform: translateY(-50%);
+}
+
+.primary.standard:focus + .label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-15%, -50%) scale(0.75);
+  color: #ff971d;
+  transition: all 0.2s ease;
+}
+
+.primary.standard:focus {
+  border-bottom-color: #ff971d;
+}
+
+.black.standard:focus + .label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-15%, -50%) scale(0.75);
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.black.standard:focus {
+  border-bottom-color: #333;
+}
+
+input.filled {
+  padding-left: 12px;
+  border: none;
+  border-bottom: solid 1px #d4d4d4;
+  border-radius: 5px 5px 0 0;
+  background: #f9f6f7;
+}
+
+.filled .iconNone + .label {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+}
+
+.filled .icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+}
+
+.icon + label .filled {
+  padding-left: 40px;
+}
+
+.filled .icon.label {
+  position: absolute;
+  top: 50%;
+  left: 40px;
+  transform: translateY(-50%);
+}
+
+.primary.filled:focus + .label {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  transform: translate(-15%, -50%) scale(0.75);
+  color: #ff971d;
+  transition: all 0.2s ease;
+}
+
+.primary.filled:focus {
+  border-bottom-color: #ff971d;
+}
+
+.black.filled:focus + .label {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  transform: translate(-15%, -50%) scale(0.75);
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.black.filled:focus {
+  border-bottom-color: #333;
+}
+
+.small {
+  height: 32px;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.rounded {
+  border-radius: 24px;
+}
+
+.multiLines {
+  height: 64px;
+}
+
+.multiLines:focus {
+  border-color: #ff971d;
+}
+
+.textfiled .outlined:not(:placeholder-shown) + .label {
+  position: absolute;
+  top: 0;
+  left: 16px;
+  transform: translate(-15%, -50%) scale(0.75);
+  padding: 0 6px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.textfiled .standard:not(:placeholder-shown) + .label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-15%, -50%) scale(0.75);
+  transition: all 0.2s ease;
+}
+
+.textfiled .filled:not(:placeholder-shown) + .label {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  transform: translate(-15%, -50%) scale(0.75);
+  transition: all 0.2s ease;
+}
+
+.textfiled .input:focus:not(:placeholder-shown) + .label {
+  color: #ff971d;
+}
+
+.textfiled .errorMessage {
+  position: absolute;
+  top: 50px;
+  left: 8px;
+  color: #e51a1a;
+}
+
+.errorMessage .outlined {
+  border-color: #e51a1a;
+  background-color: rgba(244, 17, 17, 0.1);
+}
