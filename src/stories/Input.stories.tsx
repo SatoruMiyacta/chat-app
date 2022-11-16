@@ -38,7 +38,6 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="outlined"
           placeholder="text"
           id="outlined"
-          isRequired
           value=""
         />
       </li>
@@ -292,7 +291,6 @@ const Template: ComponentStory<typeof Input> = (args) => (
           id="outlinedError"
           errorMessage="正しく入力してください"
           value="input"
-          minLength={6}
         />
       </li>
     </ul>
