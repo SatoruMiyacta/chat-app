@@ -254,10 +254,22 @@ input.filled {
   position: absolute;
   top: 50px;
   left: 8px;
+  background-color: rgba(244, 17, 17, 0.1);
   color: #e51a1a;
 }
 
 .errorMessage .outlined {
   border-color: #e51a1a;
-  background-color: rgba(244, 17, 17, 0.1);
+}
+
+.errorMessage .outlined + .label {
+  border-color: #e51a1a;
+}
+
+.errorMessage .standard {
+  border-bottom-color: #e51a1a;
+}
+
+.errorMessage .outlined {
+  border-bottom-color: #e51a1a;
 }
