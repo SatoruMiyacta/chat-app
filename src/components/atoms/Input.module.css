@@ -6,7 +6,7 @@
   color: #333;
 }
 
-input:not(.filled):hover {
+.input:not(.filled):hover {
   background: rgba(163, 167, 174, 0.03);
 }
 
@@ -250,26 +250,21 @@ input.filled {
   color: #ff971d;
 }
 
-.textfiled .errorMessage {
-  position: absolute;
-  top: 50px;
-  left: 8px;
-  background-color: rgba(244, 17, 17, 0.1);
+.errorMessage {
   color: #e51a1a;
 }
 
 .errorMessage .outlined {
-  border-color: #e51a1a;
-}
-
-.errorMessage .outlined + .label {
+  background-color: rgba(244, 17, 17, 0.1);
   border-color: #e51a1a;
 }
 
 .errorMessage .standard {
+  background-color: rgba(244, 17, 17, 0.1);
   border-bottom-color: #e51a1a;
 }
 
-.errorMessage .outlined {
+.errorMessage .filled {
+  background-color: rgba(244, 17, 17, 0.1);
   border-bottom-color: #e51a1a;
 }
