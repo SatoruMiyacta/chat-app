@@ -290,7 +290,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="outlined"
           id="outlinedError"
           errorMessage="正しく入力してください"
-          value="input"
+          value=""
+          isRequired
         />
       </li>
     </ul>

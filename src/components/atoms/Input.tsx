@@ -28,11 +28,6 @@ interface InputType {
       | React.FocusEvent<HTMLInputElement, Element>
       | React.FocusEvent<HTMLTextAreaElement, Element>
   ) => void;
-  // onFocus?: (
-  //   event:
-  //     | React.FocusEvent<HTMLInputElement, Element>
-  //     | React.FocusEvent<HTMLTextAreaElement, Element>
-  // ) => void;
 }
 
 interface InputString extends InputType {
@@ -76,28 +71,22 @@ InputProps) => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
+    if (error) {
+      const errorMessage = validate();
+      if (errorMessage === '') {
+        setError('');
+      }
+    }
     onChange(event);
   };
-
-  // const handleFocus = (
-  //   event:
-  //     | React.FocusEvent<HTMLInputElement, Element>
-  //     | React.FocusEvent<HTMLTextAreaElement, Element>
-  // ) => {
-  //   if (onFocus) {
-  //     onFocus(event);
-  //     if (onBlur) {
-  //       setError('');
-  //     }
-  //   }
-  // };
 
   const handleBlur = (
     event:
       | React.FocusEvent<HTMLInputElement, Element>
       | React.FocusEvent<HTMLTextAreaElement, Element>
   ) => {
-    validate();
+    const errorMessage = validate();
+    setError(errorMessage);
     if (onBlur) {
       onBlur(event);
     }
@@ -106,7 +95,6 @@ InputProps) => {
   // validation
 
   const validate = () => {
-    console.log('validate');
     const emailRegex = new RegExp(
       '^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+.[A-Za-z0-9]+$'
     );
@@ -114,45 +102,47 @@ InputProps) => {
     // 文字数の最小と最大
     if (typeof value !== 'number') {
       if (typeof minLength !== 'undefined' && [...value].length < minLength) {
-        setError(`文字数を${minLength}文字以上にしてください`);
+        return `文字数を${minLength}文字以上にしてください`;
       }
 
       if (typeof maxLength !== 'undefined' && [...value].length > maxLength) {
-        setError(`文字数を${maxLength}文字以下にしてください`);
+        return `文字数を${maxLength}文字以下にしてください`;
       }
     }
 
     // メールアドレスが正しく入力されているか
     if (type === 'email' && !emailRegex.test(value)) {
-      setError(`メールアドレスを正しく入力してください`);
+      return `メールアドレスを正しく入力してください`;
     }
 
     // 数字の最小値、最大値
     if (typeof value === 'number') {
       if (typeof minValue !== 'undefined' && value < minValue) {
-        setError(`値を${minValue}以上にしてください`);
+        return `値を${minValue}以上にしてください`;
       }
 
       if (typeof maxValue !== 'undefined' && value < maxValue) {
-        setError(`値を${maxValue}以下にしてください`);
+        return `値を${maxValue}以下にしてください`;
       }
     }
 
     // required
     if (value === '' && isRequired) {
-      setError(`必須入力項目です`);
+      return `必須入力項目です`;
     }
 
     if (typeof errorMessage !== 'undefined') {
-      setError(errorMessage);
+      return errorMessage;
     }
+
+    return '';
   };
 
   // textfieldのclassNameリスト
-  const textfiledClassList = [styles.textfiled, styles[color], styles[variant]];
+  const textfieldClassList = [styles.textfiled, styles[color], styles[variant]];
 
-  if (error) {
-    textfiledClassList.push(styles.errorMessage);
+  if (error || isRequired) {
+    textfieldClassList.push(styles.errorMessage);
   }
 
   // inputのclassNameリスト
@@ -181,17 +171,17 @@ InputProps) => {
   }
 
   // labelのclassNameリスト
-  const labelClassList = [styles.label];
+  const labelList = [styles.label];
 
   if (startIcon) {
-    labelClassList.push(styles.icon);
+    labelList.push(styles.icon);
   } else {
-    labelClassList.push(styles.iconNone);
+    labelList.push(styles.iconNone);
   }
 
   if (isMultiLines) {
     return (
-      <div className={textfiledClassList.join(' ')}>
+      <div className={textfieldClassList.join(' ')}>
         <span className={iconClassList.join(' ')}>{startIcon}</span>
         <label htmlFor={id} className={styles.inputLabel}>
           <textarea
@@ -203,9 +193,8 @@ InputProps) => {
             minLength={minLength}
             value={value}
             onBlur={handleBlur}
-            // onFocus={handleFocus}
           />
-          <span className={labelClassList.join(' ')}>{label}</span>
+          <span className={labelList.join(' ')}>{label}</span>
         </label>
         {error && <span className={styles.errorMessage}>{error}</span>}
       </div>
@@ -213,23 +202,24 @@ InputProps) => {
   }
 
   return (
-    <div className={textfiledClassList.join(' ')}>
-      <span className={iconClassList.join(' ')}>{startIcon}</span>
-      <label htmlFor={id} className={styles.inputLabel}>
-        <input
-          type={type}
-          id={id}
-          className={inputClassList.join(' ')}
-          onChange={handleChange}
-          placeholder={placeholder}
-          maxLength={maxLength}
-          minLength={minLength}
-          value={value}
-          onBlur={handleBlur}
-          // onFocus={handleFocus}
-        />
-        <span className={labelClassList.join(' ')}>{label}</span>
-      </label>
+    <div>
+      <div className={textfieldClassList.join(' ')}>
+        <span className={iconClassList.join(' ')}>{startIcon}</span>
+        <label htmlFor={id} className={styles.inputLabel}>
+          <input
+            type={type}
+            id={id}
+            className={inputClassList.join(' ')}
+            onChange={handleChange}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            minLength={minLength}
+            value={value}
+            onBlur={handleBlur}
+          />
+          <span className={labelList.join(' ')}>{label}</span>
+        </label>
+      </div>
       {error && <span className={styles.errorMessage}>{error}</span>}
     </div>
   );
