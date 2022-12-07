@@ -11,7 +11,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 // import { faIdCard } from '@fortawesome/free-solid-svg-icons';
 // import { faLock } from '@fortawesome/free-solid-svg-icons';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './App.css';
+// import './App.css';
 // import { useContactForm } from './hooks/index';
 
 library.add(fas, far, fab);
