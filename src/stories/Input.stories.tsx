@@ -1,5 +1,3 @@
-import { isMobileCordova } from '@firebase/util';
-import { action } from '@storybook/addon-actions';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Input from '../components/atoms/Input';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
@@ -38,6 +36,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="outlined"
           placeholder="text"
           id="outlined"
+          errorMessage=""
           value=""
         />
       </li>
@@ -48,6 +47,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="standard"
           placeholder="text"
           id="standard"
+          errorMessage=""
           value=""
         />
       </li>
@@ -58,6 +58,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="filled"
           placeholder="text"
           id="filled"
+          errorMessage=""
           value=""
         />
       </li>
@@ -71,6 +72,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="outlined"
           label="text"
           id="outlinedLabel"
+          errorMessage=""
           value=""
         />
       </li>
@@ -81,6 +83,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="standard"
           label="text"
           id="standardLabel"
+          errorMessage=""
           value=""
         />
       </li>
@@ -91,6 +94,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="filled"
           label="text"
           id="filledLabel"
+          errorMessage=""
           value=""
         />
       </li>
@@ -105,76 +109,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           startIcon={emailIcon}
           placeholder="メールアドレス"
           id="outlinedEmail"
-          value=""
-        />
-      </li>
-    </ul>
-    <ul>
-      <p>email</p>
-      <li>
-        <Input
-          {...args}
-          type="email"
-          variant="outlined"
-          startIcon={emailIcon}
-          label="メールアドレス"
-          id="outlinedEmailLabel"
-          value=""
-        />
-      </li>
-    </ul>
-    <ul>
-      <p>email</p>
-      <li>
-        <Input
-          {...args}
-          type="email"
-          variant="standard"
-          startIcon={emailIcon}
-          placeholder="メールアドレス"
-          id="standardEmail"
-          value=""
-        />
-      </li>
-    </ul>
-    <ul>
-      <p>email</p>
-      <li>
-        <Input
-          {...args}
-          type="email"
-          variant="standard"
-          startIcon={emailIcon}
-          label="メールアドレス"
-          id="standardEmailLabel"
-          value=""
-        />
-      </li>
-    </ul>
-    <ul>
-      <p>email</p>
-      <li>
-        <Input
-          {...args}
-          type="email"
-          variant="filled"
-          startIcon={emailIcon}
-          placeholder="メールアドレス"
-          id="filledEmail"
-          value=""
-        />
-      </li>
-    </ul>
-    <ul>
-      <p>email</p>
-      <li>
-        <Input
-          {...args}
-          type="email"
-          variant="filled"
-          startIcon={emailIcon}
-          label="メールアドレス"
-          id="filledEmailLabel"
+          errorMessage=""
           value=""
         />
       </li>
@@ -185,10 +120,11 @@ const Template: ComponentStory<typeof Input> = (args) => (
         <Input
           {...args}
           type="password"
-          variant="outlined"
+          variant="standard"
           startIcon={passwordIcon}
           label="パスワード（半角英数字6文字以上）"
           id="outlinedPasswordLabel"
+          errorMessage=""
           value=""
         />
       </li>
@@ -202,6 +138,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="outlined"
           isFullWidth
           id="outlinedWide"
+          errorMessage=""
           value=""
         />
       </li>
@@ -213,8 +150,9 @@ const Template: ComponentStory<typeof Input> = (args) => (
           {...args}
           type="text"
           variant="outlined"
-          size
+          size="small"
           id="outlinedSmall"
+          errorMessage=""
           value=""
         />
       </li>
@@ -229,6 +167,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           startIcon={searchIcon}
           placeholder="search"
           id="filledSearch"
+          errorMessage=""
           value=""
         />
       </li>
@@ -240,6 +179,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           startIcon={profileIcon}
           placeholder="profile"
           id="filledProfile"
+          errorMessage=""
           value=""
         />
       </li>
@@ -251,6 +191,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           startIcon={homeIcon}
           placeholder="home"
           id="filledHome"
+          errorMessage=""
           value=""
         />
       </li>
@@ -264,6 +205,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="outlined"
           isRounded
           id="outlinedRounded"
+          errorMessage=""
           value=""
         />
       </li>
@@ -277,7 +219,9 @@ const Template: ComponentStory<typeof Input> = (args) => (
           variant="outlined"
           isMultiLines
           id="outlinedMultiLine"
+          errorMessage=""
           value=""
+          rows={5}
         />
       </li>
     </ul>
@@ -303,6 +247,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
           type="number"
           variant="outlined"
           id="number"
+          errorMessage=""
           value={0}
         />
       </li>
