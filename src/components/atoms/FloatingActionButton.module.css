@@ -1,0 +1,131 @@
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 8px;
+  border-radius: 48px;
+  box-shadow: rgb(0 0 0 / 20%) 0px 3px 5px -1px,
+    rgb(0 0 0 / 14%) 0px 6px 10px 0px, rgb(0 0 0 / 12%) 0px 1px 18px 0px;
+  cursor: pointer;
+  transition: 0.2s;
+  z-index: 100;
+}
+
+.circular.primary {
+  background-color: #ff971d;
+  color: #fff;
+}
+
+.circular.primary:hover {
+  background-color: #ff8f0f;
+}
+
+.circular.gray {
+  background-color: #c2c1c1;
+  color: #fff;
+}
+
+.circular.gray:hover {
+  background-color: #afafaf;
+}
+
+.circular.white {
+  background-color: #fff;
+  color: #333;
+}
+
+.circular.white:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.circular.danger {
+  background-color: #e51a1a;
+  color: #fff;
+}
+
+.circular.danger:hover {
+  background-color: #f41111;
+}
+
+.extended.primary {
+  border-radius: 32px;
+  background-color: #ff971d;
+  color: #fff;
+}
+
+.extended.primary:hover {
+  border-radius: 32px;
+  background-color: #ff8f0f;
+}
+
+.extended.gray {
+  background-color: #c2c1c1;
+  border-radius: 32px;
+  color: #fff;
+}
+
+.extended.gray:hover {
+  border-radius: 32px;
+  background-color: #afafaf;
+}
+
+.extended.white {
+  background-color: #fff;
+
+  border-radius: 32px;
+  color: #333;
+}
+
+.extended.white:hover {
+  border-radius: 32px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.extended.danger {
+  background-color: #e51a1a;
+  border-radius: 32px;
+  color: #fff;
+}
+
+.extended.danger:hover {
+  border-radius: 32px;
+  background-color: #f41111;
+}
+
+.circular.small {
+  height: 24px;
+  width: 24px;
+}
+
+.circular.medium {
+  height: 32px;
+  width: 32px;
+}
+
+.circular.large {
+  height: 48px;
+  width: 48px;
+}
+
+.extended.small {
+  height: 24px;
+  border-radius: 24px;
+  padding: 16px 16px;
+}
+
+.extended.medium {
+  height: 32px;
+  border-radius: 32px;
+  padding: 20px 20px;
+}
+
+.extended.large {
+  height: 48px;
+  border-radius: 48px;
+  padding: 24px 24px;
+}
+
+.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
