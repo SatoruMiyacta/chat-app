@@ -6,12 +6,25 @@
   color: #333;
 }
 
+.textarea {
+  display: block;
+  overflow: hidden;
+}
+
 .input:not(.filled):hover {
   background: rgba(163, 167, 174, 0.03);
 }
 
+.isError .input:not(:placeholder-shown) + .label {
+  color: #e51a1a;
+}
+
 .textfiled {
   position: relative;
+}
+
+.textfiled .input:focus:not(:placeholder-shown) + .label {
+  color: #ff971d;
 }
 
 .label {
@@ -19,26 +32,23 @@
   pointer-events: none;
 }
 
-.icon {
-  color: #8c8a8a;
-}
-
-input.outlined {
+.input.outlined {
   border-color: #b4b4b4;
 }
 
 .outlined .iconNone + .label {
   position: absolute;
-  top: 50%;
+  top: 24px;
   left: 16px;
   transform: translateY(-50%);
 }
 
 .outlined .icon {
   position: absolute;
-  top: 50%;
+  top: 24px;
   left: 16px;
   transform: translateY(-50%);
+  color: #8c8a8a;
 }
 
 .icon + label .outlined {
@@ -47,12 +57,36 @@ input.outlined {
 
 .outlined .icon.label {
   position: absolute;
-  top: 50%;
+  top: 24px;
   left: 48px;
   transform: translateY(-50%);
 }
 
-.primary.outlined:focus + .label {
+.textfiled .outlined:not(:placeholder-shown) + .label {
+  position: absolute;
+  top: 0;
+  left: 16px;
+  transform: translate(-15%, -50%) scale(0.75);
+  padding: 0 6px;
+  transition: all 0.2s ease;
+}
+
+.isError .outlined {
+  border-color: #e51a1a;
+}
+
+.primary.outlined:focus + .iconNone.label {
+  position: absolute;
+  top: 0;
+  left: 16px;
+  transform: translate(-20%, -50%) scale(0.75);
+  padding: 0 6px;
+  background: #fff;
+  color: #ff971d;
+  transition: all 0.2s ease;
+}
+
+.primary.outlined:focus + .icon.label {
   position: absolute;
   top: 0;
   left: 16px;
@@ -67,7 +101,18 @@ input.outlined {
   border-color: #ff971d;
 }
 
-.black.outlined:focus + .label {
+.black.outlined:focus + .iconNone.label {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  transform: translate(-20%, -50%) scale(0.75);
+  padding: 0 6px;
+  background: #fff;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.black.outlined:focus + .icon.label {
   position: absolute;
   top: 0;
   left: 12px;
@@ -83,7 +128,7 @@ input.outlined {
   color: #333;
 }
 
-input.standard {
+.input.standard {
   padding-left: 0;
   border: none;
   border-bottom: solid 1px #d4d4d4;
@@ -92,16 +137,17 @@ input.standard {
 
 .standard .iconNone + .label {
   position: absolute;
-  top: 50%;
+  top: 24px;
   left: 0;
   transform: translateY(-50%);
 }
 
 .standard .icon {
   position: absolute;
-  top: 50%;
+  top: 24px;
   left: 0;
   transform: translateY(-50%);
+  color: #8c8a8a;
 }
 
 .icon + label .standard {
@@ -110,12 +156,24 @@ input.standard {
 
 .standard .icon.label {
   position: absolute;
-  top: 50%;
+  top: 24px;
   left: 32px;
   transform: translateY(-50%);
 }
 
-.primary.standard:focus + .label {
+.textfiled .standard:not(:placeholder-shown) + .label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-15%, -50%) scale(0.75);
+  transition: all 0.2s ease;
+}
+
+.isError .standard {
+  border-bottom-color: #e51a1a;
+}
+
+.primary.standard:focus + .iconNone.label {
   position: absolute;
   top: 0;
   left: 0;
@@ -124,11 +182,20 @@ input.standard {
   transition: all 0.2s ease;
 }
 
+.primary.standard:focus + .icon.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-13%, -50%) scale(0.75);
+  color: #ff971d;
+  transition: all 0.2s ease;
+}
+
 .primary.standard:focus {
   border-bottom-color: #ff971d;
 }
 
-.black.standard:focus + .label {
+.black.standard:focus + .iconNone.label {
   position: absolute;
   top: 0;
   left: 0;
@@ -137,11 +204,20 @@ input.standard {
   transition: all 0.2s ease;
 }
 
+.black.standard:focus + .icon.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-13%, -50%) scale(0.75);
+  color: #333;
+  transition: all 0.2s ease;
+}
+
 .black.standard:focus {
   border-bottom-color: #333;
 }
 
-input.filled {
+.input.filled {
   padding-left: 12px;
   border: none;
   border-bottom: solid 1px #d4d4d4;
@@ -151,16 +227,17 @@ input.filled {
 
 .filled .iconNone + .label {
   position: absolute;
-  top: 50%;
+  top: 24px;
   left: 12px;
   transform: translateY(-50%);
 }
 
 .filled .icon {
   position: absolute;
-  top: 50%;
+  top: 24px;
   left: 12px;
   transform: translateY(-50%);
+  color: #8c8a8a;
 }
 
 .icon + label .filled {
@@ -169,12 +246,24 @@ input.filled {
 
 .filled .icon.label {
   position: absolute;
-  top: 50%;
+  top: 24px;
   left: 40px;
   transform: translateY(-50%);
 }
 
-.primary.filled:focus + .label {
+.textfiled .filled:not(:placeholder-shown) + .label {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  transform: translate(-15%, -50%) scale(0.75);
+  transition: all 0.2s ease;
+}
+
+.isError .filled {
+  border-bottom-color: #e51a1a;
+}
+
+.primary.filled:focus + .iconNone.label {
   position: absolute;
   top: 0;
   left: 12px;
@@ -183,15 +272,33 @@ input.filled {
   transition: all 0.2s ease;
 }
 
+.primary.filled:focus + .icon.label {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  transform: translate(-13%, -50%) scale(0.75);
+  color: #ff971d;
+  transition: all 0.2s ease;
+}
+
 .primary.filled:focus {
   border-bottom-color: #ff971d;
 }
 
-.black.filled:focus + .label {
+.black.filled:focus + .iconNone.label {
   position: absolute;
   top: 0;
   left: 12px;
   transform: translate(-15%, -50%) scale(0.75);
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.black.filled:focus + .icon.label {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  transform: translate(-13%, -50%) scale(0.75);
   color: #333;
   transition: all 0.2s ease;
 }
@@ -204,6 +311,24 @@ input.filled {
   height: 32px;
 }
 
+.small .icon {
+  position: absolute;
+  top: 16px;
+  color: #8c8a8a;
+}
+
+.small .iconNone + .label {
+  position: absolute;
+  top: 16px;
+  transform: translateY(-50%);
+}
+
+.small .icon.label {
+  position: absolute;
+  top: 16px;
+  transform: translateY(-50%);
+}
+
 .fullWidth {
   width: 100%;
 }
@@ -213,58 +338,56 @@ input.filled {
 }
 
 .multiLines {
-  height: 64px;
+  width: 390px;
+  min-height: 48px;
+  padding: 11px 16px;
+  border-radius: 5px;
+  color: #333;
+  resize: none;
+}
+
+.multiLines.small {
+  min-height: 32px;
+  padding: 3px 16px;
+}
+
+.multiLines.icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.multiLines.rounded {
+  border-radius: 24px;
+  overflow: auto;
+}
+
+.textfiled　.inputLabel .multiLines {
+  color: #333;
+}
+
+.multiLines.rounded::-webkit-scrollbar {
+  width: 8px;
+}
+
+.multiLines.rounded::-webkit-scrollbar-track {
+  background-color: rgba(248, 248, 248, 0.3);
+  border-radius: 5px;
+  margin: 8px 0;
+}
+
+.multiLines.rounded::-webkit-scrollbar-thumb {
+  background-color: rgba(66, 66, 66, 0.3);
+  border-radius: 5px;
+  margin: 8px 0;
 }
 
 .multiLines:focus {
   border-color: #ff971d;
 }
 
-.textfiled .outlined:not(:placeholder-shown) + .label {
-  position: absolute;
-  top: 0;
-  left: 16px;
-  transform: translate(-15%, -50%) scale(0.75);
-  padding: 0 6px;
-  background: #fff;
-  transition: all 0.2s ease;
-}
-
-.textfiled .standard:not(:placeholder-shown) + .label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: translate(-15%, -50%) scale(0.75);
-  transition: all 0.2s ease;
-}
-
-.textfiled .filled:not(:placeholder-shown) + .label {
-  position: absolute;
-  top: 0;
-  left: 12px;
-  transform: translate(-15%, -50%) scale(0.75);
-  transition: all 0.2s ease;
-}
-
-.textfiled .input:focus:not(:placeholder-shown) + .label {
-  color: #ff971d;
-}
-
 .errorMessage {
+  display: inline-block;
+  margin-top: 8px;
   color: #e51a1a;
-}
-
-.errorMessage .outlined {
-  background-color: rgba(244, 17, 17, 0.1);
-  border-color: #e51a1a;
-}
-
-.errorMessage .standard {
-  background-color: rgba(244, 17, 17, 0.1);
-  border-bottom-color: #e51a1a;
-}
-
-.errorMessage .filled {
-  background-color: rgba(244, 17, 17, 0.1);
-  border-bottom-color: #e51a1a;
 }
