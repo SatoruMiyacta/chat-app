@@ -121,45 +121,46 @@ const App = () => {
   // const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   setIsChecked(!isChecked);
   // };
-  // return (
-  //   <>
-  //     <Checkbox
-  //       color="primary"
-  //       vertical
-  //       items={items}
-  //       onChange={(event, index) => handleChange(event, index)}
-  //     />
-  //     <Checkbox
-  //       color="primary"
-  //       id="first"
-  //       label="checkbox"
-  //       // isChecked
-  //       isChecked={isChecked}
-  //       // isDisabled
-  //       // vertical
-  //       // items={items}
-  //       onChange={onChange}
-  //     />
-  //     <Input
-  //       type="text"
-  //       color="primary"
-  //       variant="outlined"
-  //       placeholder="ユーザーネーム"
-  //       label="ユーザーネーム"
-  //       startIcon={<FontAwesomeIcon icon={faIdCard} />}
-  //       id="outlined"
-  //       value={text}
-  //       // isRequired
-  //       // isMultiLines
-  //       // isRounded
-  //       onChange={handleChangeText}
-  //       onBlur={handleBlur}
-  //       // rows={4}
-  //       maxRows={5}
-  //       // minRows={3}
-  //     />
-  //   </>
-  // );
+  return (
+    <></>
+    //   <>
+    //     <Checkbox
+    //       color="primary"
+    //       vertical
+    //       items={items}
+    //       onChange={(event, index) => handleChange(event, index)}
+    //     />
+    //     <Checkbox
+    //       color="primary"
+    //       id="first"
+    //       label="checkbox"
+    //       // isChecked
+    //       isChecked={isChecked}
+    //       // isDisabled
+    //       // vertical
+    //       // items={items}
+    //       onChange={onChange}
+    //     />
+    //     <Input
+    //       type="text"
+    //       color="primary"
+    //       variant="outlined"
+    //       placeholder="ユーザーネーム"
+    //       label="ユーザーネーム"
+    //       startIcon={<FontAwesomeIcon icon={faIdCard} />}
+    //       id="outlined"
+    //       value={text}
+    //       // isRequired
+    //       // isMultiLines
+    //       // isRounded
+    //       onChange={handleChangeText}
+    //       onBlur={handleBlur}
+    //       // rows={4}
+    //       maxRows={5}
+    //       // minRows={3}
+    //     />
+    //   </>
+  );
 };
 
 export default App;
