@@ -2,7 +2,7 @@ import styles from './Checkbox.module.css';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-interface CheckboxProps {
+export interface CheckboxProps {
   color: 'primary' | 'gray' | 'white';
   onChange: (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -50,7 +50,7 @@ const Checkbox = ({
       labelTagClass.push(styles.disabled);
     }
 
-    if (isDisabled) labelTagClass.push(styles.disabled);
+    if (isDisabled) labelTagClass.push('disabled');
 
     return labelTagClass.join(' ');
   };

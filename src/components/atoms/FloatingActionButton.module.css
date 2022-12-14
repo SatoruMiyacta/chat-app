@@ -71,7 +71,6 @@
 
 .extended.white {
   background-color: #fff;
-
   border-radius: 32px;
   color: #333;
 }
@@ -123,9 +122,4 @@
   height: 48px;
   border-radius: 48px;
   padding: 24px 24px;
-}
-
-.disabled {
-  opacity: 0.3;
-  pointer-events: none;
 }
