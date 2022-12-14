@@ -33,8 +33,8 @@ const commentPlusIcon = <FontAwesomeIcon icon={faCommentMedical} />;
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof Fab> = (args) => (
   <>
+    <p>variant</p>
     <ul>
-      <p>variant</p>
       <li>
         <Fab {...args} variant="circular" onClick={action('clicked')}>
           {plusIcon}
@@ -66,8 +66,8 @@ const Template: ComponentStory<typeof Fab> = (args) => (
         </Fab>
       </li>
     </ul>
+    <p>size</p>
     <ul>
-      <p>size</p>
       <li>
         <Fab
           {...args}
@@ -94,8 +94,8 @@ const Template: ComponentStory<typeof Fab> = (args) => (
         </Fab>
       </li>
     </ul>
+    <p>icons</p>
     <ul>
-      <p>icons</p>
       <li>
         <Fab {...args} variant="circular" onClick={action('clicked')}>
           {userPlusIcon}
