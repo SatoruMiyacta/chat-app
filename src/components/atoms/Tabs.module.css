@@ -1,0 +1,64 @@
+.tabsContainer {
+  display: flex;
+  overflow: auto;
+}
+
+.tabsContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.tab.border {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+}
+
+.tab {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  width: 100%;
+  min-width: max-content;
+  padding: 8px;
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.active.primary {
+  color: #ff971d;
+  border-color: #ff971d;
+}
+
+.active.black {
+  color: #333;
+  border-color: #333;
+}
+
+.tab.top {
+  flex-direction: column;
+}
+
+:where(.top, .bottom) .label {
+  font-size: 14px;
+}
+
+.tab.start {
+  flex-direction: row;
+  justify-content: center;
+}
+
+.tab.end {
+  flex-direction: row-reverse;
+  justify-content: center;
+}
+
+.tab.bottom {
+  flex-direction: column-reverse;
+}
+
+.tab.start .icon {
+  margin-right: 8px;
+}
+
+.tab.end .icon {
+  margin-left: 8px;
+}
