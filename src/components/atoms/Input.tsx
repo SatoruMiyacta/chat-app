@@ -48,7 +48,7 @@ interface InputNumber extends InputType {
   value: number;
 }
 
-type InputProps = InputString | InputNumber;
+export type InputProps = InputString | InputNumber;
 
 const Input = (props: InputProps) => {
   const {

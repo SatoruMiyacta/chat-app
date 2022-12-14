@@ -1,6 +1,6 @@
 import styles from './FloatingActionButton.module.css';
 
-interface FabProps {
+export interface FabProps {
   color: 'primary' | 'gray' | 'white' | 'danger';
   variant: 'circular' | 'extended';
   children: React.ReactNode;
@@ -25,7 +25,7 @@ const Fab = ({
   ];
 
   if (isDisabled) {
-    classNameList.push(styles.disabled);
+    classNameList.push('disabled');
   }
 
   const handleClick = (

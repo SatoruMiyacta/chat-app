@@ -1,6 +1,6 @@
 import styles from './Button.module.css';
 
-interface ButtonProps {
+export interface ButtonProps {
   color: 'primary' | 'gray' | 'white' | 'danger';
   variant: 'contained' | 'outlined' | 'text';
   children: React.ReactNode;
@@ -22,7 +22,7 @@ const Button = ({
     classNameList.push(styles.fullWidth);
   }
   if (isDisabled) {
-    classNameList.push(styles.disabled);
+    classNameList.push('disabled');
   }
 
   const handleClick = (
