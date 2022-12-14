@@ -24,8 +24,8 @@ export default {
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof Button> = (args) => (
   <>
+    <p>variants</p>
     <ul>
-      <p>variants</p>
       <li>
         <Button {...args} variant="contained" onClick={action('clicked')} />
       </li>
@@ -47,8 +47,8 @@ const Template: ComponentStory<typeof Button> = (args) => (
         <Button {...args} variant="text" isDisabled />
       </li>
     </ul>
+    <p>wide</p>
     <ul>
-      <p>wide</p>
       <li className="wide">
         <Button
           {...args}

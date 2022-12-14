@@ -27,8 +27,8 @@ const homeIcon = <FontAwesomeIcon icon={faHouse} />;
 
 const Template: ComponentStory<typeof Input> = (args) => (
   <>
+    <p>default</p>
     <ul>
-      <p>default</p>
       <li>
         <Input
           {...args}
@@ -63,8 +63,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
+    <p>label</p>
     <ul>
-      <p>label</p>
       <li>
         <Input
           {...args}
@@ -99,8 +99,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
+    <p>email</p>
     <ul>
-      <p>email</p>
       <li>
         <Input
           {...args}
@@ -114,8 +114,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
+    <p>password</p>
     <ul>
-      <p>password</p>
       <li>
         <Input
           {...args}
@@ -129,8 +129,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
+    <p>wide</p>
     <ul>
-      <p>wide</p>
       <li className="wide">
         <Input
           {...args}
@@ -143,8 +143,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
+    <p>small</p>
     <ul>
-      <p>small</p>
       <li>
         <Input
           {...args}
@@ -157,8 +157,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
+    <p>startIcon</p>
     <ul>
-      <p>startIcon</p>
       <li>
         <Input
           {...args}
@@ -196,8 +196,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
+    <p>rounded</p>
     <ul>
-      <p>rounded</p>
       <li>
         <Input
           {...args}
@@ -210,8 +210,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
+    <p>multiLine</p>
     <ul>
-      <p>multiLine</p>
       <li>
         <Input
           {...args}
@@ -225,8 +225,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
+    <p>error</p>
     <ul>
-      <p>error</p>
       <li>
         <Input
           {...args}
@@ -239,8 +239,8 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
+    <p>number</p>
     <ul>
-      <p>number</p>
       <li>
         <Input
           {...args}

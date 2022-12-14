@@ -3,14 +3,27 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-// import Input from './components/atoms/Input';
-// import Button from './components/atoms/Button';
-// import Checkbox from './components/atoms/Checkbox';
+// import Tabs, { TabsItem, TabsProps } from './components/atoms/Tabs';
+// import Heading, { HeadingProps } from './components/atoms/Heading';
+// import Input, { InputProps } from './components/atoms/Input';
+// import Button, { ButtonProps } from './components/atoms/Button';
+// import Menu, { labelsItem, MenuProps } from './components/molecules/Menu';
+// import Checkbox, { CheckboxProps } from './components/atoms/Checkbox';
+// import Fab, { FabProps } from './components/atoms/FloatingActionButton';
 
 // import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 // import { faIdCard } from '@fortawesome/free-solid-svg-icons';
 // import { faLock } from '@fortawesome/free-solid-svg-icons';
+// import { faUser } from '@fortawesome/free-solid-svg-icons';
+// import { faXmark } from '@fortawesome/free-solid-svg-icons';
+// import { faUsers } from '@fortawesome/free-solid-svg-icons';
+// import { faCommentMedical } from '@fortawesome/free-solid-svg-icons';
+// import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+// import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+// import { faTrash } from '@fortawesome/free-solid-svg-icons';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
+// import Modal, { ModalProps } from './components/molecules/Modal';
 // import './App.css';
 // import { useContactForm } from './hooks/index';
 
@@ -88,6 +101,13 @@ const App = () => {
   //     </div>
   //   </>
   // );
+
+  {
+    /**
+-----------------------------------------------------------------------------------
+*/
+  }
+
   // const [isChecked, setIsChecked] = useState(false);
   // const [items, setItems] = useState([
   //   { id: 'first', label: 'checkbox', isChecked: false, isDisabled: false },
@@ -121,46 +141,198 @@ const App = () => {
   // const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   setIsChecked(!isChecked);
   // };
-  return (
-    <></>
-    //   <>
-    //     <Checkbox
-    //       color="primary"
-    //       vertical
-    //       items={items}
-    //       onChange={(event, index) => handleChange(event, index)}
-    //     />
-    //     <Checkbox
-    //       color="primary"
-    //       id="first"
-    //       label="checkbox"
-    //       // isChecked
-    //       isChecked={isChecked}
-    //       // isDisabled
-    //       // vertical
-    //       // items={items}
-    //       onChange={onChange}
-    //     />
-    //     <Input
-    //       type="text"
-    //       color="primary"
-    //       variant="outlined"
-    //       placeholder="ユーザーネーム"
-    //       label="ユーザーネーム"
-    //       startIcon={<FontAwesomeIcon icon={faIdCard} />}
-    //       id="outlined"
-    //       value={text}
-    //       // isRequired
-    //       // isMultiLines
-    //       // isRounded
-    //       onChange={handleChangeText}
-    //       onBlur={handleBlur}
-    //       // rows={4}
-    //       maxRows={5}
-    //       // minRows={3}
-    //     />
-    //   </>
-  );
+  // return (
+  //   <>
+  //     <Checkbox
+  //       color="primary"
+  //       vertical
+  //       items={items}
+  //       onChange={(event, index) => handleChange(event, index)}
+  //     />
+  //     <Checkbox
+  //       color="primary"
+  //       id="first"
+  //       label="checkbox"
+  //       // isChecked
+  //       isChecked={isChecked}
+  //       // isDisabled
+  //       // vertical
+  //       // items={items}
+  //       onChange={onChange}
+  //     />
+  //     <Input
+  //       type="text"
+  //       color="primary"
+  //       variant="outlined"
+  //       placeholder="ユーザーネーム"
+  //       label="ユーザーネーム"
+  //       startIcon={<FontAwesomeIcon icon={faIdCard} />}
+  //       id="outlined"
+  //       value={text}
+  //       // isRequired
+  //       // isMultiLines
+  //       // isRounded
+  //       onChange={handleChangeText}
+  //       onBlur={handleBlur}
+  //       // rows={4}
+  //       maxRows={5}
+  //       // minRows={3}
+  //     />
+  //   </>
+  // );
+
+  {
+    /**
+-----------------------------------------------------------------------------------
+*/
+  }
+
+  // const [activeIndex, setActiveIndex] = useState(0);
+
+  // const [items, setItems] = useState<TabsItem[]>([
+  //   {
+  //     label: 'tabs',
+  //     icon: <FontAwesomeIcon icon={faUser} />,
+  //     isDisabled: false,
+  //   },
+  //   {
+  //     label: 'tabs',
+  //     icon: <FontAwesomeIcon icon={faUser} />,
+  //     isDisabled: false,
+  //   },
+  //   {
+  //     label: 'tabs',
+  //     icon: <FontAwesomeIcon icon={faUser} />,
+  //     isDisabled: false,
+  //   },
+  //   {
+  //     label: 'tabs',
+  //     icon: <FontAwesomeIcon icon={faUser} />,
+  //     isDisabled: false,
+  //   },
+  //   {
+  //     label: 'tabs',
+  //     icon: <FontAwesomeIcon icon={faUser} />,
+  //     isDisabled: true,
+  //   },
+  // ]);
+  // const handleClick = (
+  //   event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  //   index: number
+  // ) => {
+  //   if (items[index] !== items[activeIndex]) setActiveIndex(index);
+  // };
+
+  // return (
+  //   <>
+  //     <div>
+  //       <Tabs
+  //         color="primary"
+  //         items={items}
+  //         activeIndex={activeIndex}
+  //         isBorder
+  //         onClick={(event, index) => handleClick(event, index)}
+  //       />
+  //     </div>
+  //   </>
+  // );
+
+  {
+    /**
+-----------------------------------------------------------------------------------
+*/
+  }
+  // const [show, setShow] = useState(false);
+
+  // const handleOpen = (
+  //   event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  // ) => {
+  //   setShow(true);
+  //   // setShow(!show);
+  // };
+
+  // const handleClose = () => {
+  //   setShow(false);
+  // };
+  // return (
+  //   <>
+  //     <Modal isOpen={show} onClick={handleClose} isCloseButton text="heading">
+  //       <div className="modal">
+  //         <div className="top">
+  //           <FontAwesomeIcon icon={faUser} size="3x" />
+  //         </div>
+  //         <div className="btn">
+  //           <div className="leftBtn">
+  //             <Button color="gray" variant="text" onClick={() => {}}>
+  //               <FontAwesomeIcon icon={faUserPlus} size="3x" />
+  //             </Button>
+  //           </div>
+  //           <div className="rightBtn">
+  //             <Button color="gray" variant="text" onClick={() => {}}>
+  //               <FontAwesomeIcon icon={faCommentMedical} size="3x" />
+  //             </Button>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </Modal>
+  //     <Button
+  //       color="gray"
+  //       variant="text"
+  //       onClick={(event) => handleOpen(event)}
+  //     >
+  //       ボタン
+  //     </Button>
+  //   </>
+  // );
+
+  {
+    /**
+-----------------------------------------------------------------------------------
+*/
+  }
+
+  // const [labels, isLabels] = useState([
+  //   {
+  //     label: (
+  //       <>
+  //         <FontAwesomeIcon icon={faPenToSquare} />
+  //         &nbsp;編集
+  //       </>
+  //     ),
+  //     onClick: () => {},
+  //   },
+  //   {
+  //     label: (
+  //       <>
+  //         <FontAwesomeIcon icon={faTrash} />
+  //         &nbsp;削除
+  //       </>
+  //     ),
+  //     onClick: () => {},
+  //   },
+  //   {
+  //     label: (
+  //       <>
+  //         削除 &nbsp;
+  //         <FontAwesomeIcon icon={faTrash} />
+  //       </>
+  //     ),
+  //     onClick: () => {},
+  //   },
+  // ]);
+
+  // return (
+  //   <>
+  //     <div className="all">
+  //       <Menu
+  //         labels={labels}
+  //         buttonChildren={<FontAwesomeIcon icon={faEllipsisVertical} />}
+  //       ></Menu>
+  //       {/* <Menu isOpen={open} labels={labels} onClick={handleClose}></Menu> */}
+  //     </div>
+  //   </>
+  // );
+  return <></>;
 };
 
 export default App;

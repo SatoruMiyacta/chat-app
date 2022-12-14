@@ -14,8 +14,8 @@ export default {
 
 const Template: ComponentStory<typeof Checkbox> = (args) => (
   <>
+    <p>without label</p>
     <ul>
-      <p>without label</p>
       <li>
         <Checkbox {...args} id="default" />
       </li>
@@ -29,8 +29,8 @@ const Template: ComponentStory<typeof Checkbox> = (args) => (
         <Checkbox {...args} id="disabledChecked" isDisabled isChecked />
       </li>
     </ul>
+    <p>size</p>
     <ul>
-      <p>size</p>
       <li>
         <Checkbox {...args} id="default" size="small" />
       </li>
@@ -50,8 +50,8 @@ const Template: ComponentStory<typeof Checkbox> = (args) => (
         />
       </li>
     </ul>
+    <p>label</p>
     <ul>
-      <p>label</p>
       <li>
         <Checkbox {...args} id="default" label="checkbox" />
       </li>
