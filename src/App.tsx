@@ -1,13 +1,13 @@
-// import { useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
+// import { useState } from 'react';
 // import Tabs, { TabsItem, TabsProps } from './components/atoms/Tabs';
 // import Heading, { HeadingProps } from './components/atoms/Heading';
 // import Input, { InputProps } from './components/atoms/Input';
 // import Button, { ButtonProps } from './components/atoms/Button';
-// import Menu, { labelsItem, MenuProps } from './components/molecules/Menu';
+// import Menu, { item, MenuProps } from './components/molecules/Menu';
 // import Checkbox, { CheckboxProps } from './components/atoms/Checkbox';
 // import Fab, { FabProps } from './components/atoms/FloatingActionButton';
 
@@ -18,9 +18,11 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 // import { faXmark } from '@fortawesome/free-solid-svg-icons';
 // import { faUsers } from '@fortawesome/free-solid-svg-icons';
 // import { faCommentMedical } from '@fortawesome/free-solid-svg-icons';
+// import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 // import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 // import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 // import { faTrash } from '@fortawesome/free-solid-svg-icons';
+// import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 // import Modal, { ModalProps } from './components/molecules/Modal';
@@ -256,10 +258,17 @@ const App = () => {
   // };
   // return (
   //   <>
-  //     <Modal isOpen={show} onClick={handleClose} isCloseButton text="heading">
+  //     <Modal
+  //       isOpen={show}
+  //       onClick={handleClose}
+  //       showCloseButton
+  //       title="heading"
+  //       titleAlign="center"
+  //       hasInner
+  //     >
   //       <div className="modal">
-  //         <div className="top">
-  //           <FontAwesomeIcon icon={faUser} size="3x" />
+  //         {/* <div className="top">
+  //           <FontAwesomeIcon icon={faCircleUser} size="3x" />
   //         </div>
   //         <div className="btn">
   //           <div className="leftBtn">
@@ -272,7 +281,14 @@ const App = () => {
   //               <FontAwesomeIcon icon={faCommentMedical} size="3x" />
   //             </Button>
   //           </div>
-  //         </div>
+  //         </div> */}
+  //         <p>
+  //           The content of modal is unmounted when closed. If you need to make
+  //           the content available to search engines or render expensive
+  //           component trees inside your modal while optimizing for interaction
+  //           responsiveness it might be a good idea to change this default
+  //           behavior by enabling the keepMounted prop:
+  //         </p>
   //       </div>
   //     </Modal>
   //     <Button
@@ -291,12 +307,15 @@ const App = () => {
 */
   }
 
-  // const [labels, isLabels] = useState([
+  // const [items, isItems] = useState([
   //   {
   //     label: (
   //       <>
-  //         <FontAwesomeIcon icon={faPenToSquare} />
-  //         &nbsp;編集
+  //         <FontAwesomeIcon
+  //           icon={faPenToSquare}
+  //           style={{ marginRight: '8px', opacity: 0.5 }}
+  //         />
+  //         編集
   //       </>
   //     ),
   //     onClick: () => {},
@@ -304,8 +323,11 @@ const App = () => {
   //   {
   //     label: (
   //       <>
-  //         <FontAwesomeIcon icon={faTrash} />
-  //         &nbsp;削除
+  //         <FontAwesomeIcon
+  //           icon={faTrash}
+  //           style={{ width: '16px', marginRight: '8px', opacity: 0.5 }}
+  //         />
+  //         削除
   //       </>
   //     ),
   //     onClick: () => {},
@@ -313,8 +335,23 @@ const App = () => {
   //   {
   //     label: (
   //       <>
-  //         削除 &nbsp;
-  //         <FontAwesomeIcon icon={faTrash} />
+  //         <FontAwesomeIcon
+  //           icon={faFloppyDisk}
+  //           style={{ width: '16px', marginRight: '8px', opacity: 0.5 }}
+  //         />
+  //         保存
+  //       </>
+  //     ),
+  //     onClick: () => {},
+  //   },
+  //   {
+  //     label: (
+  //       <>
+  //         <FontAwesomeIcon
+  //           icon={faFloppyDisk}
+  //           style={{ width: '16px', marginRight: '8px', opacity: 0.5 }}
+  //         />
+  //         ブックマーク
   //       </>
   //     ),
   //     onClick: () => {},
@@ -323,12 +360,11 @@ const App = () => {
 
   // return (
   //   <>
-  //     <div className="all">
+  //     <div className="menu">
   //       <Menu
-  //         labels={labels}
+  //         items={items}
   //         buttonChildren={<FontAwesomeIcon icon={faEllipsisVertical} />}
   //       ></Menu>
-  //       {/* <Menu isOpen={open} labels={labels} onClick={handleClose}></Menu> */}
   //     </div>
   //   </>
   // );
