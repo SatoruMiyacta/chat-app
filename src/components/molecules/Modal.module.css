@@ -1,0 +1,56 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(3, 3, 3, 0.5);
+  z-index: 100;
+}
+
+.content {
+  position: relative;
+  height: fit-content;
+  max-height: 80vh;
+  width: fit-content;
+  max-width: 80vw;
+  overflow-y: scroll;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 42px;
+  height: 42px;
+  color: #afafaf;
+  background-color: transparent;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.closeButton:hover {
+  background-color: rgba(196, 196, 196, 0.2);
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.inner {
+  padding: 0px 16px 16px;
+}
+
+.contentHeader {
+  position: sticky;
+  top: 0;
+  padding: 16px 16px 12px;
+  background-color: #fff;
+}
