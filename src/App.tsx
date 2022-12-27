@@ -1,37 +1,86 @@
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
-// import { useState } from 'react';
-// import Tabs, { TabsItem, TabsProps } from './components/atoms/Tabs';
-// import Heading, { HeadingProps } from './components/atoms/Heading';
-// import Input, { InputProps } from './components/atoms/Input';
-// import Button, { ButtonProps } from './components/atoms/Button';
-// import Menu, { item, MenuProps } from './components/molecules/Menu';
-// import Checkbox, { CheckboxProps } from './components/atoms/Checkbox';
-// import Fab, { FabProps } from './components/atoms/FloatingActionButton';
+import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
-// import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-// import { faIdCard } from '@fortawesome/free-solid-svg-icons';
-// import { faLock } from '@fortawesome/free-solid-svg-icons';
-// import { faUser } from '@fortawesome/free-solid-svg-icons';
-// import { faXmark } from '@fortawesome/free-solid-svg-icons';
-// import { faUsers } from '@fortawesome/free-solid-svg-icons';
-// import { faCommentMedical } from '@fortawesome/free-solid-svg-icons';
-// import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-// import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
-// import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-// import { faTrash } from '@fortawesome/free-solid-svg-icons';
-// import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
-// import Modal, { ModalProps } from './components/molecules/Modal';
+import { useContactForm } from './hooks/index';
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import {
+  fas,
+  faEnvelope,
+  faIdCard,
+  faLock,
+  faUser,
+  faXmark,
+  faUsers,
+  faCommentMedical,
+  faMessage,
+  faCircleUser,
+  faEllipsisVertical,
+  faPenToSquare,
+  faTrash,
+  faFloppyDisk,
+  faUserPlus,
+  faChevronLeft,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import Button, { ButtonProps } from '@/components/atoms/Button';
+import Checkbox, {
+  checkoboxItem,
+  CheckboxProps,
+} from '@/components/atoms/Checkbox';
+import Fab, { FabProps } from '@/components/atoms/FloatingActionButton';
+import Heading, { HeadingProps } from '@/components/atoms/Heading';
+import Input, { InputProps } from '@/components/atoms/Input';
+import Tabs, { TabsItem, TabsProps } from '@/components/atoms/Tabs';
+import Menu, { MenuItem, MenuProps } from '@/components/molecules/Menu';
+import Modal, { ModalProps } from '@/components/molecules/Modal';
+import BottomNavigation from '@/components/organisms/BottomNavigation';
+import Header, { ActionItem, HeaderProps } from '@/components/organisms/Header';
+import Home from '@/components/pages/home/Index';
+import Profile from '@/components/pages/profile/Index';
+import Rooms from '@/components/pages/rooms/Index';
+
 // import './App.css';
-// import { useContactForm } from './hooks/index';
 
 library.add(fas, far, fab);
 
 const App = () => {
+  // return (
+  //   <Routes>
+  //     <Route path="/accounts" element={}>
+  //       <Route path="/login" element={}></Route>
+  //       <Route path="/create" element={}></Route>
+  //       <Route path="/reset-password" element={}></Route>
+  //     </Route>
+  //     <Route path="/profile" element={}>
+  //       <Route path="/edit" element={}></Route>
+  //       <Route path="/delete-account" element={}></Route>
+  //     </Route>
+  //     <Route path="/users" element={}>
+  //       <Route path="/{userId}" element={}></Route>
+  //     </Route>
+  //     <Route path="/home" element={}></Route>
+  //     <Route path="/groups" element={}>
+  //       <Route path="/create" element={}></Route>
+  //       <Route path="/{groupId}" element={}>
+  //         <Route path="/edit" element={}></Route>
+  //       </Route>
+  //     </Route>
+  //     <Route path="/rooms" element={}>
+  //       <Route path="/{roomId}" element={}></Route>
+  //       <Route path="/message" element={}></Route>
+  //     </Route>
+  //   </Routes>
+  // );
+
+  {
+    /**
+-----------------------------------------------------------------------------------
+*/
+  }
   // const {
   //   text,
   //   email,
@@ -307,7 +356,7 @@ const App = () => {
 */
   }
 
-  // const [items, isItems] = useState([
+  // const [items, isItems] = useState<MenuItem[]>([
   //   {
   //     label: (
   //       <>
@@ -368,7 +417,102 @@ const App = () => {
   //     </div>
   //   </>
   // );
-  return <></>;
+
+  {
+    /**
+-----------------------------------------------------------------------------------
+*/
+  }
+  // const [menuItems, setMenuItems] = useState<MenuItem[]>([
+  //   {
+  //     label: (
+  //       <>
+  //         <FontAwesomeIcon
+  //           icon={faPenToSquare}
+  //           style={{ marginRight: '8px', opacity: 0.5 }}
+  //         />
+  //         編集
+  //       </>
+  //     ),
+  //     onClick: () => {},
+  //   },
+  //   {
+  //     label: (
+  //       <>
+  //         <FontAwesomeIcon
+  //           icon={faTrash}
+  //           style={{ width: '16px', marginRight: '8px', opacity: 0.5 }}
+  //         />
+  //         削除
+  //       </>
+  //     ),
+  //     onClick: () => {},
+  //   },
+  // ]);
+
+  // const [actionItems, setActionItems] = useState<ActionItem[]>([
+  //   {
+  //     item: <FontAwesomeIcon icon={faUser} />,
+  //     // item: '保存',
+  //     onClick: () => {},
+  //   },
+  //   {
+  //     item: '編集',
+  //     onClick: () => {},
+  //   },
+  //   {
+  //     item: '保存',
+  //     onClick: () => {},
+  //   },
+  // ]);
+
+  // return (
+  //   <>
+  //     <Header
+  //       // showBackButton
+  //       // title="プロフィール"
+  //       title="パスワードリセット"
+  //       actionItems={actionItems}
+  //       // menu={menuItems}
+  //     />
+  //     <BottomNavigation />
+  //   </>
+  // );
+
+  {
+    /**
+-----------------------------------------------------------------------------------
+*/
+  }
+
+  // 思い込みに気をつけて、今までの形にとらわれない、なんでpropsを使うか理由も考えて
+  // 一から考えて、どうしたいか考えてください！
+
+  // return (
+  //   <>
+  //     <BottomNavigation />
+  //   </>
+  // );
+
+  {
+    /**
+-----------------------------------------------------------------------------------
+*/
+  }
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+      <Routes>
+        <Route path="/rooms" element={<Rooms />} />
+      </Routes>
+      <Routes>
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </>
+  );
 };
 
 export default App;
