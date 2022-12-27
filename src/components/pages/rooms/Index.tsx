@@ -1,5 +1,5 @@
-import BottomNavigation from '../../organisms/BottomNavigation';
-import Header, { ActionItem } from '../../organisms/Header';
+import BottomNavigation from '@/components/organisms/BottomNavigation';
+import Header, { ActionItem } from '@/components/organisms/Header';
 
 const Rooms = () => {
   return (
