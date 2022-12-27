@@ -1,6 +1,14 @@
 import styles from './Checkbox.module.css';
+
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+export interface checkoboxItem {
+  id: string;
+  isChecked: boolean;
+  label?: string;
+  isDisabled?: boolean;
+}
 
 export interface CheckboxProps {
   color: 'primary' | 'gray' | 'white';
@@ -14,12 +22,7 @@ export interface CheckboxProps {
   id?: string;
   isChecked?: boolean;
   vertical?: boolean;
-  items?: {
-    id: string;
-    isChecked: boolean;
-    label?: string;
-    isDisabled?: boolean;
-  }[];
+  items: checkoboxItem[];
 }
 
 const Checkbox = ({

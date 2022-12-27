@@ -14,8 +14,8 @@
 }
 
 .checkboxCircle {
-  height: 32px;
   width: 32px;
+  height: 32px;
   border: solid 1px #b4b4b4;
   border-radius: 100px;
 }
@@ -39,9 +39,9 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   color: #fff;
   pointer-events: none;
+  transform: translate(-50%, -50%);
 }
 
 .white + .checkedIcon {
@@ -53,6 +53,6 @@
 }
 
 .small {
-  height: 24px;
   width: 24px;
+  height: 24px;
 }

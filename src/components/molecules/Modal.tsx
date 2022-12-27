@@ -1,7 +1,11 @@
 import styles from './Modal.module.css';
-import Heading, { HeadingProps } from '../atoms/Heading';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import Button, { ButtonProps } from '@/components/atoms/Button';
+import Heading from '@/components/atoms/Heading';
+import type { HeadingProps } from '@/components/atoms/Heading';
 
 export interface ModalProps {
   children: React.ReactNode;
@@ -42,9 +46,14 @@ const Modal = ({
           </Heading>
         )}
         {showCloseButton && (
-          <button className={styles.closeButton} onClick={onClose}>
+          <Button
+            color="gray"
+            variant="text"
+            onClick={onClose}
+            className={styles.closeButton}
+          >
             <FontAwesomeIcon icon={faXmark} size="sm" />
-          </button>
+          </Button>
         )}
       </header>
     );

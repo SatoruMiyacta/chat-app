@@ -1,19 +1,19 @@
 .button {
+  z-index: 100;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   padding: 8px 8px;
+  cursor: pointer;
   border-radius: 48px;
   box-shadow: rgb(0 0 0 / 20%) 0px 3px 5px -1px,
     rgb(0 0 0 / 14%) 0px 6px 10px 0px, rgb(0 0 0 / 12%) 0px 1px 18px 0px;
-  cursor: pointer;
   transition: 0.2s;
-  z-index: 100;
 }
 
 .circular.primary {
-  background-color: #ff971d;
   color: #fff;
+  background-color: #ff971d;
 }
 
 .circular.primary:hover {
@@ -21,8 +21,8 @@
 }
 
 .circular.gray {
-  background-color: #c2c1c1;
   color: #fff;
+  background-color: #c2c1c1;
 }
 
 .circular.gray:hover {
@@ -30,8 +30,8 @@
 }
 
 .circular.white {
-  background-color: #fff;
   color: #333;
+  background-color: #fff;
 }
 
 .circular.white:hover {
@@ -39,8 +39,8 @@
 }
 
 .circular.danger {
-  background-color: #e51a1a;
   color: #fff;
+  background-color: #e51a1a;
 }
 
 .circular.danger:hover {
@@ -48,78 +48,78 @@
 }
 
 .extended.primary {
-  border-radius: 32px;
-  background-color: #ff971d;
   color: #fff;
+  background-color: #ff971d;
+  border-radius: 32px;
 }
 
 .extended.primary:hover {
-  border-radius: 32px;
   background-color: #ff8f0f;
+  border-radius: 32px;
 }
 
 .extended.gray {
+  color: #fff;
   background-color: #c2c1c1;
   border-radius: 32px;
-  color: #fff;
 }
 
 .extended.gray:hover {
-  border-radius: 32px;
   background-color: #afafaf;
+  border-radius: 32px;
 }
 
 .extended.white {
+  color: #333;
   background-color: #fff;
   border-radius: 32px;
-  color: #333;
 }
 
 .extended.white:hover {
-  border-radius: 32px;
   background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 32px;
 }
 
 .extended.danger {
+  color: #fff;
   background-color: #e51a1a;
   border-radius: 32px;
-  color: #fff;
 }
 
 .extended.danger:hover {
-  border-radius: 32px;
   background-color: #f41111;
+  border-radius: 32px;
 }
 
 .circular.small {
-  height: 24px;
   width: 24px;
+  height: 24px;
 }
 
 .circular.medium {
-  height: 32px;
   width: 32px;
+  height: 32px;
 }
 
 .circular.large {
-  height: 48px;
   width: 48px;
+  height: 48px;
 }
 
 .extended.small {
   height: 24px;
-  border-radius: 24px;
   padding: 16px 16px;
+  border-radius: 24px;
 }
 
 .extended.medium {
   height: 32px;
-  border-radius: 32px;
   padding: 20px 20px;
+  border-radius: 32px;
 }
 
 .extended.large {
   height: 48px;
-  border-radius: 48px;
   padding: 24px 24px;
+  border-radius: 48px;
 }

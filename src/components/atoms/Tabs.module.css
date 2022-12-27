@@ -18,9 +18,9 @@
   width: 100%;
   min-width: max-content;
   padding: 8px;
-  background-color: #fff;
   color: rgba(0, 0, 0, 0.3);
   cursor: pointer;
+  background-color: #fff;
 }
 
 .active.primary {

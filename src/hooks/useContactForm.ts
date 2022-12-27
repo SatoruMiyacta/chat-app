@@ -5,9 +5,7 @@ export const useContactForm = () => {
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('');
   // const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-
   // const isComplete = () => {
-
   //   if (!text) return false;
   //   if (!email) return false;
   //   if (!password) return false;
@@ -21,8 +19,6 @@ export const useContactForm = () => {
   //   }
   //   return true;
   // }
-  
-
   // const passwordComplete = () => {
   //   const passWordRegex = new RegExp('^[0-9a-zA-Z]*$');
   //   if (!passWordRegex.test(password)) {
@@ -30,7 +26,6 @@ export const useContactForm = () => {
   //   }
   //   return '';
   // }
-
   // const handleChangeText = (
   //   event:
   //     | React.ChangeEvent<HTMLInputElement>
@@ -38,7 +33,6 @@ export const useContactForm = () => {
   // ) => {
   //     setText(event.target.value);
   // };
-
   // const handleChangeEmail = (
   //   event:
   //     | React.ChangeEvent<HTMLInputElement>
@@ -46,7 +40,6 @@ export const useContactForm = () => {
   // ) => {
   //   setEmail(event.target.value);
   // };
-
   // const handleChangePassword = (
   //   event:
   //     | React.ChangeEvent<HTMLInputElement>
@@ -54,7 +47,6 @@ export const useContactForm = () => {
   // ) => {
   //     setPassword(event.target.value);
   // };
-
   // const handleBlur = (
   //   event:
   //     | React.FocusEvent<HTMLInputElement, Element>
@@ -63,12 +55,10 @@ export const useContactForm = () => {
   //   const errorMessage = passwordComplete();
   //   setPasswordErrorMessage(errorMessage);
   // };
-
   // const handleClick = () => {
   //   if (!isComplete()) {
   //     return;
   //   }
   // };
-
   // return {text,email, password,passwordErrorMessage,handleChangeText,handleChangeEmail,handleChangePassword,handleClick,handleBlur,isComplete}
-}
+};

@@ -1,17 +1,17 @@
 .button {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   height: 48px;
   padding: 0 16px;
-  border-radius: 48px;
   cursor: pointer;
+  border-radius: 48px;
   transition: 0.2s;
 }
 
 .contained.primary {
-  background-color: #ff971d;
   color: #fff;
+  background-color: #ff971d;
 }
 
 .contained.primary:hover {
@@ -19,8 +19,8 @@
 }
 
 .contained.gray {
-  background-color: #c2c1c1;
   color: #fff;
+  background-color: #c2c1c1;
 }
 
 .contained.gray:hover {
@@ -28,8 +28,8 @@
 }
 
 .contained.white {
-  background-color: #fff;
   color: #333;
+  background-color: #fff;
 }
 
 .contained.white:hover {
@@ -37,8 +37,8 @@
 }
 
 .contained.danger {
-  background-color: #e51a1a;
   color: #fff;
+  background-color: #e51a1a;
 }
 
 .contained.danger:hover {
@@ -46,52 +46,52 @@
 }
 
 .outlined {
-  border: solid 1px #333;
   background: transparent;
+  border: solid 1px #333;
 }
 
 .outlined.primary {
-  border-color: #ff971d;
   color: #ff971d;
+  border-color: #ff971d;
 }
 
 .outlined.primary:hover {
-  border-color: #ff8f0f;
-  background-color: rgba(255, 143, 15, 0.1);
   color: #ff8f0f;
+  background-color: rgba(255, 143, 15, 0.1);
+  border-color: #ff8f0f;
 }
 
 .outlined.gray {
-  border-color: #c2c1c1;
   color: #c2c1c1;
+  border-color: #c2c1c1;
 }
 
 .outlined.gray:hover {
-  border-color: #afafaf;
-  background-color: rgba(175, 175, 175, 0.1);
   color: #afafaf;
+  background-color: rgba(175, 175, 175, 0.1);
+  border-color: #afafaf;
 }
 
 .outlined.white {
-  border-color: #fff;
   color: #fff;
+  border-color: #fff;
 }
 
 .outlined.white:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .outlined.danger {
-  border-color: #e51a1a;
   color: #e51a1a;
+  border-color: #e51a1a;
 }
 
 .outlined.danger:hover {
-  border-color: #f41111;
-  background-color: rgba(244, 17, 17, 0.1);
   color: #f41111;
+  background-color: rgba(244, 17, 17, 0.1);
+  border-color: #f41111;
 }
 
 .text {

@@ -4,6 +4,7 @@ export interface FabProps {
   color: 'primary' | 'gray' | 'white' | 'danger';
   variant: 'circular' | 'extended';
   children: React.ReactNode;
+  className?: string;
   onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   size?: 'small' | 'medium' | 'large';
   isDisabled?: boolean;
@@ -13,6 +14,7 @@ const Fab = ({
   color,
   variant,
   children,
+  className,
   onClick,
   size = 'medium',
   isDisabled = false,
@@ -22,6 +24,7 @@ const Fab = ({
     styles[color],
     styles[variant],
     styles[size],
+    className,
   ];
 
   if (isDisabled) {

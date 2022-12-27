@@ -34,8 +34,8 @@ select {
 }
 button {
   padding: 0;
-  border: none;
   cursor: pointer;
+  border: none;
 }
 p {
   overflow-wrap: break-word;
@@ -46,9 +46,9 @@ h3,
 h4,
 h5,
 h6 {
-  overflow-wrap: break-word;
   margin: 0;
   font-weight: normal;
+  overflow-wrap: break-word;
 }
 #root,
 #__next {
@@ -61,8 +61,8 @@ table {
 
 input,
 textarea {
-  border-width: 1px;
   border: solid 1px #b4b4b4;
+  border-width: 1px;
 }
 
 input:focus,
