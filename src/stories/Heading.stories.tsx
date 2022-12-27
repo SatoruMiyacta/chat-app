@@ -1,5 +1,6 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Heading from '../components/atoms/Heading';
+import Heading from '@/components/atoms/Heading';
+
+import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
   title: 'components/Heading',

@@ -1,12 +1,14 @@
-import { action } from '@storybook/addon-actions';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Tabs from '../components/atoms/Tabs';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import Tabs from '@/components/atoms/Tabs';
+
+import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
   title: 'components/Tabs',
   component: Tabs,
+  onClick: { action: 'clicked' },
 } as ComponentMeta<typeof Tabs>;
 
 const Template: ComponentStory<typeof Tabs> = (args) => (
@@ -14,11 +16,11 @@ const Template: ComponentStory<typeof Tabs> = (args) => (
     <div style={{ width: '250px' }}>
       <p>Border</p>
       <ul>
-        <Tabs {...args} isBorder activeIndex={1} onClick={action('clicked')} />
+        <Tabs {...args} isBorder activeIndex={1} />
       </ul>
       <p>No border</p>
       <ul>
-        <Tabs {...args} activeIndex={1} onClick={action('clicked')} />
+        <Tabs {...args} activeIndex={1} />
       </ul>
       <p>disabled</p>
       <ul>
@@ -32,7 +34,6 @@ const Template: ComponentStory<typeof Tabs> = (args) => (
             },
           ]}
           isBorder
-          onClick={action('clicked')}
         />
       </ul>
       <p>icon position</p>
@@ -50,7 +51,6 @@ const Template: ComponentStory<typeof Tabs> = (args) => (
             iconPosition="top"
             activeIndex={0}
             isBorder
-            onClick={action('clicked')}
           />
           <Tabs
             {...args}
@@ -63,7 +63,6 @@ const Template: ComponentStory<typeof Tabs> = (args) => (
             ]}
             iconPosition="start"
             isBorder
-            onClick={action('clicked')}
           />
           <Tabs
             {...args}
@@ -76,7 +75,6 @@ const Template: ComponentStory<typeof Tabs> = (args) => (
             ]}
             iconPosition="end"
             isBorder
-            onClick={action('clicked')}
           />
           <Tabs
             {...args}
@@ -89,7 +87,6 @@ const Template: ComponentStory<typeof Tabs> = (args) => (
             ]}
             iconPosition="bottom"
             isBorder
-            onClick={action('clicked')}
           />
         </div>
       </ul>
@@ -127,7 +124,6 @@ const Template: ComponentStory<typeof Tabs> = (args) => (
             ]}
             activeIndex={0}
             isBorder
-            onClick={action('clicked')}
           />
         </div>
       </ul>
