@@ -1,10 +1,13 @@
-import { action } from '@storybook/addon-actions';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Fab from '../components/atoms/FloatingActionButton';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import { faCommentMedical } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faUserPlus,
+  faCommentMedical,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import Fab from '@/components/atoms/FloatingActionButton';
+
+import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
   title: 'components/FloatingActionButton',
@@ -23,6 +26,7 @@ export default {
       options: ['small', 'medium', 'large'],
       control: { type: 'radio' },
     },
+    onClick: { action: 'clicked' },
   },
 } as ComponentMeta<typeof Fab>;
 
@@ -36,32 +40,22 @@ const Template: ComponentStory<typeof Fab> = (args) => (
     <p>variant</p>
     <ul>
       <li>
-        <Fab {...args} variant="circular" onClick={action('clicked')}>
+        <Fab {...args} variant="circular">
           {plusIcon}
         </Fab>
       </li>
       <li>
-        <Fab
-          {...args}
-          variant="circular"
-          isDisabled
-          onClick={action('clicked')}
-        >
+        <Fab {...args} variant="circular" isDisabled>
           {plusIcon}
         </Fab>
       </li>
       <li>
-        <Fab {...args} variant="extended" onClick={action('clicked')}>
+        <Fab {...args} variant="extended">
           EXTENDED
         </Fab>
       </li>
       <li>
-        <Fab
-          {...args}
-          variant="extended"
-          isDisabled
-          onClick={action('clicked')}
-        >
+        <Fab {...args} variant="extended" isDisabled>
           EXTENDED
         </Fab>
       </li>
@@ -69,27 +63,17 @@ const Template: ComponentStory<typeof Fab> = (args) => (
     <p>size</p>
     <ul>
       <li>
-        <Fab
-          {...args}
-          variant="circular"
-          size="small"
-          onClick={action('clicked')}
-        >
+        <Fab {...args} variant="circular" size="small">
           {plusIcon}
         </Fab>
       </li>
       <li>
-        <Fab {...args} variant="circular" onClick={action('clicked')}>
+        <Fab {...args} variant="circular">
           {plusIcon}
         </Fab>
       </li>
       <li>
-        <Fab
-          {...args}
-          variant="circular"
-          size="large"
-          onClick={action('clicked')}
-        >
+        <Fab {...args} variant="circular" size="large">
           {plusIcon}
         </Fab>
       </li>
@@ -97,12 +81,12 @@ const Template: ComponentStory<typeof Fab> = (args) => (
     <p>icons</p>
     <ul>
       <li>
-        <Fab {...args} variant="circular" onClick={action('clicked')}>
+        <Fab {...args} variant="circular">
           {userPlusIcon}
         </Fab>
       </li>
       <li>
-        <Fab {...args} variant="circular" onClick={action('clicked')}>
+        <Fab {...args} variant="circular">
           {commentPlusIcon}
         </Fab>
       </li>

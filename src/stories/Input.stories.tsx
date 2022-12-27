@@ -1,11 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Input from '../components/atoms/Input';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
-import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { faHouse } from '@fortawesome/free-solid-svg-icons';
+import {
+  faMagnifyingGlass,
+  faEnvelope,
+  faLock,
+  faCircleUser,
+  faHouse,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import Input from '@/components/atoms/Input';
+
+import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
   title: 'components/Input',

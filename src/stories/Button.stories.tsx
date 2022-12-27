@@ -1,9 +1,12 @@
-import { action } from '@storybook/addon-actions';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Button from '../components/atoms/Button';
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEllipsisVertical,
+  faChevronLeft,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import Button from '@/components/atoms/Button';
+
+import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
   title: 'components/Button',
@@ -18,6 +21,7 @@ export default {
       options: ['contained', 'outlined', 'text'],
       control: { type: 'radio' },
     },
+    onClick: { action: 'clicked' },
   },
 } as ComponentMeta<typeof Button>;
 
@@ -27,13 +31,13 @@ const Template: ComponentStory<typeof Button> = (args) => (
     <p>variants</p>
     <ul>
       <li>
-        <Button {...args} variant="contained" onClick={action('clicked')} />
+        <Button {...args} variant="contained" />
       </li>
       <li>
-        <Button {...args} variant="outlined" onClick={action('clicked')} />
+        <Button {...args} variant="outlined" />
       </li>
       <li>
-        <Button {...args} variant="text" onClick={action('clicked')} />
+        <Button {...args} variant="text" />
       </li>
     </ul>
     <ul>
@@ -50,12 +54,7 @@ const Template: ComponentStory<typeof Button> = (args) => (
     <p>wide</p>
     <ul>
       <li className="wide">
-        <Button
-          {...args}
-          variant="contained"
-          isFullWidth
-          onClick={action('clicked')}
-        />
+        <Button {...args} variant="contained" isFullWidth />
       </li>
       <li className="wide">
         <Button {...args} variant="contained" isDisabled isFullWidth />
