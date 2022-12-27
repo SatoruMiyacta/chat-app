@@ -4,7 +4,7 @@ import Header, { ActionItem } from '../../organisms/Header';
 const Rooms = () => {
   return (
     <>
-      <Header title="トーク" isSticky />
+      <Header title="トーク" />
       <BottomNavigation />
     </>
   );
