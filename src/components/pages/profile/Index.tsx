@@ -4,7 +4,7 @@ import Header, { ActionItem } from '../../organisms/Header';
 const Profile = () => {
   return (
     <>
-      <Header title="プロフィール" isSticky />
+      <Header title="プロフィール" />
       <BottomNavigation />
     </>
   );

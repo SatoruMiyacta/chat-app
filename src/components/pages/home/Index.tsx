@@ -1,11 +1,10 @@
-import Menu, { MenuItem, MenuProps } from '../../molecules/Menu';
-import BottomNavigation from '../../organisms/BottomNavigation';
-import Header, { ActionItem } from '../../organisms/Header';
+import BottomNavigation from '@/components/organisms/BottomNavigation';
+import Header, { ActionItem } from '@/components/organisms/Header';
 
 const Home = () => {
   return (
     <>
-      <Header title="ホーム" isSticky />
+      <Header title="ホーム" />
       <BottomNavigation />
     </>
   );
