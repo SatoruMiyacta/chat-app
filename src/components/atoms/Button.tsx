@@ -5,6 +5,7 @@ export interface ButtonProps {
   variant: 'contained' | 'outlined' | 'text';
   children: React.ReactNode;
   onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  className?: string;
   isFullWidth?: boolean;
   isDisabled?: boolean;
 }
@@ -15,9 +16,15 @@ const Button = ({
   isFullWidth = false,
   isDisabled = false,
   children,
+  className,
   onClick,
 }: ButtonProps) => {
-  const classNameList = [styles.button, styles[color], styles[variant]];
+  const classNameList = [
+    styles.button,
+    styles[color],
+    styles[variant],
+    className,
+  ];
   if (isFullWidth) {
     classNameList.push(styles.fullWidth);
   }

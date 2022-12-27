@@ -1,2 +1,1 @@
 export { useContactForm } from './useContactForm';
-

@@ -1,18 +1,22 @@
-import styles from './Menu.module.css';
 import { useState, useRef, useEffect } from 'react';
-import Button from '../atoms/Button';
 
-export interface item {
+import styles from './Menu.module.css';
+
+import Button from '@/components/atoms/Button';
+import type { ButtonProps } from '@/components/atoms/Button';
+
+export interface MenuItem {
   label: React.ReactNode;
   onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 export interface MenuProps {
-  items: item[];
+  items: MenuItem[];
   buttonChildren: React.ReactNode;
+  buttonColor?: ButtonProps['color'];
 }
 
-const Menu = ({ items, buttonChildren }: MenuProps) => {
+const Menu = ({ items, buttonChildren, buttonColor = 'gray' }: MenuProps) => {
   const [open, setOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState('lowerLeft');
   const menuRef = useRef<HTMLUListElement>(null);
@@ -85,7 +89,11 @@ const Menu = ({ items, buttonChildren }: MenuProps) => {
   return (
     <div className={styles.menuContainer}>
       <div ref={buttonRef}>
-        <Button color="gray" variant="text" onClick={() => setOpen(true)}>
+        <Button
+          color={buttonColor}
+          variant="text"
+          onClick={() => setOpen(true)}
+        >
           {buttonChildren}
         </Button>
       </div>

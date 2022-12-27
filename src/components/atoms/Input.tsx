@@ -1,5 +1,6 @@
-import styles from './Input.module.css';
 import { useState, useEffect, useRef } from 'react';
+
+import styles from './Input.module.css';
 
 interface InputType {
   color: 'primary' | 'black';

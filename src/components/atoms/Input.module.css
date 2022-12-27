@@ -1,9 +1,9 @@
 .input {
-  height: 48px;
   width: 390px;
+  height: 48px;
   padding-left: 16px;
-  border-radius: 5px;
   color: #333;
+  border-radius: 5px;
 }
 
 .textarea {
@@ -47,8 +47,8 @@
   position: absolute;
   top: 24px;
   left: 16px;
-  transform: translateY(-50%);
   color: #8c8a8a;
+  transform: translateY(-50%);
 }
 
 .icon + label .outlined {
@@ -66,9 +66,9 @@
   position: absolute;
   top: 0;
   left: 16px;
-  transform: translate(-15%, -50%) scale(0.75);
   padding: 0 6px;
   transition: all 0.2s ease;
+  transform: translate(-15%, -50%) scale(0.75);
 }
 
 .isError .outlined {
@@ -79,22 +79,22 @@
   position: absolute;
   top: 0;
   left: 16px;
-  transform: translate(-20%, -50%) scale(0.75);
   padding: 0 6px;
-  background: #fff;
   color: #ff971d;
+  background: #fff;
   transition: all 0.2s ease;
+  transform: translate(-20%, -50%) scale(0.75);
 }
 
 .primary.outlined:focus + .icon.label {
   position: absolute;
   top: 0;
   left: 16px;
-  transform: translate(-15%, -50%) scale(0.75);
   padding: 0 6px;
-  background: #fff;
   color: #ff971d;
+  background: #fff;
   transition: all 0.2s ease;
+  transform: translate(-15%, -50%) scale(0.75);
 }
 
 .primary.outlined:focus {
@@ -105,27 +105,27 @@
   position: absolute;
   top: 0;
   left: 12px;
-  transform: translate(-20%, -50%) scale(0.75);
   padding: 0 6px;
-  background: #fff;
   color: #333;
+  background: #fff;
   transition: all 0.2s ease;
+  transform: translate(-20%, -50%) scale(0.75);
 }
 
 .black.outlined:focus + .icon.label {
   position: absolute;
   top: 0;
   left: 12px;
-  transform: translate(-15%, -50%) scale(0.75);
   padding: 0 6px;
-  background: #fff;
   color: #333;
+  background: #fff;
   transition: all 0.2s ease;
+  transform: translate(-15%, -50%) scale(0.75);
 }
 
 .black.outlined:focus {
-  border-color: #333;
   color: #333;
+  border-color: #333;
 }
 
 .input.standard {
@@ -146,8 +146,8 @@
   position: absolute;
   top: 24px;
   left: 0;
-  transform: translateY(-50%);
   color: #8c8a8a;
+  transform: translateY(-50%);
 }
 
 .icon + label .standard {
@@ -165,8 +165,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  transform: translate(-15%, -50%) scale(0.75);
   transition: all 0.2s ease;
+  transform: translate(-15%, -50%) scale(0.75);
 }
 
 .isError .standard {
@@ -177,18 +177,18 @@
   position: absolute;
   top: 0;
   left: 0;
-  transform: translate(-15%, -50%) scale(0.75);
   color: #ff971d;
   transition: all 0.2s ease;
+  transform: translate(-15%, -50%) scale(0.75);
 }
 
 .primary.standard:focus + .icon.label {
   position: absolute;
   top: 0;
   left: 0;
-  transform: translate(-13%, -50%) scale(0.75);
   color: #ff971d;
   transition: all 0.2s ease;
+  transform: translate(-13%, -50%) scale(0.75);
 }
 
 .primary.standard:focus {
@@ -199,18 +199,18 @@
   position: absolute;
   top: 0;
   left: 0;
-  transform: translate(-15%, -50%) scale(0.75);
   color: #333;
   transition: all 0.2s ease;
+  transform: translate(-15%, -50%) scale(0.75);
 }
 
 .black.standard:focus + .icon.label {
   position: absolute;
   top: 0;
   left: 0;
-  transform: translate(-13%, -50%) scale(0.75);
   color: #333;
   transition: all 0.2s ease;
+  transform: translate(-13%, -50%) scale(0.75);
 }
 
 .black.standard:focus {
@@ -219,10 +219,10 @@
 
 .input.filled {
   padding-left: 12px;
+  background: #f9f6f7;
   border: none;
   border-bottom: solid 1px #d4d4d4;
   border-radius: 5px 5px 0 0;
-  background: #f9f6f7;
 }
 
 .filled .iconNone + .label {
@@ -236,8 +236,8 @@
   position: absolute;
   top: 24px;
   left: 12px;
-  transform: translateY(-50%);
   color: #8c8a8a;
+  transform: translateY(-50%);
 }
 
 .icon + label .filled {
@@ -255,8 +255,8 @@
   position: absolute;
   top: 0;
   left: 12px;
-  transform: translate(-15%, -50%) scale(0.75);
   transition: all 0.2s ease;
+  transform: translate(-15%, -50%) scale(0.75);
 }
 
 .isError .filled {
@@ -267,18 +267,18 @@
   position: absolute;
   top: 0;
   left: 12px;
-  transform: translate(-15%, -50%) scale(0.75);
   color: #ff971d;
   transition: all 0.2s ease;
+  transform: translate(-15%, -50%) scale(0.75);
 }
 
 .primary.filled:focus + .icon.label {
   position: absolute;
   top: 0;
   left: 12px;
-  transform: translate(-13%, -50%) scale(0.75);
   color: #ff971d;
   transition: all 0.2s ease;
+  transform: translate(-13%, -50%) scale(0.75);
 }
 
 .primary.filled:focus {
@@ -289,18 +289,18 @@
   position: absolute;
   top: 0;
   left: 12px;
-  transform: translate(-15%, -50%) scale(0.75);
   color: #333;
   transition: all 0.2s ease;
+  transform: translate(-15%, -50%) scale(0.75);
 }
 
 .black.filled:focus + .icon.label {
   position: absolute;
   top: 0;
   left: 12px;
-  transform: translate(-13%, -50%) scale(0.75);
   color: #333;
   transition: all 0.2s ease;
+  transform: translate(-13%, -50%) scale(0.75);
 }
 
 .black.filled:focus {
@@ -341,9 +341,9 @@
   width: 390px;
   min-height: 48px;
   padding: 11px 16px;
-  border-radius: 5px;
   color: #333;
   resize: none;
+  border-radius: 5px;
 }
 
 .multiLines.small {
@@ -358,8 +358,8 @@
 }
 
 .multiLines.rounded {
-  border-radius: 24px;
   overflow: auto;
+  border-radius: 24px;
 }
 
 .textfiled　.inputLabel .multiLines {
@@ -371,15 +371,15 @@
 }
 
 .multiLines.rounded::-webkit-scrollbar-track {
+  margin: 8px 0;
   background-color: rgba(248, 248, 248, 0.3);
   border-radius: 5px;
-  margin: 8px 0;
 }
 
 .multiLines.rounded::-webkit-scrollbar-thumb {
+  margin: 8px 0;
   background-color: rgba(66, 66, 66, 0.3);
   border-radius: 5px;
-  margin: 8px 0;
 }
 
 .multiLines:focus {
