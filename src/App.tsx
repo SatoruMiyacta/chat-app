@@ -1,47 +1,47 @@
-import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+// import { useState } from 'react';
+// import { Routes, Route } from 'react-router-dom';
 
-import { useContactForm } from './hooks/index';
+// import { useContactForm } from './hooks/index';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
-import {
-  fas,
-  faEnvelope,
-  faIdCard,
-  faLock,
-  faUser,
-  faXmark,
-  faUsers,
-  faCommentMedical,
-  faMessage,
-  faCircleUser,
-  faEllipsisVertical,
-  faPenToSquare,
-  faTrash,
-  faFloppyDisk,
-  faUserPlus,
-  faChevronLeft,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+// import {
+//   faEnvelope,
+//   faIdCard,
+//   faLock,
+//   faUser,
+//   faXmark,
+//   faUsers,
+//   faCommentMedical,
+//   faMessage,
+//   faCircleUser,
+//   faEllipsisVertical,
+//   faPenToSquare,
+//   faTrash,
+//   faFloppyDisk,
+//   faUserPlus,
+//   faChevronLeft,
+// } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import Button, { ButtonProps } from '@/components/atoms/Button';
-import Checkbox, {
-  checkoboxItem,
-  CheckboxProps,
-} from '@/components/atoms/Checkbox';
-import Fab, { FabProps } from '@/components/atoms/FloatingActionButton';
-import Heading, { HeadingProps } from '@/components/atoms/Heading';
-import Input, { InputProps } from '@/components/atoms/Input';
-import Tabs, { TabsItem, TabsProps } from '@/components/atoms/Tabs';
-import Menu, { MenuItem, MenuProps } from '@/components/molecules/Menu';
-import Modal, { ModalProps } from '@/components/molecules/Modal';
-import BottomNavigation from '@/components/organisms/BottomNavigation';
-import Header, { ActionItem, HeaderProps } from '@/components/organisms/Header';
-import Home from '@/components/pages/home/Index';
-import Profile from '@/components/pages/profile/Index';
-import Rooms from '@/components/pages/rooms/Index';
+// import Button, { ButtonProps } from '@/components/atoms/Button';
+// import Checkbox, {
+//   checkoboxItem,
+//   CheckboxProps,
+// } from '@/components/atoms/Checkbox';
+// import Fab, { FabProps } from '@/components/atoms/FloatingActionButton';
+// import Heading, { HeadingProps } from '@/components/atoms/Heading';
+// import Input, { InputProps } from '@/components/atoms/Input';
+// import Tabs, { TabsItem, TabsProps } from '@/components/atoms/Tabs';
+// import Menu, { MenuItem, MenuProps } from '@/components/molecules/Menu';
+// import Modal, { ModalProps } from '@/components/molecules/Modal';
+// import BottomNavigation from '@/components/organisms/BottomNavigation';
+// import Header, { ActionItem, HeaderProps } from '@/components/organisms/Header';
+// import Home from '@/components/pages/home/Index';
+// import Profile from '@/components/pages/profile/Index';
+// import Rooms from '@/components/pages/rooms/Index';
 
 // import './App.css';
 
@@ -502,7 +502,7 @@ const App = () => {
 
   return (
     <>
-      <Routes>
+      {/* <Routes>
         <Route path="/" element={<Home />} />
       </Routes>
       <Routes>
@@ -510,7 +510,7 @@ const App = () => {
       </Routes>
       <Routes>
         <Route path="/profile" element={<Profile />} />
-      </Routes>
+      </Routes> */}
     </>
   );
 };
