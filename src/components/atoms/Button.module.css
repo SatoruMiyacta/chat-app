@@ -1,7 +1,4 @@
 .button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 48px;
   padding: 0 16px;
   cursor: pointer;
@@ -18,13 +15,15 @@
   background-color: #ff8f0f;
 }
 
-.contained.gray {
-  color: #fff;
+.contained.inherit {
+  color: inherit;
   background-color: #c2c1c1;
+  box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.1);
 }
 
-.contained.gray:hover {
-  background-color: #afafaf;
+.contained.inherit:hover {
+  background-color: #fff;
+  box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.1);
 }
 
 .contained.white {
@@ -61,15 +60,15 @@
   border-color: #ff8f0f;
 }
 
-.outlined.gray {
-  color: #c2c1c1;
-  border-color: #c2c1c1;
+.outlined.inherit {
+  color: inherit;
+  border-color: inherit;
 }
 
-.outlined.gray:hover {
-  color: #afafaf;
+.outlined.inherit:hover {
+  /* color: #afafaf; */
   background-color: rgba(175, 175, 175, 0.1);
-  border-color: #afafaf;
+  /* border-color: #afafaf; */
 }
 
 .outlined.white {
@@ -105,10 +104,10 @@
   background-color: rgba(255, 143, 15, 0.1);
 }
 
-.text.gray {
-  color: #c2c1c1;
+.text.inherit {
+  color: inherit;
 }
-.text.gray:hover {
+.text.inherit:hover {
   background-color: rgba(175, 175, 175, 0.1);
 }
 

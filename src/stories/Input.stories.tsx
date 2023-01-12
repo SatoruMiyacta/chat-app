@@ -24,7 +24,6 @@ export default {
 } as ComponentMeta<typeof Input>;
 
 const emailIcon = <FontAwesomeIcon icon={faEnvelope} />;
-const passwordIcon = <FontAwesomeIcon icon={faLock} />;
 const searchIcon = <FontAwesomeIcon icon={faMagnifyingGlass} />;
 const profileIcon = <FontAwesomeIcon icon={faCircleUser} />;
 const homeIcon = <FontAwesomeIcon icon={faHouse} />;
@@ -118,21 +117,7 @@ const Template: ComponentStory<typeof Input> = (args) => (
         />
       </li>
     </ul>
-    <p>password</p>
-    <ul>
-      <li>
-        <Input
-          {...args}
-          type="password"
-          variant="standard"
-          startIcon={passwordIcon}
-          label="パスワード（半角英数字6文字以上）"
-          id="outlinedPasswordLabel"
-          errorMessage=""
-          value=""
-        />
-      </li>
-    </ul>
+
     <p>wide</p>
     <ul>
       <li className="wide">
