@@ -12,8 +12,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const BottomNavigation = () => {
   const location = useLocation();
 
+  // 部分一致にする
   const getActiveClass = (path: string) => {
-    if (location.pathname === path) return styles.active;
+    const result = path.slice(1);
+    if (location.pathname.indexOf(result) > 0) {
+      return styles.active;
+    } else if (location.pathname === path) {
+      return styles.active;
+    }
   };
 
   return (
@@ -39,6 +45,7 @@ const BottomNavigation = () => {
             トーク
           </Link>
         </li>
+
         <li>
           <Link className={getActiveClass('/profile')} to={'/profile'}>
             <FontAwesomeIcon
