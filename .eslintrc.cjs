@@ -79,6 +79,11 @@ module.exports = {
             position: 'before',
           },
           {
+            pattern: '@slack/webhook',
+            group: 'index',
+            position: 'before',
+          },
+          {
             pattern: '@/{types,utils}/**',
             group: 'index',
             position: 'before',

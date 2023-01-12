@@ -78,3 +78,8 @@ ul {
   padding: 0;
   list-style-type: none;
 }
+
+input:-webkit-autofill {
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
