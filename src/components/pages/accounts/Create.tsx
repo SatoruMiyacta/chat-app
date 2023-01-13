@@ -145,7 +145,7 @@ const CreateAcconunts = () => {
                 errorMessage={nameErrorMessage}
                 startIcon={<FontAwesomeIcon icon={faIdCard} />}
                 onChange={(event) => setName(event.target.value)}
-                onBlur={() => setNameErrorMessage(nameComplete())}
+                // onBlur={() => setNameErrorMessage(nameComplete())}
               />
             </div>
             <div className={styles.emailForm}>
