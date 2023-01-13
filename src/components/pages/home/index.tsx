@@ -16,7 +16,6 @@ import Header from '@/components/organisms/Header';
 
 const Home = () => {
   const [search, setSearch] = useState('');
-
   const [activeIndex, setActiveIndex] = useState(0);
 
   const [items, setItems] = useState<TabsItem[]>([

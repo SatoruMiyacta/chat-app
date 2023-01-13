@@ -25,7 +25,6 @@ const DeleteAccount = () => {
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalTitle, setModalTitle] = useState('');
-
   const {
     passwordComplete,
     setPasswordErrorMessage,

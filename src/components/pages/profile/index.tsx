@@ -15,6 +15,7 @@ import { authUserAtom, UserData, usersAtom } from '@/store/user';
 const Profile = () => {
   const [authUser, setAuthUser] = useAtom(authUserAtom);
   const [users, setUsers] = useAtom(usersAtom);
+
   const navigate = useNavigate();
   const { fetchUserData, myIconUrl, userName } = useProfile();
   const [actionItems, setActionItems] = useState<ActionItem[]>([

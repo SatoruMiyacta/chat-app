@@ -26,6 +26,7 @@ const ResetPassword = () => {
   const [modalMessage, setModalMessage] = useState('');
   const [modalTitle, setModalTitle] = useState('');
   const { email, setEmail, isComplete } = useResetPassword();
+
   const navigate = useNavigate();
 
   const handleClick = async () => {
