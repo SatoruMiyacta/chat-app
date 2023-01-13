@@ -34,19 +34,17 @@
 
 .label {
   color: #8c8a8a;
-  background: #fff;
   pointer-events: none;
+  background: #fff;
 }
 
 .input.outlined {
   border-color: #b4b4b4;
 }
 
-
 .input.outlined.rounded {
-    border-radius: 24px;
+  border-radius: 24px;
 }
-
 
 .outlined .iconNone + .label {
   position: absolute;
@@ -150,8 +148,6 @@
 .input.standard.rounded {
   border-radius: 24px;
 }
-
-
 
 .standard .iconNone + .label {
   position: absolute;
