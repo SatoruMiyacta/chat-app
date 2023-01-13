@@ -1,1 +1,1 @@
-export { userDataAtom } from '@/store/user';
+export { authUserAtom } from '@/store/user';
