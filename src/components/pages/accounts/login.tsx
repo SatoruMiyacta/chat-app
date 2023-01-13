@@ -5,14 +5,15 @@ import { FirebaseError } from 'firebase/app';
 
 import styles from './login.module.css';
 
+import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
 import CoverImage from '@/components/organisms/CoverImage';
 import Header from '@/components/organisms/Header';
-import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { getFirebaseError } from '@/utils/firebaseErrorMessage';
 
