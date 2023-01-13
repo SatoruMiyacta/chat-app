@@ -3,9 +3,9 @@ import styles from './Modal.module.css';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import Button, { ButtonProps } from '@/components/atoms/Button';
-import Heading from '@/components/atoms/Heading';
+import Button from '@/components/atoms/Button';
 import type { HeadingProps } from '@/components/atoms/Heading';
+import Heading from '@/components/atoms/Heading';
 
 export interface ModalProps {
   children: React.ReactNode;
