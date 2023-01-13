@@ -3,8 +3,7 @@ export const fetchSlackApi = async (
   email: string,
   contactText: string
 ) => {
-  const url =
-    'https://hooks.slack.com/services/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';
+  const url = import.meta.env.VITE_SLACK_WEBHOOK_URL;
   try {
     const res = await fetch(url, {
       method: 'POST',
