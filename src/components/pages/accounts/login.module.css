@@ -1,0 +1,53 @@
+.contents {
+  margin-top: 64px;
+  text-align: right;
+}
+
+.passwordForm {
+  margin-top: 24px;
+}
+
+.forgotPasswordButton {
+  margin-top: 16px;
+}
+
+.signInButton {
+  margin-top: 72px;
+}
+
+.createAccountButton {
+  margin: 32px auto 0 auto;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.modalButton {
+  margin-top: 16px;
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    display: flex;
+  }
+
+  .responsiveTitle {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+    color: #ff971d;
+  }
+
+  .container > img {
+    width: 50vw;
+    height: 100vh;
+  }
+
+  .inner {
+    width: 50vw;
+    padding: 16px;
+  }
+}
+

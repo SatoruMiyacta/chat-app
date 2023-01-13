@@ -14,7 +14,7 @@ import BaCkgroundImage from '@/components/organisms/BackgroundImage';
 import Header, { ActionItem } from '@/components/organisms/Header';
 
 import { useEditProfile } from '@/hooks/useEditProfile';
-import { userDataAtom } from '@/store';
+import { authUserAtom } from '@/store';
 
 const EditProfile = () => {
   const [actionItems, setActionItems] = useState<ActionItem[]>([
@@ -23,7 +23,7 @@ const EditProfile = () => {
       onClick: (event) => onSave(),
     },
   ]);
-  const [userData, setUserData] = useAtom(userDataAtom);
+  const [userData, setUserData] = useAtom(authUserAtom);
 
   const {
     onFileload,

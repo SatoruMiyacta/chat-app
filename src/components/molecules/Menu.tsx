@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import styles from './Menu.module.css';
 
-import Button from '@/components/atoms/Button';
 import type { ButtonProps } from '@/components/atoms/Button';
+import Button from '@/components/atoms/Button';
 
 export interface MenuItem {
   label: React.ReactNode;
@@ -16,7 +16,11 @@ export interface MenuProps {
   buttonColor?: ButtonProps['color'];
 }
 
-const Menu = ({ items, buttonChildren, buttonColor = 'gray' }: MenuProps) => {
+const Menu = ({
+  items,
+  buttonChildren,
+  buttonColor = 'inherit',
+}: MenuProps) => {
   const [open, setOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState('lowerLeft');
   const menuRef = useRef<HTMLUListElement>(null);
