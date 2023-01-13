@@ -68,14 +68,14 @@ Primary.args = {
   color: 'primary',
   children: 'ボタン',
 };
-export const Gray = Template.bind({});
-Gray.args = {
-  color: 'gray',
+export const Inherit = Template.bind({});
+Inherit.args = {
+  color: 'inherit',
   children: 'ボタン',
 };
-export const GrayIconText = Template.bind({});
-GrayIconText.args = {
-  color: 'gray',
+export const InheritIconText = Template.bind({});
+InheritIconText.args = {
+  color: 'inherit',
   children: <FontAwesomeIcon icon={faEllipsisVertical} />,
 };
 export const WhiteText = Template.bind({});

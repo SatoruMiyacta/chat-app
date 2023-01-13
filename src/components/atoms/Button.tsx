@@ -1,7 +1,7 @@
 import styles from './Button.module.css';
 
 export interface ButtonProps {
-  color: 'primary' | 'gray' | 'white' | 'danger';
+  color: 'primary' | 'inherit' | 'white' | 'danger';
   variant: 'contained' | 'outlined' | 'text';
   children: React.ReactNode;
   onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;

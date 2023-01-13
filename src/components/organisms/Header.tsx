@@ -20,6 +20,7 @@ export interface ActionItem {
 
 export interface HeaderProps {
   title: string;
+  className?: string;
   showBackButton?: boolean;
   actionItems?: ActionItem[];
   menu?: MenuProps['items'];
@@ -27,6 +28,7 @@ export interface HeaderProps {
 
 const Header = ({
   title,
+  className,
   actionItems,
   showBackButton = false,
   menu,
@@ -60,9 +62,10 @@ const Header = ({
   if (menu?.length !== 0 || actionItems?.length !== 0) {
     headerStyle.paddingRight = '8px';
   }
+  const headerClassList = [styles.header, className];
 
   return (
-    <header className={styles.header} style={headerStyle}>
+    <header className={headerClassList.join(' ')} style={headerStyle}>
       {showBackButton && (
         <Button
           className={styles.backButton}

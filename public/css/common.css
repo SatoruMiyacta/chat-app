@@ -6,3 +6,22 @@ html {
   pointer-events: none;
   opacity: 0.3;
 }
+
+.inner {
+  padding-right: 16px;
+  padding-left: 16px;
+}
+
+@media screen and (min-width:1024px) {
+  .sp.responsive {
+    display: none;
+  }
+}
+
+@media screen and (max-width:1023px) {
+  .pc.responsive {
+    display: none;
+  }
+}
+
+

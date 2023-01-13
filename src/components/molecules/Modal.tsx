@@ -3,13 +3,13 @@ import styles from './Modal.module.css';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import Button, { ButtonProps } from '@/components/atoms/Button';
-import Heading from '@/components/atoms/Heading';
+import Button from '@/components/atoms/Button';
 import type { HeadingProps } from '@/components/atoms/Heading';
+import Heading from '@/components/atoms/Heading';
 
 export interface ModalProps {
   children: React.ReactNode;
-  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+  onClose: (event: React.MouseEvent<HTMLElement>) => void;
   title?: string;
   titleAlign?: HeadingProps['align'];
   showCloseButton?: boolean;
@@ -20,7 +20,7 @@ export interface ModalProps {
 
 const Modal = ({
   children,
-  onClick,
+  onClose,
   title,
   titleAlign = 'start',
   showCloseButton = false,
@@ -28,10 +28,6 @@ const Modal = ({
   isBold,
   hasInner,
 }: ModalProps) => {
-  const onClose = (event: React.MouseEvent<HTMLElement>) => {
-    onClick(event);
-  };
-
   const childrenClassList = [];
   if (hasInner) childrenClassList.push(styles.inner);
 
@@ -47,7 +43,7 @@ const Modal = ({
         )}
         {showCloseButton && (
           <Button
-            color="gray"
+            color="inherit"
             variant="text"
             onClick={onClose}
             className={styles.closeButton}
@@ -61,17 +57,15 @@ const Modal = ({
 
   if (isOpen) {
     return (
-      <>
-        <div className={styles.overlay} onClick={onClose}>
-          <div
-            className={styles.content}
-            onClick={(event) => event.stopPropagation()}
-          >
-            {createHeader(title, showCloseButton)}
-            <div className={childrenClassList.join(' ')}>{children}</div>
-          </div>
+      <div className={styles.overlay} onClick={onClose}>
+        <div
+          className={styles.content}
+          onClick={(event) => event.stopPropagation()}
+        >
+          {createHeader(title, showCloseButton)}
+          <div className={childrenClassList.join(' ')}>{children}</div>
         </div>
-      </>
+      </div>
     );
   }
   return null;

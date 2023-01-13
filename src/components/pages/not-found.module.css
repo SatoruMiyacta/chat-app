@@ -1,0 +1,27 @@
+.container {
+  padding: 16px;
+  text-align: center;
+}
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+}
+
+.notFound > span {
+  font-size: 0.8em;
+}
+
+.sentence {
+  margin-top: 32px;
+  color: #8c8a8a;
+}
+
+.sentence > span {
+  margin-left: 8px;
+}
+
+.button {
+  width: 240px;
+  margin-top: 24px;
+}

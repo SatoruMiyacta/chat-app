@@ -1,0 +1,10 @@
+.contents {
+  position: relative;
+  z-index: 10;
+  padding-top: 24px;
+  background-color: #fff;
+}
+
+.BackgroundImage {
+  pointer-events: none;
+}

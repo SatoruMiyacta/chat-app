@@ -79,6 +79,11 @@ module.exports = {
             position: 'before',
           },
           {
+            pattern: '@slack/webhook',
+            group: 'index',
+            position: 'before',
+          },
+          {
             pattern: '@/{types,utils}/**',
             group: 'index',
             position: 'before',
@@ -94,15 +99,5 @@ module.exports = {
         'newlines-between': 'always',
       },
     ],
-    // indentation: 2,
-    // 'string-quotes': 'single',
-    // 'no-duplicate-selectors': true,
-    // 'color-hex-case ': 'lower',
-    // 'color-hex-length': 'short',
-    // 'color-named': 'never',
-    // 'selector-attribute-operator-space-before': 'always',
-    // 'selector-attribute-operator -space-after': 'always',
-    // 'selector-attribute-brackets-space-inside': 'always',
-    // 'rule-empty-line-before': 'always-multi-line',
   },
 };
