@@ -1,78 +1,79 @@
-.uploadWrapper{
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 160px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
+.uploadWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 160px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
-.uploadWrapper::before{  
-    background: inherit;  
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 105%;
-    filter: blur(5px); 
-    top: -5px;
-    right: 0;
-    bottom: 0;
-    left: 0;
+.uploadWrapper::before {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 105%;
+  content: '';
+  background: inherit;
+  filter: blur(5px);
 }
 
 .inner {
-    z-index: 80;
+  z-index: 80;
 }
 
 .uploadWrapper.under > .uploadIconButton,
 .uploadWrapper.left > .uploadIconButton,
-.uploadWrapper.right > .uploadIconButton{
-    transform: translateY(50%);
+.uploadWrapper.right > .uploadIconButton {
+  transform: translateY(50%);
 }
 
 .uploadWrapper.under {
-    align-items: flex-end;
-    justify-content: center;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .uploadWrapper.left {
-    align-items: flex-end;
+  align-items: flex-end;
 }
 
 .uploadWrapper.right {
-    align-items: flex-end;
-    justify-content: end;
+  align-items: flex-end;
+  justify-content: end;
 }
 
-.uploadIconButton{
-    position: relative;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
+.uploadIconButton {
+  position: relative;
+  z-index: 20;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
 }
 
-.uploadIconButton > img{
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
+.uploadIconButton > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.uploadInput{
-    display: none;
+.uploadInput {
+  display: none;
 }
 
 .cameraIcon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 2px;
-    border: 1px solid #333;
-    border-radius: 50%;
-    background-color: #fff;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  background-color: #fff;
+  border: 1px solid #333;
+  border-radius: 50%;
 }

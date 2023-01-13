@@ -5,24 +5,23 @@ import { Route, Routes } from 'react-router-dom';
 // import { far } from '@fortawesome/free-regular-svg-icons';
 // import { fas } from '@fortawesome/free-solid-svg-icons';
 
-import Login from '@/components/pages/accounts/login';
-import Home from '@/components/pages/home/index';
-import Profile from '@/components/pages/profile/index';
-import Rooms from '@/components/pages/rooms/index';
-import AuthProvider from '@/provider/AuthProvider';
-
 import './App.css';
 import Contact from './components/pages/accounts/contact';
 import CreateAcconunts from './components/pages/accounts/create';
+import Login from './components/pages/accounts/login';
 import ResetPassword from './components/pages/accounts/resetPassword';
 import CreateMember from './components/pages/group/createMember';
 import CreateName from './components/pages/group/createName';
 import Edit from './components/pages/group/editGroup';
+import Home from './components/pages/home/index';
 import NotFound from './components/pages/not-found';
 import DeleteAccount from './components/pages/profile/deleteAccount';
 import EditProfile from './components/pages/profile/editProfile';
+import Profile from './components/pages/profile/index';
 import ProfileLayout from './components/pages/profile/profileLayout';
+import Rooms from './components/pages/rooms/index';
 import Message from './components/pages/rooms/message';
+import AuthProvider from './provider/AuthProvider';
 
 // library.add(fas, far, fab);
 
