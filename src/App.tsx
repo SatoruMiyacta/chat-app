@@ -20,6 +20,7 @@ import Profile from '@/components/pages/profile/index';
 import ProfileLayout from '@/components/pages/profile/profileLayout';
 import Rooms from '@/components/pages/rooms/index';
 import Message from '@/components/pages/rooms/message';
+
 import AuthProvider from '@/provider/AuthProvider';
 import './App.css';
 // library.add(fas, far, fab);
