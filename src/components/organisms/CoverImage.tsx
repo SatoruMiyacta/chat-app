@@ -1,4 +1,4 @@
-import styles from './coverImage.module.css';
+import styles from './CoverImage.module.css';
 const CoverImage = () => {
   return (
     <>
