@@ -1,0 +1,17 @@
+.alertMessage {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border: 1px solid #ff971d;
+  border-radius: 5px;
+}
+
+.inner {
+  padding: 16px;
+}
+
+.passwordForm,
+.deleteButton {
+  margin-top: 32px;
+}
+

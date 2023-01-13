@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 
-import styles from './contact.module.css';
+import styles from './create.module.css';
 
 import {
-  faCircleQuestion,
   faEnvelope,
   faIdCard,
+  faLock,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -15,58 +16,76 @@ import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
+import BackgroundImage from '@/components/organisms/BackgroundImage';
 import CoverImage from '@/components/organisms/CoverImage';
 import Header from '@/components/organisms/Header';
 
-import { fetchSlackApi } from '@/utils/fetchSlackApi';
 import { getFirebaseError } from '@/utils/firebaseErrorMessage';
 
-import { useContact } from '@/hooks/useContact';
+import { INITIAL_ICON_URL } from '@/constants';
+import { useCreateAccounts } from '@/hooks';
+import { InitialUserData } from '@/hooks/useCreateAccounts';
 
-const Contact = () => {
+const CreateAcconunts = () => {
   const [open, setOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [modalTitle, setModalTitle] = useState('');
+  const [firebaseError, setFirebaseError] = useState('');
+  const navigate = useNavigate();
 
   const {
+    initialIconUrl,
+    signUp,
     name,
     setName,
     email,
     setEmail,
-    contactText,
-    setContactText,
+    password,
+    setPassword,
     nameErrorMessage,
     setNameErrorMessage,
-    contactTextErrorMessage,
-    setContactTextErrorMessage,
     nameComplete,
+    passwordErrorMessage,
+    setPasswordErrorMessage,
+    passwordComplete,
     isComplete,
-    contactTextComplete,
-  } = useContact();
+    onFileload,
+    uploadIcon,
+    registerUserDate,
+    userIconFile,
+    setInitialIconUrl,
+  } = useCreateAccounts();
 
   const handleClick = async () => {
     if (!isComplete()) return;
 
     try {
-      fetchSlackApi(name, email, contactText);
-      setModalMessage('メールが送信されました。');
-      setModalTitle('送信完了');
-      setOpen(true);
+      // emailとpasswordでサインアップ
+      // user情報を返す
+      const user = await signUp(email, password);
+      const useId = user.uid;
+
+      // リサイズされたプロフィールアイコンをcloudstorageにアップロードする
+      let userIconUrl = INITIAL_ICON_URL;
+      if (userIconFile) userIconUrl = await uploadIcon(userIconFile, useId);
+
+      const initialUserData: InitialUserData = { name, userIconUrl };
+      await registerUserDate(useId, initialUserData);
+
+      navigate('/');
     } catch (error) {
+      setOpen(true);
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
-        setModalMessage(getFirebaseError(errorCode));
+        console.log(errorCode);
+        setFirebaseError(getFirebaseError(errorCode));
       }
-      setModalTitle('エラー');
-      setOpen(true);
     }
   };
 
-  const showModal = () => {
+  const errorModal = () => {
     if (!open) return;
     return (
       <Modal
-        title={modalTitle}
+        title="エラー"
         titleAlign="center"
         isOpen={open}
         hasInner
@@ -74,7 +93,7 @@ const Contact = () => {
         onClose={() => setOpen(false)}
       >
         <span className={styles.modalContent}>
-          {modalMessage}
+          {firebaseError}
           <Button
             color="primary"
             variant="contained"
@@ -90,9 +109,9 @@ const Contact = () => {
 
   return (
     <>
-      {showModal()}
+      {errorModal()}
       <Header
-        title="お問い合わせ"
+        title="アカウント作成"
         className={`${styles.header} sp responsive`}
         showBackButton
       />
@@ -106,16 +125,21 @@ const Contact = () => {
             size="xxl"
             className={`${styles.responsiveTitle} pc responsive`}
           >
-            お問い合わせ
+            アカウント作成
           </Heading>
+          <BackgroundImage
+            hasCameraIcon
+            onChange={onFileload}
+            iconUrl={initialIconUrl}
+          />
           <div className={styles.formWrapper}>
             <div className={styles.userForm}>
               <Input
                 isFullWidth
                 type="text"
                 color="primary"
-                variant="outlined"
-                id="nameContact"
+                variant="standard"
+                id="textCreate"
                 label="ユーザーネーム"
                 value={name}
                 errorMessage={nameErrorMessage}
@@ -129,30 +153,28 @@ const Contact = () => {
                 isFullWidth
                 type="email"
                 color="primary"
-                variant="outlined"
-                id="emailContact"
+                variant="standard"
+                id="emailCreate"
                 label="メールアドレス"
                 value={email}
                 startIcon={<FontAwesomeIcon icon={faEnvelope} />}
                 onChange={(event) => setEmail(event.target.value)}
               />
             </div>
-            <div className={styles.contactForm}>
+            <div className={styles.passwordForm}>
               <Input
                 isFullWidth
-                type="text"
+                type="password"
                 color="primary"
-                variant="outlined"
-                id="contact"
-                label="お問い合わせ内容"
-                value={contactText}
-                errorMessage={contactTextErrorMessage}
-                startIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
-                onChange={(event) => setContactText(event.target.value)}
-                // onBlur={() => setContactTextErrorMessage(contactTextComplete())}
-                rows={4}
-                isMultiLines
-                maxLength={300}
+                variant="standard"
+                id="passwordCreate"
+                label="パスワード"
+                value={password}
+                errorMessage={passwordErrorMessage}
+                startIcon={<FontAwesomeIcon icon={faLock} />}
+                onChange={(event) => setPassword(event.target.value)}
+                onBlur={() => setPasswordErrorMessage(passwordComplete())}
+                minLength={10}
               />
             </div>
             <Button
@@ -163,7 +185,7 @@ const Contact = () => {
               isFullWidth
               isDisabled={!isComplete()}
             >
-              送信
+              作成
             </Button>
           </div>
         </div>
@@ -172,4 +194,4 @@ const Contact = () => {
   );
 };
 
-export default Contact;
+export default CreateAcconunts;
