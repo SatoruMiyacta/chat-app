@@ -1,24 +1,32 @@
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRef } from 'react';
+
 import styles from './BackgroundImage.module.css';
 
-export interface BaCkgroundImageProps {
-  onChange: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+export interface BackgroundImageProps {
   iconUrl: string;
+  onChange?: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
   hasCameraIcon?: boolean;
   iconPosition?: 'center' | 'under' | 'left' | 'right';
+  className?: string;
 }
 
-const BaCkgroundImage = ({
-  onChange,
+const BackgroundImage = ({
   iconUrl,
+  onChange,
   hasCameraIcon = false,
   iconPosition = 'center',
-}: BaCkgroundImageProps) => {
+  className,
+}: BackgroundImageProps) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const uploadWrapperClassList = [styles.uploadWrapper, styles[iconPosition]];
+  const uploadWrapperClassList = [
+    styles.uploadWrapper,
+    styles[iconPosition],
+    className,
+  ];
 
   return (
     <>
@@ -79,4 +87,4 @@ const BaCkgroundImage = ({
     </>
   );
 };
-export default BaCkgroundImage;
+export default BackgroundImage;
