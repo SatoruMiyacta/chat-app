@@ -1,0 +1,14 @@
+.contents {
+  position: relative;
+  z-index: 10;
+  padding-top: 64px;
+  background-color: #fff;
+}
+
+.emailForm {
+  margin-top: 32px;
+}
+
+.deleteButton {
+  margin-top: 64px;
+}
