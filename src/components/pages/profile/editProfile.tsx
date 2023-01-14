@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { FirebaseError } from 'firebase/app';
 import { useAtom } from 'jotai';
 
 import styles from './editProfile.module.css';
@@ -10,8 +11,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Button from '@/components/atoms/Button';
 import Input from '@/components/atoms/Input';
+import Modal from '@/components/molecules/Modal';
 import BaCkgroundImage from '@/components/organisms/BackgroundImage';
 import Header, { ActionItem } from '@/components/organisms/Header';
+
+import { getFirebaseError } from '@/utils/firebaseErrorMessage';
 
 import { INITIAL_ICON_URL } from '@/constants';
 import { useEditProfile } from '@/hooks/useEditProfile';
@@ -25,6 +29,8 @@ const EditProfile = () => {
     },
   ]);
   const [userData, setUserData] = useAtom(authUserAtom);
+  const [firebaseError, setFirebaseError] = useState('');
+  const [open, setOpen] = useState(false);
 
   const {
     onFileload,
@@ -53,22 +59,56 @@ const EditProfile = () => {
       if (userIconFile) userIconUrl = await uploadIcon(userIconFile, userUid);
       await saveUserData(userUid, userIconUrl, name, email);
       navigate('/profile');
-    } catch {}
+    } catch (error) {
+      setOpen(true);
+      if (error instanceof FirebaseError) {
+        const errorCode = error.code;
+        setFirebaseError(getFirebaseError(errorCode));
+      }
+    }
   };
 
-  useEffect(() => {
-    try {
-      if (userData) {
-        const userId = userData.uid;
-        getMyUserData(userId);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const errorModal = () => {
+    if (!open) return;
+    return (
+      <Modal
+        title="エラー"
+        titleAlign="center"
+        isOpen={open}
+        hasInner
+        isBold
+        onClose={() => setOpen(false)}
+      >
+        <span className={styles.modalContent}>
+          {firebaseError}
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => setOpen(false)}
+            className={styles.modalButton}
+            isFullWidth
+          >
+            OK
+          </Button>
+        </span>
+      </Modal>
+    );
+  };
+
+  // useEffect(() => {
+  //   try {
+  //     if (userData) {
+  //       const userId = userData.uid;
+  //       getMyUserData(userId);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   return (
     <>
+      {errorModal}
       <Header title="プロフィール" actionItems={actionItems} showBackButton />
       <main>
         <BaCkgroundImage
