@@ -12,7 +12,6 @@ export const useProfile = () => {
   const [myIconUrl, setMyIconUrl] = useState('');
 
   const fetchUserData = async (userId: string) => {
-    // const fetchUserData = async (userId: string):Promise<UserData> => {
     const docRef = doc(db, 'users', `${userId}`);
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
