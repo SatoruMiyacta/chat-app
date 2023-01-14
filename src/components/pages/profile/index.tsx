@@ -27,14 +27,10 @@ const Profile = () => {
 
   try {
     // キャッシュのタイムアウト設定
-
-    // [userId: string]: { data: UserData; expiresIn: Date };
-
     if (authUser) {
       const userId = authUser.uid;
       const date = new Date();
       if (users[userId].expiresIn < date) {
-        // const data = await fetchUserData(userId);
         fetchUserData(userId).then((data) => {
           if (!data) return;
           const userData: UserData = {

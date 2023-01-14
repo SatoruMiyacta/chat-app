@@ -121,7 +121,7 @@ const Contact = () => {
                 errorMessage={nameErrorMessage}
                 startIcon={<FontAwesomeIcon icon={faIdCard} />}
                 onChange={(event) => setName(event.target.value)}
-                // onBlur={() => setNameErrorMessage(nameComplete())}
+                onBlur={() => setNameErrorMessage(nameComplete())}
               />
             </div>
             <div className={styles.emailForm}>
@@ -149,7 +149,7 @@ const Contact = () => {
                 errorMessage={contactTextErrorMessage}
                 startIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
                 onChange={(event) => setContactText(event.target.value)}
-                // onBlur={() => setContactTextErrorMessage(contactTextComplete())}
+                onBlur={() => setContactTextErrorMessage(contactTextComplete())}
                 rows={4}
                 isMultiLines
                 maxLength={300}

@@ -12,29 +12,34 @@ export const useContact = () => {
     if (!email) return false;
     if (!contactText) return false;
 
-    // const nameRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
-    // if (!nameRegex.test(name)) return false;
+    const nameRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
+    if (!nameRegex.test(name)) return false;
 
-    // const contactTextRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
-    // if (!contactTextRegex.test(contactText)) return false;
+    const emailRegex = new RegExp(
+      '^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+.[A-Za-z0-9]+$'
+    );
+    if (!emailRegex.test(email)) return false;
+
+    const contactTextRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
+    if (!contactTextRegex.test(contactText)) return false;
 
     return true;
   };
 
   const nameComplete = () => {
-    // const nameRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
-    // if (!nameRegex.test(name)) {
-    //   return '半角英数字か全角で入力してください';
-    // }
-    // return '';
+    const nameRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
+    if (!nameRegex.test(name)) {
+      return '半角英数字か日本語で入力してください';
+    }
+    return '';
   };
 
   const contactTextComplete = () => {
-    // const contactTextRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
-    // if (!contactTextRegex.test(contactText)) {
-    //   return '半角英数字か全角で入力してください';
-    // }
-    // return '';
+    const contactTextRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
+    if (!contactTextRegex.test(contactText)) {
+      return '半角英数字か日本語で入力してください';
+    }
+    return '';
   };
 
   return {

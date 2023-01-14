@@ -13,6 +13,7 @@ import Input from '@/components/atoms/Input';
 import BaCkgroundImage from '@/components/organisms/BackgroundImage';
 import Header, { ActionItem } from '@/components/organisms/Header';
 
+import { INITIAL_ICON_URL } from '@/constants';
 import { useEditProfile } from '@/hooks/useEditProfile';
 import { authUserAtom } from '@/store';
 
@@ -44,22 +45,22 @@ const EditProfile = () => {
   const navigate = useNavigate();
 
   const onSave = async () => {
-    // if (!isComplete) return;
-    // try {
-    //   if (!userData) return;
-    //   const userUid = userData.uid;
-    //   let userIconUrl = INITIAL_ICON_URL;
-    //   if (userIconFile) userIconUrl = await uploadIcon(userIconFile, userUid);
-    //   await saveUserData(userUid, userIconUrl, name, email);
-    //   navigate('/profile');
-    // } catch {}
+    if (!isComplete) return;
+    try {
+      if (!userData) return;
+      const userUid = userData.uid;
+      let userIconUrl = INITIAL_ICON_URL;
+      if (userIconFile) userIconUrl = await uploadIcon(userIconFile, userUid);
+      await saveUserData(userUid, userIconUrl, name, email);
+      navigate('/profile');
+    } catch {}
   };
 
   useEffect(() => {
     try {
       if (userData) {
-        // const userId = userData.uid;
-        // getMyUserData(userId);
+        const userId = userData.uid;
+        getMyUserData(userId);
       }
     } catch (error) {
       console.log(error);

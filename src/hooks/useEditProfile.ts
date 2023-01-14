@@ -17,18 +17,18 @@ export const useEditProfile = () => {
     if (!name) return false;
     if (!email) return false;
 
-    // const nameRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
-    // if (!nameRegex.test(name)) return false;
+    const nameRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
+    if (!nameRegex.test(name)) return false;
 
     return true;
   };
 
   const nameComplete = () => {
-    // const nameRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
-    // if (!nameRegex.test(name)) {
-    //   return '半角英数字か全角で入力してください';
-    // }
-    // return '';
+    const nameRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
+    if (!nameRegex.test(name)) {
+      return '半角英数字か全角で入力してください';
+    }
+    return '';
   };
 
   const getMyUserData = async (userId: string) => {
