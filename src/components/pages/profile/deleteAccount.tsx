@@ -20,11 +20,18 @@ import Header from '@/components/organisms/Header';
 import { getFirebaseError } from '@/utils/firebaseErrorMessage';
 
 import { useDeleteAccount } from '@/hooks/useDeleteAccount';
+import { authUserAtom } from '@/store';
+import { deleteUser } from 'firebase/auth';
+import { useAtom } from 'jotai';
 
 const DeleteAccount = () => {
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalTitle, setModalTitle] = useState('');
+  const [userData, setUserData] = useAtom(authUserAtom);
+
+  const navigate = useNavigate();
+
   const {
     passwordComplete,
     setPasswordErrorMessage,
@@ -38,8 +45,10 @@ const DeleteAccount = () => {
     if (!isComplete()) return;
 
     try {
-      setModalMessage('メールが送信されました。');
-      setModalTitle('送信完了');
+      if (!userData) return;
+      await deleteUser(userData);
+      setModalMessage('アカウントが削除されました。');
+      setModalTitle('削除完了');
       setOpen(true);
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -50,8 +59,6 @@ const DeleteAccount = () => {
       setOpen(true);
     }
   };
-
-  const navigate = useNavigate();
 
   const completeDelete = () => {
     if (!open) return;
@@ -69,7 +76,7 @@ const DeleteAccount = () => {
           <Button
             color="primary"
             variant="contained"
-            onClick={() => setOpen(false)}
+            onClick={() => navigate('/')}
             className={styles.modalButton}
           >
             OK
@@ -87,7 +94,7 @@ const DeleteAccount = () => {
         className={`${styles.header} sp responsive`}
         showBackButton
       />
-      <div className={styles.inner}>
+      <div className={`${styles.contents} inner`}>
         <Heading
           tag="h1"
           align="center"
@@ -97,10 +104,16 @@ const DeleteAccount = () => {
         >
           アカウント削除
         </Heading>
-        <p className={styles.alertMessage}>
-          <FontAwesomeIcon icon={faTriangleExclamation} color="#ff971d" />
-          アカウント削除すると、すべてデータは消えてしまいます。
-        </p>
+        <div className={styles.caution}>
+          <FontAwesomeIcon
+            icon={faTriangleExclamation}
+            color="#ff971d"
+            size="xl"
+          />
+          <p className={styles.alertMessage}>
+            アカウント削除すると、すべてデータは消えてしまいます。
+          </p>
+        </div>
         <div className={styles.passwordForm}>
           <Input
             isFullWidth
