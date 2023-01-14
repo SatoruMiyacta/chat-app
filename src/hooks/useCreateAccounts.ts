@@ -27,7 +27,7 @@ export const useCreateAccounts = () => {
     if (!email) return false;
     if (!password) return false;
 
-    const nameRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
+    const nameRegex = new RegExp('^[0-9a-zA-Z一-龠ァ-ンヴーぁ-んー]*$');
     if (!nameRegex.test(name)) return false;
 
     const passWordRegex = new RegExp('^[0-9a-zA-Z]*$');
@@ -38,9 +38,9 @@ export const useCreateAccounts = () => {
   };
 
   const nameComplete = () => {
-    const nameRegex = new RegExp('[^\x01-/:-@[-`{-~]+');
+    const nameRegex = new RegExp('^[0-9a-zA-Z一-龠ァ-ンヴーぁ-んー]*$');
     if (!nameRegex.test(name)) {
-      return '半角英数字か日本語で入力してください';
+      return '半角英数字か全角で入力してください';
     }
     return '';
   };
