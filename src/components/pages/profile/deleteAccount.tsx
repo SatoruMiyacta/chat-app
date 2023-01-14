@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
+import { deleteUser } from 'firebase/auth';
+import { useAtom } from 'jotai';
 
 import styles from './deleteAccount.module.css';
 
@@ -21,8 +23,6 @@ import { getFirebaseError } from '@/utils/firebaseErrorMessage';
 
 import { useDeleteAccount } from '@/hooks/useDeleteAccount';
 import { authUserAtom } from '@/store';
-import { deleteUser } from 'firebase/auth';
-import { useAtom } from 'jotai';
 
 const DeleteAccount = () => {
   const [open, setOpen] = useState(false);
