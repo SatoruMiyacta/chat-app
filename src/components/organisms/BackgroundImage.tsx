@@ -1,10 +1,11 @@
 import React, { useRef } from 'react';
 
+import Button from '../atoms/Button';
+
 import styles from './BackgroundImage.module.css';
 
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Button from '../atoms/Button';
 
 export interface BackgroundImageProps {
   iconUrl: string;

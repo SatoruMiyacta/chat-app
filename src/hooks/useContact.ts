@@ -1,5 +1,6 @@
-import { validateEmail } from '@/utils';
 import { useState } from 'react';
+
+import { validateEmail } from '@/utils';
 
 export const useContact = () => {
   const [userName, setName] = useState('');
