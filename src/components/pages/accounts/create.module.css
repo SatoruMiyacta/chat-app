@@ -1,8 +1,8 @@
 .formButtonWrapper {
   position: relative;
-  background-color: #fff;
-  padding-top: 64px;
   z-index: 10;
+  padding-top: 64px;
+  background-color: #fff;
 }
 
 .form {
@@ -32,10 +32,10 @@
 
   .iconImage {
     display: flex;
-    margin-left: 16px;
     margin-top: 64px;
+    margin-left: 16px;
   }
-  
+
   .contents > h1 {
     color: #ff971d;
   }

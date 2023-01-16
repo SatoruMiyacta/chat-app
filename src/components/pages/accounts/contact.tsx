@@ -15,12 +15,11 @@ import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
+import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
 
-import { getFirebaseError, sendToSlack } from '@/utils';
-
-import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import { useContact } from '@/hooks';
+import { getFirebaseError, sendToSlack } from '@/utils';
 
 const Contact = () => {
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);

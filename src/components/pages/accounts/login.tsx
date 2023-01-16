@@ -12,12 +12,11 @@ import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
+import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
 
-import { getFirebaseError, isValidPassword } from '@/utils';
-
-import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import { useLogin } from '@/hooks';
+import { getFirebaseError, isValidPassword } from '@/utils';
 
 const Login = () => {
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);

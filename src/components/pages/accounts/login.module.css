@@ -10,9 +10,9 @@
 }
 
 .form > button {
-  margin-left: auto;
-  margin-right: 0;
   width: fit-content;
+  margin-right: 0;
+  margin-left: auto;
 }
 
 .fullWidthButton {
@@ -36,7 +36,7 @@
     width: 50vw;
     margin: auto;
   }
-  
+
   .contents > h1 {
     color: #ff971d;
   }
@@ -44,5 +44,4 @@
   .form {
     margin-top: 64px;
   }
-
 }

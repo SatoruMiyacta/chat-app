@@ -15,11 +15,10 @@ import Modal from '@/components/molecules/Modal';
 import BaCkgroundImage from '@/components/organisms/BackgroundImage';
 import Header, { ActionItem } from '@/components/organisms/Header';
 
-import { getFirebaseError } from '@/utils';
-
 import { INITIAL_ICON_URL } from '@/constants';
 import { useEditProfile } from '@/hooks';
 import { authUserAtom } from '@/store';
+import { getFirebaseError } from '@/utils';
 
 const EditProfile = () => {
   const [userData, setUserData] = useAtom(authUserAtom);

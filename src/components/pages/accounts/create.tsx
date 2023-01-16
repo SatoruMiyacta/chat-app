@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import loadImage from 'blueimp-load-image';
 import { FirebaseError } from 'firebase/app';
 
 import styles from './create.module.css';
@@ -19,10 +20,10 @@ import Modal from '@/components/molecules/Modal';
 import BackgroundImage from '@/components/organisms/BackgroundImage';
 import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
+
 import { INITIAL_ICON_URL } from '@/constants';
 import { InitialUserData, useCreateAccounts } from '@/hooks';
 import { getFirebaseError, isValidPassword } from '@/utils';
-import loadImage from 'blueimp-load-image';
 
 const CreateAcconunts = () => {
   const [isErrorModal, setIsErrorModal] = useState(false);

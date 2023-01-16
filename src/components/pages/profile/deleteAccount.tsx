@@ -19,10 +19,9 @@ import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
 import Header from '@/components/organisms/Header';
 
-import { getFirebaseError } from '@/utils';
-
 import { useDeleteAccount } from '@/hooks';
 import { authUserAtom } from '@/store';
+import { getFirebaseError } from '@/utils';
 
 const DeleteAccount = () => {
   const [open, setOpen] = useState(false);

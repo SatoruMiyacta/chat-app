@@ -6,25 +6,23 @@
 .button.small {
   height: 32px;
   padding: 0 12px;
-  border-radius: 32px;
   font-size: 0.8rem;
+  border-radius: 32px;
 }
 
 .button.medium {
   height: 40px;
   padding: 0 14px;
-  border-radius: 40px;
   font-size: 0.9rem;
+  border-radius: 40px;
 }
 
 .button.large {
   height: 48px;
   padding: 0 16px;
-  border-radius: 48px;
   font-size: 1rem;
+  border-radius: 48px;
 }
-
-
 
 .contained.primary {
   color: #fff;
