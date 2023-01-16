@@ -1,12 +1,12 @@
 import {
-  faEllipsisVertical,
   faChevronLeft,
+  faEllipsisVertical,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Button from '@/components/atoms/Button';
 
-import type { ComponentStory, ComponentMeta } from '@storybook/react';
+import type { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
   title: 'components/Button',
@@ -49,6 +49,18 @@ const Template: ComponentStory<typeof Button> = (args) => (
       </li>
       <li>
         <Button {...args} variant="text" isDisabled />
+      </li>
+    </ul>
+    <p>sizes</p>
+    <ul>
+      <li>
+        <Button {...args} variant="contained" size="small" />
+      </li>
+      <li>
+        <Button {...args} variant="contained" size="medium" />
+      </li>
+      <li>
+        <Button {...args} variant="contained" size="large" />
       </li>
     </ul>
     <p>wide</p>
