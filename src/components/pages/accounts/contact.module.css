@@ -1,21 +1,24 @@
-.formWrapper {
-  padding: 16px;
+.controler {
+  margin-top: 24px;
 }
 
-.userForm {
+.contents {
   margin-top: 64px;
 }
 
-.emailForm {
-  margin-top: 32px;
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 320px;
 }
 
-.contactForm {
-  margin-top: 32px;
+.sendButton{
+  margin-top: 64px;
 }
 
-.createButton {
-  margin-top: 72px;
+.controler {
+  margin-top: 24px;
 }
 
 @media screen and (min-width: 1024px) {
@@ -23,21 +26,16 @@
     display: flex;
   }
 
-  .uploadWrapper {
+  .contents {
     width: 50vw;
-    height: 80px;
-    padding: 16px;
+    margin: auto;
   }
 
-  .responsiveTitle {
-    display: flex;
-    justify-content: center;
-    margin-top: 32px;
+  .contents > h1 {
     color: #ff971d;
   }
 
-  .formWrapper {
-    width: 50vw;
-    padding: 16px;
+  .form {
+    margin-top: 64px;
   }
 }

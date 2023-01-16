@@ -1,1 +1,1 @@
-export { INITIAL_ICON_URL } from './user';
+export * from './user';

@@ -19,9 +19,9 @@ import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
 import Header from '@/components/organisms/Header';
 
-import { getFirebaseError } from '@/utils/firebaseErrorMessage';
+import { getFirebaseError } from '@/utils';
 
-import { useDeleteAccount } from '@/hooks/useDeleteAccount';
+import { useDeleteAccount } from '@/hooks';
 import { authUserAtom } from '@/store';
 
 const DeleteAccount = () => {
@@ -68,7 +68,7 @@ const DeleteAccount = () => {
         titleAlign="center"
         isOpen={open}
         hasInner
-        isBold
+        isBoldTitle
         onClose={() => setOpen(false)}
       >
         <span className={styles.modalContent}>

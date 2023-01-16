@@ -3,34 +3,18 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import { auth } from '@/main';
+import { isValidPassword, validateEmail } from '@/utils';
 
 export const useLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+
   const isComplete = () => {
-    if (!email) return false;
-    if (!password) return false;
-
-    const passWordRegex = new RegExp('^[0-9a-zA-Z]*$');
-    if (!passWordRegex.test(password)) {
-      return false;
-    }
-
-    const emailRegex = new RegExp(
-      '^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+.[A-Za-z0-9]+$'
-    );
-    if (!emailRegex.test(email)) return false;
+    if (!validateEmail(email)) return false;
+    if (!isValidPassword(password)) return false;
 
     return true;
-  };
-
-  const passwordComplete = () => {
-    const passWordRegex = new RegExp('^[0-9a-zA-Z]*$');
-    if (!passWordRegex.test(password)) {
-      return '半角英数字で入力してください';
-    }
-    return '';
   };
 
   const signIn = async (email: string, password: string) => {
@@ -50,7 +34,7 @@ export const useLogin = () => {
     password,
     setPassword,
     passwordErrorMessage,
-    passwordComplete,
+    // validatePassword,
     setPasswordErrorMessage,
     isComplete,
   };

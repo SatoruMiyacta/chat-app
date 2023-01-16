@@ -22,10 +22,6 @@
   filter: blur(5px);
 }
 
-.inner {
-  z-index: 80;
-}
-
 .uploadWrapper.under > .uploadIconButton,
 .uploadWrapper.left > .uploadIconButton,
 .uploadWrapper.right > .uploadIconButton {
@@ -76,4 +72,14 @@
   background-color: #fff;
   border: 1px solid #333;
   border-radius: 50%;
+}
+
+@media screen and (min-width:1024px) {
+  .uploadWrapper{
+    height: fit-content;
+  }
+
+  .uploadButton{
+    margin-left: 16px;
+  }
 }

@@ -15,148 +15,140 @@ import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
-import CoverImage from '@/components/organisms/CoverImage';
 import Header from '@/components/organisms/Header';
 
-import { fetchSlackApi } from '@/utils/fetchSlackApi';
-import { getFirebaseError } from '@/utils/firebaseErrorMessage';
+import { getFirebaseError, sendToSlack } from '@/utils';
 
-import { useContact } from '@/hooks/useContact';
+import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
+import { useContact } from '@/hooks';
 
 const Contact = () => {
-  const [open, setOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState(
+    '予期せぬエラーが発生しました。お手数ですが、再度送信してください。'
+  );
   const [modalTitle, setModalTitle] = useState('');
 
   const {
-    name,
+    userName,
     setName,
     email,
     setEmail,
     contactText,
     setContactText,
-    nameErrorMessage,
-    setNameErrorMessage,
-    contactTextErrorMessage,
-    setContactTextErrorMessage,
-    nameComplete,
     isComplete,
-    contactTextComplete,
   } = useContact();
 
   const handleClick = async () => {
     if (!isComplete()) return;
 
     try {
-      fetchSlackApi(name, email, contactText);
-      setModalMessage('メールが送信されました。');
+      await sendToSlack(userName, email, contactText);
       setModalTitle('送信完了');
-      setOpen(true);
+      setModalMessage('メールが送信されました。');
+      setIsErrorModalOpen(true);
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
         setModalMessage(getFirebaseError(errorCode));
       }
       setModalTitle('エラー');
-      setOpen(true);
+      setIsErrorModalOpen(true);
     }
   };
 
-  const showModal = () => {
-    if (!open) return;
+  const renderModal = () => {
+    if (!isErrorModalOpen) return;
     return (
       <Modal
         title={modalTitle}
         titleAlign="center"
-        isOpen={open}
+        isOpen={isErrorModalOpen}
         hasInner
-        isBold
-        onClose={() => setOpen(false)}
+        isBoldTitle
+        onClose={() => setIsErrorModalOpen(false)}
       >
-        <span className={styles.modalContent}>
-          {modalMessage}
+        <div>
+          <p>{modalMessage}</p>
+        </div>
+        <div className={styles.controler}>
           <Button
             color="primary"
             variant="contained"
-            onClick={() => setOpen(false)}
-            className={styles.modalButton}
+            onClick={() => setIsErrorModalOpen(false)}
+            isFullWidth
+            size="small"
           >
             OK
           </Button>
-        </span>
+        </div>
       </Modal>
     );
   };
 
   return (
     <>
-      {showModal()}
+      {renderModal()}
       <Header
         title="お問い合わせ"
-        className={`${styles.header} sp responsive`}
+        className={`${styles.header} sp `}
         showBackButton
       />
-      <div className={styles.container}>
-        <CoverImage />
-        <div className={styles.inner}>
+      <main className={styles.container}>
+        <CoverImageOnlyPc />
+        <section className={`${styles.contents} inner`}>
           <Heading
             tag="h1"
             align="center"
             color="inherit"
             size="xxl"
-            className={`${styles.responsiveTitle} pc responsive`}
+            className={'pc'}
           >
             お問い合わせ
           </Heading>
-          <div className={styles.formWrapper}>
-            <div className={styles.userForm}>
-              <Input
-                isFullWidth
-                type="text"
-                color="primary"
-                variant="outlined"
-                id="nameContact"
-                label="ユーザーネーム"
-                value={name}
-                errorMessage={nameErrorMessage}
-                startIcon={<FontAwesomeIcon icon={faIdCard} />}
-                onChange={(event) => setName(event.target.value)}
-                onBlur={() => setNameErrorMessage(nameComplete())}
-              />
-            </div>
-            <div className={styles.emailForm}>
-              <Input
-                isFullWidth
-                type="email"
-                color="primary"
-                variant="outlined"
-                id="emailContact"
-                label="メールアドレス"
-                value={email}
-                startIcon={<FontAwesomeIcon icon={faEnvelope} />}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </div>
-            <div className={styles.contactForm}>
-              <Input
-                isFullWidth
-                type="text"
-                color="primary"
-                variant="outlined"
-                id="contact"
-                label="お問い合わせ内容"
-                value={contactText}
-                errorMessage={contactTextErrorMessage}
-                startIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
-                onChange={(event) => setContactText(event.target.value)}
-                onBlur={() => setContactTextErrorMessage(contactTextComplete())}
-                rows={4}
-                isMultiLines
-                maxLength={300}
-              />
-            </div>
+          <div className={styles.form}>
+            <Input
+              isFullWidth
+              type="text"
+              color="primary"
+              variant="outlined"
+              id="nameContact"
+              label="ユーザーネーム"
+              value={userName}
+              startIcon={<FontAwesomeIcon icon={faIdCard} />}
+              onChange={(event) => setName(event.target.value)}
+              isRequired
+            />
+            <Input
+              isFullWidth
+              type="email"
+              color="primary"
+              variant="outlined"
+              id="emailContact"
+              label="メールアドレス"
+              value={email}
+              isRequired
+              startIcon={<FontAwesomeIcon icon={faEnvelope} />}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <Input
+              isFullWidth
+              type="text"
+              color="primary"
+              variant="outlined"
+              id="contact"
+              label="お問い合わせ内容"
+              value={contactText}
+              startIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
+              onChange={(event) => setContactText(event.target.value)}
+              rows={6}
+              isMultiLines
+              isRequired
+              maxLength={300}
+            />
+          </div>
+          <div className={styles.sendButton}>
             <Button
-              className={styles.createButton}
               color="primary"
               variant="contained"
               onClick={handleClick}
@@ -166,8 +158,8 @@ const Contact = () => {
               送信
             </Button>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </>
   );
 };
