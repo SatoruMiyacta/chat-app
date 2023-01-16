@@ -12,16 +12,18 @@ import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
-import CoverImage from '@/components/organisms/CoverImage';
 import Header from '@/components/organisms/Header';
 
-import { getFirebaseError } from '@/utils/firebaseErrorMessage';
+import { getFirebaseError, isValidPassword } from '@/utils';
 
+import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import { useLogin } from '@/hooks';
 
 const Login = () => {
-  const [open, setOpen] = useState(false);
-  const [firebaseError, setFirebaseError] = useState('');
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [firebaseErrorMessage, setFirebaseErrorMessage] = useState(
+    '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
+  );
   const navigate = useNavigate();
 
   const {
@@ -32,71 +34,73 @@ const Login = () => {
     setPassword,
     passwordErrorMessage,
     setPasswordErrorMessage,
-    passwordComplete,
     isComplete,
   } = useLogin();
 
   // コンポーネントに関係するものはコンポーネント
   // 機能に関するものはhooks、関係ないものはこっち
-  const handleClick = async () => {
+  const signInAndRedirect = async () => {
     if (!isComplete()) return;
 
     try {
       await signIn(email, password);
       navigate('/');
     } catch (error) {
-      setOpen(true);
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
-        setFirebaseError(getFirebaseError(errorCode));
+        setFirebaseErrorMessage(getFirebaseError(errorCode));
       }
+      setIsErrorModalOpen(true);
     }
   };
 
-  const errorModal = () => {
-    if (!open) return;
+  const renderErrorModal = () => {
+    if (!isErrorModalOpen) return;
+
     return (
       <Modal
         title="エラー"
         titleAlign="center"
-        isOpen={open}
+        isOpen={isErrorModalOpen}
         hasInner
-        isBold
-        onClose={() => setOpen(false)}
+        isBoldTitle
+        onClose={() => setIsErrorModalOpen(false)}
       >
-        <span className={styles.modalContent}>
-          {firebaseError}
+        <div>
+          <p>{firebaseErrorMessage}</p>
+        </div>
+        <div className={styles.controler}>
           <Button
             color="primary"
             variant="contained"
-            onClick={() => setOpen(false)}
-            className={styles.modalButton}
+            onClick={() => setIsErrorModalOpen(false)}
             isFullWidth
+            size="small"
           >
             OK
           </Button>
-        </span>
+        </div>
       </Modal>
     );
   };
 
   return (
     <>
-      {errorModal()}
-      <Header title="ログイン" className={`${styles.header} sp responsive`} />
-      <div className={styles.container}>
-        <CoverImage />
-        <div className={`${styles.contents} inner`}>
+      {renderErrorModal()}
+      <Header title="ログイン" className={`${styles.header} sp`} />
+      <main className={styles.container}>
+        <CoverImageOnlyPc />
+        <section className={`${styles.contents} inner`}>
           <Heading
             tag="h1"
             align="center"
             color="inherit"
             size="xxl"
-            className={`${styles.responsiveTitle} pc responsive`}
+            className={'pc'}
           >
             ログイン
           </Heading>
-          <div className={styles.emailForm}>
+          <div className={styles.form}>
             <Input
               isFullWidth
               type="email"
@@ -105,12 +109,10 @@ const Login = () => {
               id="emailLogin"
               label="メールアドレス"
               value={email}
+              isRequired
               startIcon={<FontAwesomeIcon icon={faEnvelope} />}
               onChange={(event) => setEmail(event.target.value)}
-              onBlur={() => setPasswordErrorMessage(passwordComplete())}
             />
-          </div>
-          <div className={styles.passwordForm}>
             <Input
               isFullWidth
               type="password"
@@ -119,43 +121,48 @@ const Login = () => {
               id="passwordLogin"
               label="パスワード"
               value={password}
+              isRequired
               errorMessage={passwordErrorMessage}
               startIcon={<FontAwesomeIcon icon={faLock} />}
               onChange={(event) => setPassword(event.target.value)}
-              onBlur={() => setPasswordErrorMessage(passwordComplete())}
+              onBlur={() => {
+                if (!isValidPassword(password)) {
+                  setPasswordErrorMessage('半角英数字で入力してください');
+                } else {
+                  setPasswordErrorMessage('');
+                }
+              }}
               minLength={10}
             />
+            <Button
+              color="primary"
+              variant="text"
+              onClick={() => navigate('/accounts/reset-password')}
+            >
+              パスワードを忘れた場合
+            </Button>
           </div>
-          <Button
-            className={styles.forgotPasswordButton}
-            color="primary"
-            variant="text"
-            onClick={() => navigate('/accounts/reset-password')}
-          >
-            パスワードを忘れた場合
-          </Button>
-
-          <Button
-            className={styles.signInButton}
-            color="primary"
-            variant="contained"
-            onClick={handleClick}
-            isFullWidth
-            isDisabled={!isComplete()}
-          >
-            サインイン
-          </Button>
-          <Button
-            className={styles.createAccountButton}
-            color="primary"
-            variant="text"
-            isFullWidth
-            onClick={() => navigate('/accounts/create')}
-          >
-            アカウント作成
-          </Button>
-        </div>
-      </div>
+          <div className={styles.fullWidthButton}>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={signInAndRedirect}
+              isFullWidth
+              isDisabled={!isComplete()}
+            >
+              サインイン
+            </Button>
+            <Button
+              color="primary"
+              variant="text"
+              isFullWidth
+              onClick={() => navigate('/accounts/create')}
+            >
+              アカウント作成
+            </Button>
+          </div>
+        </section>
+      </main>
     </>
   );
 };

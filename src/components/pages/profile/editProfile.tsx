@@ -15,22 +15,25 @@ import Modal from '@/components/molecules/Modal';
 import BaCkgroundImage from '@/components/organisms/BackgroundImage';
 import Header, { ActionItem } from '@/components/organisms/Header';
 
-import { getFirebaseError } from '@/utils/firebaseErrorMessage';
+import { getFirebaseError } from '@/utils';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { useEditProfile } from '@/hooks/useEditProfile';
+import { useEditProfile } from '@/hooks';
 import { authUserAtom } from '@/store';
 
 const EditProfile = () => {
+  const [userData, setUserData] = useAtom(authUserAtom);
+  const [isErrorModal, setIsErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(
+    '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
+  );
+
   const [actionItems, setActionItems] = useState<ActionItem[]>([
     {
       item: '保存',
       onClick: (event) => onSave(),
     },
   ]);
-  const [userData, setUserData] = useAtom(authUserAtom);
-  const [firebaseError, setFirebaseError] = useState('');
-  const [open, setOpen] = useState(false);
 
   const {
     onFileload,
@@ -60,55 +63,47 @@ const EditProfile = () => {
       await saveUserData(userUid, userIconUrl, name, email);
       navigate('/profile');
     } catch (error) {
-      setOpen(true);
+      setIsErrorModal(true);
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
-        setFirebaseError(getFirebaseError(errorCode));
+        setErrorMessage(getFirebaseError(errorCode));
       }
     }
   };
 
-  const errorModal = () => {
-    if (!open) return;
+  const renderErrorModal = () => {
+    if (!isErrorModal) return;
+
     return (
       <Modal
         title="エラー"
         titleAlign="center"
-        isOpen={open}
+        isOpen={isErrorModal}
         hasInner
-        isBold
-        onClose={() => setOpen(false)}
+        isBoldTitle
+        onClose={() => setIsErrorModal(false)}
       >
-        <span className={styles.modalContent}>
-          {firebaseError}
+        <div>
+          <p>{errorMessage}</p>
+        </div>
+        <div className={styles.controler}>
           <Button
             color="primary"
             variant="contained"
-            onClick={() => setOpen(false)}
-            className={styles.modalButton}
+            onClick={() => setIsErrorModal(false)}
             isFullWidth
+            size="small"
           >
             OK
           </Button>
-        </span>
+        </div>
       </Modal>
     );
   };
 
-  // useEffect(() => {
-  //   try {
-  //     if (userData) {
-  //       const userId = userData.uid;
-  //       getMyUserData(userId);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, []);
-
   return (
     <>
-      {errorModal}
+      {renderErrorModal}
       <Header title="プロフィール" actionItems={actionItems} showBackButton />
       <main>
         <BaCkgroundImage
@@ -117,7 +112,7 @@ const EditProfile = () => {
           iconUrl={myIconUrl}
         />
         <div className={`${styles.contents} inner`}>
-          <div className={styles.userForm}>
+          <div className={styles.form}>
             <Input
               isFullWidth
               type="text"
@@ -129,10 +124,8 @@ const EditProfile = () => {
               errorMessage={nameErrorMessage}
               startIcon={<FontAwesomeIcon icon={faIdCard} />}
               onChange={(event) => setName(event.target.value)}
-              // onBlur={() => setNameErrorMessage(nameComplete())}
+              onBlur={() => setNameErrorMessage(nameComplete())}
             />
-          </div>
-          <div className={styles.emailForm}>
             <Input
               isFullWidth
               type="email"
@@ -145,15 +138,17 @@ const EditProfile = () => {
               onChange={(event) => setEmail(event.target.value)}
             />
           </div>
-          <Button
-            color="danger"
-            variant="outlined"
-            onClick={() => navigate('/profile/delete-account')}
-            isFullWidth
-            className={styles.deleteButton}
-          >
-            アカウント削除
-          </Button>
+          <div className={styles.fullWidthButton}>
+            <Button
+              color="danger"
+              variant="outlined"
+              onClick={() => navigate('/profile/delete-account')}
+              isFullWidth
+              className={styles.deleteButton}
+            >
+              アカウント削除
+            </Button>
+          </div>
         </div>
       </main>
     </>

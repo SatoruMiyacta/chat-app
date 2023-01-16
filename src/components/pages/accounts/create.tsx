@@ -17,40 +17,36 @@ import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
 import BackgroundImage from '@/components/organisms/BackgroundImage';
-import CoverImage from '@/components/organisms/CoverImage';
+import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
-
-import { getFirebaseError } from '@/utils/firebaseErrorMessage';
-
 import { INITIAL_ICON_URL } from '@/constants';
-import { useCreateAccounts } from '@/hooks';
-import { InitialUserData } from '@/hooks/useCreateAccounts';
+import { InitialUserData, useCreateAccounts } from '@/hooks';
+import { getFirebaseError, isValidPassword } from '@/utils';
+import loadImage from 'blueimp-load-image';
 
 const CreateAcconunts = () => {
-  const [open, setOpen] = useState(false);
-  const [firebaseError, setFirebaseError] = useState('');
+  const [isErrorModal, setIsErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(
+    '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
+  );
+  const [userIconFile, setUserIconFile] = useState<Blob>();
+  // プレビューのiconURL
+  const [initialIconUrl, setInitialIconUrl] = useState(INITIAL_ICON_URL);
   const navigate = useNavigate();
 
   const {
-    initialIconUrl,
     signUp,
-    name,
+    userName,
     setName,
     email,
     setEmail,
     password,
     setPassword,
-    nameErrorMessage,
-    setNameErrorMessage,
-    nameComplete,
     passwordErrorMessage,
     setPasswordErrorMessage,
-    passwordComplete,
     isComplete,
-    onFileload,
     uploadIcon,
     registerUserDate,
-    userIconFile,
   } = useCreateAccounts();
 
   const handleClick = async () => {
@@ -66,73 +62,116 @@ const CreateAcconunts = () => {
       let userIconUrl = INITIAL_ICON_URL;
       if (userIconFile) userIconUrl = await uploadIcon(userIconFile, useId);
 
-      const initialUserData: InitialUserData = { name, userIconUrl };
+      const initialUserData: InitialUserData = { userName, userIconUrl };
       await registerUserDate(useId, initialUserData);
 
       navigate('/');
     } catch (error) {
-      setOpen(true);
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
-        console.log(errorCode);
-        setFirebaseError(getFirebaseError(errorCode));
+        setErrorMessage(getFirebaseError(errorCode));
       }
+      setIsErrorModal(true);
     }
   };
 
-  const errorModal = () => {
-    if (!open) return;
+  const onFileload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    const file = event.target.files[0];
+
+    const loadImageResult = await loadImage(file, {
+      maxWidth: 500,
+      maxHeight: 500,
+      canvas: true,
+    });
+
+    const canvas = loadImageResult.image as HTMLCanvasElement;
+    canvas.toBlob((blob) => {
+      try {
+        if (!blob)
+          throw new Error(
+            '画像読み込みに失敗しました。再度アップロードしてください。'
+          );
+
+        // 画像容量制限
+        // 単位byte
+        const maxFileSize = 10000000;
+        if (blob.size > maxFileSize) {
+          throw new Error('画像サイズは１０MB以下にしてください');
+        }
+
+        setUserIconFile(blob);
+        setInitialIconUrl(URL.createObjectURL(blob));
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+          setErrorMessage(error.message);
+        }
+        setIsErrorModal(true);
+      }
+    });
+  };
+
+  const renderErrorModal = () => {
+    if (!isErrorModal) return;
+
     return (
       <Modal
         title="エラー"
         titleAlign="center"
-        isOpen={open}
+        isOpen={isErrorModal}
         hasInner
-        isBold
-        onClose={() => setOpen(false)}
+        isBoldTitle
+        onClose={() => setIsErrorModal(false)}
       >
-        <span className={styles.modalContent}>
-          {firebaseError}
+        <div>
+          <p>{errorMessage}</p>
+        </div>
+        <div className={styles.controler}>
           <Button
             color="primary"
             variant="contained"
-            onClick={() => setOpen(false)}
-            className={styles.modalButton}
+            onClick={() => setIsErrorModal(false)}
+            isFullWidth
+            size="small"
           >
             OK
           </Button>
-        </span>
+        </div>
       </Modal>
     );
   };
 
   return (
     <>
-      {errorModal()}
+      {renderErrorModal()}
       <Header
         title="アカウント作成"
-        className={`${styles.header} sp responsive`}
+        className={`${styles.header} sp `}
         showBackButton
       />
-      <div className={styles.container}>
-        <CoverImage />
-        <div className={styles.inner}>
+      <main className={styles.container}>
+        <CoverImageOnlyPc />
+        <section className={styles.contents}>
           <Heading
             tag="h1"
             align="center"
             color="inherit"
             size="xxl"
-            className={`${styles.responsiveTitle} pc responsive`}
+            className={'pc'}
           >
             アカウント作成
           </Heading>
-          <BackgroundImage
-            hasCameraIcon
-            onChange={onFileload}
-            iconUrl={initialIconUrl}
-          />
-          <div className={styles.formWrapper}>
-            <div className={styles.userForm}>
+          <div className={styles.iconImage}>
+            <BackgroundImage
+              hasCameraIcon
+              onChange={onFileload}
+              iconUrl={initialIconUrl}
+              isUploadButton
+            />
+          </div>
+          <div className={`${styles.formButtonWrapper} inner`}>
+            <div className={styles.form}>
               <Input
                 isFullWidth
                 type="text"
@@ -140,14 +179,11 @@ const CreateAcconunts = () => {
                 variant="standard"
                 id="textCreate"
                 label="ユーザーネーム"
-                value={name}
-                errorMessage={nameErrorMessage}
+                value={userName}
+                isRequired
                 startIcon={<FontAwesomeIcon icon={faIdCard} />}
                 onChange={(event) => setName(event.target.value)}
-                onBlur={() => setNameErrorMessage(nameComplete())}
               />
-            </div>
-            <div className={styles.emailForm}>
               <Input
                 isFullWidth
                 type="email"
@@ -156,11 +192,10 @@ const CreateAcconunts = () => {
                 id="emailCreate"
                 label="メールアドレス"
                 value={email}
+                isRequired
                 startIcon={<FontAwesomeIcon icon={faEnvelope} />}
                 onChange={(event) => setEmail(event.target.value)}
               />
-            </div>
-            <div className={styles.passwordForm}>
               <Input
                 isFullWidth
                 type="password"
@@ -172,23 +207,30 @@ const CreateAcconunts = () => {
                 errorMessage={passwordErrorMessage}
                 startIcon={<FontAwesomeIcon icon={faLock} />}
                 onChange={(event) => setPassword(event.target.value)}
-                onBlur={() => setPasswordErrorMessage(passwordComplete())}
+                onBlur={() => {
+                  if (!isValidPassword(password)) {
+                    setPasswordErrorMessage('半角英数字で入力してください');
+                  } else {
+                    setPasswordErrorMessage('');
+                  }
+                }}
                 minLength={10}
               />
             </div>
-            <Button
-              className={styles.createButton}
-              color="primary"
-              variant="contained"
-              onClick={handleClick}
-              isFullWidth
-              isDisabled={!isComplete()}
-            >
-              作成
-            </Button>
+            <div className={styles.fullWidthButton}>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={handleClick}
+                isFullWidth
+                isDisabled={!isComplete()}
+              >
+                作成
+              </Button>
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </>
   );
 };

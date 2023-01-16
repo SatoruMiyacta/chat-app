@@ -13,90 +13,96 @@ import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
-import CoverImage from '@/components/organisms/CoverImage';
 import Header from '@/components/organisms/Header';
 
-import { getFirebaseError } from '@/utils/firebaseErrorMessage';
+import { getFirebaseError } from '@/utils';
 
-import { useResetPassword } from '@/hooks/useResetPassword';
+import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
+import { useResetPassword } from '@/hooks';
 import { auth } from '@/main';
 
 const ResetPassword = () => {
-  const [open, setOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState(
+    '予期せぬエラーが発生しました。お手数ですが、再度送信してください。'
+  );
   const [modalTitle, setModalTitle] = useState('');
-  const { email, setEmail, isComplete } = useResetPassword();
-
   const navigate = useNavigate();
+
+  const { email, setEmail, isComplete } = useResetPassword();
 
   const handleClick = async () => {
     if (!isComplete()) return;
 
     try {
       await sendPasswordResetEmail(auth, email);
-      setModalMessage('メールが送信されました。');
       setModalTitle('送信完了');
-      setOpen(true);
+      setModalMessage('メールが送信されました。');
+      setIsErrorModalOpen(true);
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
         setModalMessage(getFirebaseError(errorCode));
       }
       setModalTitle('エラー');
-      setOpen(true);
+      setIsErrorModalOpen(true);
     }
   };
 
-  const completeSendEmail = () => {
-    if (!open) return;
+  const renderModal = () => {
+    if (!isErrorModalOpen) return;
+
     return (
       <Modal
         title={modalTitle}
         titleAlign="center"
-        isOpen={open}
+        isOpen={isErrorModalOpen}
         hasInner
-        isBold
-        onClose={() => setOpen(false)}
+        isBoldTitle
+        onClose={() => setIsErrorModalOpen(false)}
       >
-        <span className={styles.modalContent}>
-          {modalMessage}
+        <div>
+          <p>{modalMessage}</p>
+        </div>
+        <div className={styles.controler}>
           <Button
             color="primary"
             variant="contained"
-            onClick={() => setOpen(false)}
-            className={styles.modalButton}
+            onClick={() => setIsErrorModalOpen(false)}
+            isFullWidth
+            size="small"
           >
             OK
           </Button>
-        </span>
+        </div>
       </Modal>
     );
   };
 
   return (
     <>
-      {completeSendEmail()}
+      {renderModal()}
       <Header
         title="パスワードリセット"
-        className={`${styles.header} sp responsive`}
+        className={`${styles.header} sp `}
         showBackButton
       />
-      <div className={styles.container}>
-        <CoverImage />
-        <div className={styles.inner}>
+      <main className={styles.container}>
+        <CoverImageOnlyPc />
+        <section className={`${styles.contents} inner`}>
           <Heading
             tag="h1"
             align="center"
             color="inherit"
             size="xxl"
-            className={`${styles.responsiveTitle} pc responsive`}
+            className={'pc'}
           >
             パスワードリセット
           </Heading>
-          <p className={styles.resetMessage}>
+          <p>
             パスワードをリセットします。登録したメールアドレスを入力して送信してください。
           </p>
-          <div className={styles.emailForm}>
+          <div className={styles.form}>
             <Input
               isFullWidth
               type="email"
@@ -109,28 +115,28 @@ const ResetPassword = () => {
               onChange={(event) => setEmail(event.target.value)}
             />
           </div>
-          <Button
-            className={styles.forgotPasswordButton}
-            color="primary"
-            variant="contained"
-            onClick={handleClick}
-            isFullWidth
-            isDisabled={!isComplete()}
-          >
-            メール送信
-          </Button>
-          <hr />
-          <Button
-            className={styles.contactButton}
-            color="inherit"
-            variant="outlined"
-            onClick={() => navigate('/accounts/contact')}
-            isFullWidth
-          >
-            問い合わせ
-          </Button>
-        </div>
-      </div>
+          <div className={styles.fullWidthButton}>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={handleClick}
+              isFullWidth
+              isDisabled={!isComplete()}
+            >
+              メール送信
+            </Button>
+            <hr />
+            <Button
+              color="inherit"
+              variant="outlined"
+              onClick={() => navigate('/accounts/contact')}
+              isFullWidth
+            >
+              問い合わせ
+            </Button>
+          </div>
+        </section>
+      </main>
     </>
   );
 };

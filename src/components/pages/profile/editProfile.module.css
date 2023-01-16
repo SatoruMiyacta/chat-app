@@ -5,10 +5,13 @@
   background-color: #fff;
 }
 
-.emailForm {
-  margin-top: 32px;
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 240px;
 }
 
-.deleteButton {
-  margin-top: 64px;
+.controler {
+  margin-top: 24px;
 }

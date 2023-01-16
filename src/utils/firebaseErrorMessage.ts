@@ -110,6 +110,6 @@ export const getFirebaseError = (errorCode: string) => {
   if (errorCode === 'auth/unauthorized-continue-uri')
     return ' Firebaseコンソールでドメインをホワイトリストに登録します。';
   if (errorCode === 'auth/user-not-found')
-    return 'アカウントがありません。メールアドレスかパスワードが間違っていませんか？';
+    return 'アカウントがありません。メールアドレスまたはパスワードに誤りがある可能性があります。';
   return '';
 };

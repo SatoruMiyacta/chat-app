@@ -13,14 +13,14 @@ html {
 }
 
 @media screen and (min-width:1024px) {
-  .sp.responsive {
-    display: none;
+  .sp {
+    display: none !important;
   }
 }
 
 @media screen and (max-width:1023px) {
-  .pc.responsive {
-    display: none;
+  .pc {
+    display: none !important;
   }
 }
 

@@ -14,7 +14,7 @@ export interface ModalProps {
   titleAlign?: HeadingProps['align'];
   showCloseButton?: boolean;
   isOpen?: boolean;
-  isBold?: HeadingProps['isBold'];
+  isBoldTitle?: HeadingProps['isBold'];
   hasInner?: boolean;
 }
 
@@ -25,7 +25,7 @@ const Modal = ({
   titleAlign = 'start',
   showCloseButton = false,
   isOpen = false,
-  isBold,
+  isBoldTitle,
   hasInner,
 }: ModalProps) => {
   const childrenClassList = [];
@@ -37,7 +37,7 @@ const Modal = ({
     return (
       <header className={styles.contentHeader}>
         {title && (
-          <Heading tag="h1" size="xxl" isBold={isBold} align={titleAlign}>
+          <Heading tag="h1" size="l" isBold={isBoldTitle} align={titleAlign}>
             {title}
           </Heading>
         )}
