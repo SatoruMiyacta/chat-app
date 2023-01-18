@@ -1,3 +1,7 @@
+import { Link, useLocation } from 'react-router-dom';
+
+import styles from './SideMenu.module.css';
+
 import {
   faCircleUser,
   faComment,
@@ -5,8 +9,6 @@ import {
   faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link, useLocation } from 'react-router-dom';
-import styles from './SideMenu.module.css';
 
 const SideMenu = () => {
   const location = useLocation();
