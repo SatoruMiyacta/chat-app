@@ -17,6 +17,7 @@ module.exports = {
     project: './tsconfig.json',
   },
   plugins: ['react', '@typescript-eslint', 'import'],
+  ignorePatterns: ['vite.config.ts'],
   settings: {
     'import/extensions': ['.ts', '.tsx'],
     'import/parsers': { '@typescript-eslint/parser': ['.ts', '.tsx'] },
@@ -31,10 +32,10 @@ module.exports = {
     },
   },
   rules: {
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': ['error'],
+    // 'no-unused-vars': 'off',
+    // '@typescript-eslint/no-unused-vars': ['error'],
 
-    'react/jsx-curly-brace-presence': 'error',
+    // 'react/jsx-curly-brace-presence': 'error',
 
     'react/react-in-jsx-scope': 'off',
 
