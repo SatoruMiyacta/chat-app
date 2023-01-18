@@ -1,11 +1,11 @@
-  .formButtonWrapper {
+.formButtonWrapper {
   position: relative;
   z-index: 10;
   padding-top: 40px;
   background-color: #fff;
 }
 
-.form div + div{
+.form div + div {
   margin-top: 24px;
 }
 
@@ -27,7 +27,7 @@
     margin: auto;
   }
 
-  .form div + div{
+  .form div + div {
     margin-top: 32px;
   }
 
