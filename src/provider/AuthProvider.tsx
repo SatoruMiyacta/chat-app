@@ -11,9 +11,7 @@ const AuthProvider = () => {
   const navigate = useNavigate();
   onAuthStateChanged(auth, (user) => {
     console.log('onAuthStateChanged');
-    // console.log(userData);
     if (user) {
-      const uid = user.uid;
       setAuthUser(user);
     } else {
       setAuthUser(null);

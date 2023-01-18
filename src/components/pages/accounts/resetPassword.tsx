@@ -35,6 +35,7 @@ const ResetPassword = () => {
 
     try {
       await sendPasswordResetEmail(auth, email);
+
       setModalTitle('送信完了');
       setModalMessage('メールが送信されました。');
       setIsErrorModalOpen(true);
@@ -43,6 +44,7 @@ const ResetPassword = () => {
         const errorCode = error.code;
         setModalMessage(getFirebaseError(errorCode));
       }
+
       setModalTitle('エラー');
       setIsErrorModalOpen(true);
     }
@@ -78,6 +80,14 @@ const ResetPassword = () => {
     );
   };
 
+  const setVariant = () => {
+    if (window.matchMedia('(min-width:1024px)').matches) {
+      return 'outlined';
+    } else {
+      return 'standard';
+    }
+  };
+
   return (
     <>
       {renderModal()}
@@ -106,7 +116,7 @@ const ResetPassword = () => {
               isFullWidth
               type="email"
               color="primary"
-              variant="standard"
+              variant={setVariant()}
               id="emailResetPassword"
               label="メールアドレス"
               value={email}

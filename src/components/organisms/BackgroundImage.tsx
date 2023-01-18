@@ -13,7 +13,7 @@ export interface BackgroundImageProps {
   hasCameraIcon?: boolean;
   iconPosition?: 'center' | 'under' | 'left' | 'right';
   isUploadButton?: boolean;
-  // uploadButtonPosition?: 'top' | 'under' | 'left' | 'right';
+  uploadIconButtonSize?: 'small' | 'medium' | 'large';
   className?: string;
 }
 
@@ -23,7 +23,7 @@ const BackgroundImage = ({
   hasCameraIcon = false,
   iconPosition = 'center',
   isUploadButton = false,
-  // uploadButtonPosition = 'right',
+  uploadIconButtonSize = 'medium',
   className,
 }: BackgroundImageProps) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
@@ -32,6 +32,11 @@ const BackgroundImage = ({
     styles.uploadWrapper,
     styles[iconPosition],
     className,
+  ];
+
+  const uploadIconButtonClassList = [
+    styles.uploadIconButton,
+    styles[uploadIconButtonSize],
   ];
 
   return (
@@ -43,7 +48,7 @@ const BackgroundImage = ({
       >
         <button
           id="imageUpload"
-          className={styles.uploadIconButton}
+          className={`${uploadIconButtonClassList.join(' ')}`}
           onClick={() => inputFileRef.current?.click()}
         >
           <img src={iconUrl} />
@@ -70,16 +75,10 @@ const BackgroundImage = ({
       <div className={`${styles.uploadWrapper} pc`}>
         <button
           id="imageUpload"
-          className={styles.uploadIconButton}
+          className={`${uploadIconButtonClassList.join(' ')}`}
           onClick={() => inputFileRef.current?.click()}
         >
           <img src={iconUrl} />
-          <FontAwesomeIcon
-            icon={faCamera}
-            color="#333"
-            size="sm"
-            className={styles.cameraIcon}
-          />
         </button>
         <input
           id="imageUpload"
@@ -97,7 +96,7 @@ const BackgroundImage = ({
             variant="outlined"
             onClick={() => inputFileRef.current?.click()}
             className={styles.uploadButton}
-            size="medium"
+            size="small"
           >
             画像選択
           </Button>

@@ -51,6 +51,7 @@ const Contact = () => {
         const errorCode = error.code;
         setModalMessage(getFirebaseError(errorCode));
       }
+
       setModalTitle('エラー');
       setIsErrorModalOpen(true);
     }

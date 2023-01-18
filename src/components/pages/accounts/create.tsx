@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import loadImage from 'blueimp-load-image';
 import { FirebaseError } from 'firebase/app';
 
 import styles from './create.module.css';
@@ -21,6 +20,12 @@ import BackgroundImage from '@/components/organisms/BackgroundImage';
 import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
 
+import {
+  convertBlobFile,
+  resizeFile,
+  validateBlobFile,
+} from '@/utils/fileProcessing';
+
 import { INITIAL_ICON_URL } from '@/constants';
 import { InitialUserData, useCreateAccounts } from '@/hooks';
 import { getFirebaseError, isValidPassword } from '@/utils';
@@ -36,6 +41,7 @@ const CreateAcconunts = () => {
   const navigate = useNavigate();
 
   const {
+    saveUsersAtom,
     signUp,
     userName,
     setName,
@@ -66,51 +72,39 @@ const CreateAcconunts = () => {
       const initialUserData: InitialUserData = { userName, userIconUrl };
       await registerUserDate(useId, initialUserData);
 
+      saveUsersAtom(useId, initialUserData);
+
       navigate('/');
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
         setErrorMessage(getFirebaseError(errorCode));
       }
+
       setIsErrorModal(true);
     }
   };
 
-  const onFileload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files) return;
-    const file = event.target.files[0];
+  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const canvas = await resizeFile(event);
+      if (!canvas) return;
 
-    const loadImageResult = await loadImage(file, {
-      maxWidth: 500,
-      maxHeight: 500,
-      canvas: true,
-    });
+      const blobFile = await convertBlobFile(canvas);
+      if (!blobFile) return;
 
-    const canvas = loadImageResult.image as HTMLCanvasElement;
-    canvas.toBlob((blob) => {
-      try {
-        if (!blob)
-          throw new Error(
-            '画像読み込みに失敗しました。再度アップロードしてください。'
-          );
+      const blob = validateBlobFile(blobFile);
+      if (!blob) return;
 
-        // 画像容量制限
-        // 単位byte
-        const maxFileSize = 10000000;
-        if (blob.size > maxFileSize) {
-          throw new Error('画像サイズは１０MB以下にしてください');
-        }
-
-        setUserIconFile(blob);
-        setInitialIconUrl(URL.createObjectURL(blob));
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.message);
-          setErrorMessage(error.message);
-        }
-        setIsErrorModal(true);
+      setUserIconFile(blob);
+      setInitialIconUrl(URL.createObjectURL(blob));
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
       }
-    });
+
+      setIsErrorModal(true);
+    }
   };
 
   const renderErrorModal = () => {
@@ -143,6 +137,17 @@ const CreateAcconunts = () => {
     );
   };
 
+  // 三項演算子、一行なら可
+
+  const getBackgroundClass = () => {
+    if (window.matchMedia('(min-width:1024px)').matches) {
+      return `${styles.iconImage} inner`;
+    } else {
+      return styles.iconImage;
+    }
+  };
+
+  const windowWidth = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
       {renderErrorModal()}
@@ -159,16 +164,17 @@ const CreateAcconunts = () => {
             align="center"
             color="inherit"
             size="xxl"
-            className={'pc'}
+            className="pc"
           >
             アカウント作成
           </Heading>
-          <div className={styles.iconImage}>
+          <div className={getBackgroundClass()}>
             <BackgroundImage
               hasCameraIcon
-              onChange={onFileload}
+              onChange={onFileChange}
               iconUrl={initialIconUrl}
               isUploadButton
+              uploadIconButtonSize={windowWidth ? 'medium' : 'small'}
             />
           </div>
           <div className={`${styles.formButtonWrapper} inner`}>
@@ -177,7 +183,7 @@ const CreateAcconunts = () => {
                 isFullWidth
                 type="text"
                 color="primary"
-                variant="standard"
+                variant={windowWidth ? 'outlined' : 'standard'}
                 id="textCreate"
                 label="ユーザーネーム"
                 value={userName}
@@ -189,7 +195,7 @@ const CreateAcconunts = () => {
                 isFullWidth
                 type="email"
                 color="primary"
-                variant="standard"
+                variant={windowWidth ? 'outlined' : 'standard'}
                 id="emailCreate"
                 label="メールアドレス"
                 value={email}
@@ -201,7 +207,7 @@ const CreateAcconunts = () => {
                 isFullWidth
                 type="password"
                 color="primary"
-                variant="standard"
+                variant={windowWidth ? 'outlined' : 'standard'}
                 id="passwordCreate"
                 label="パスワード"
                 value={password}
@@ -225,6 +231,7 @@ const CreateAcconunts = () => {
                 onClick={handleClick}
                 isFullWidth
                 isDisabled={!isComplete()}
+                size="medium"
               >
                 作成
               </Button>

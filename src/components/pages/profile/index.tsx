@@ -28,23 +28,13 @@ const Profile = () => {
     },
   ]);
 
-  const initialUserData = async (userId: string) => {
-    const data = await fetchUserData(userId);
-    if (!data) return;
-
-    setMyIconUrl(data.iconUrl);
-    setUserName(data.name);
-  };
-
   try {
     // キャッシュのタイムアウト設定
     if (authUser) {
       const userId = authUser.uid;
       const date = new Date();
-      initialUserData(userId);
-      console.log('uuu');
 
-      if (users[userId].expiresIn < date) {
+      if (users[userId] === undefined || users[userId].expiresIn < date) {
         fetchUserData(userId).then((data) => {
           if (!data) return;
 
@@ -55,7 +45,7 @@ const Profile = () => {
             updateAt: data.updateAt.toDate(),
           };
 
-          setUsers({ userId: { data: userData, expiresIn: date } });
+          setUsers({ [userId]: { data: userData, expiresIn: date } });
         });
       }
     }
@@ -65,12 +55,18 @@ const Profile = () => {
 
   return (
     <>
-      <Header title="プロフィール" actionItems={actionItems} showBackButton />
-      <main>
+      <Header
+        title="プロフィール"
+        actionItems={actionItems}
+        showBackButton
+        className={`${styles.header} sp`}
+      />
+      <main className={styles.container}>
         <BackgroundImage
           className={styles.BackgroundImage}
           iconPosition="under"
           iconUrl={myIconUrl}
+          uploadIconButtonSize="small"
         />
         <div className={styles.contents}>
           <Heading tag="h2" align="center" isBold>

@@ -16,7 +16,7 @@ const Button = ({
   variant,
   isFullWidth = false,
   isDisabled = false,
-  size = 'large',
+  size = 'medium',
   children,
   className,
   onClick,

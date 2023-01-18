@@ -45,9 +45,22 @@
 .uploadIconButton {
   position: relative;
   z-index: 20;
+  border-radius: 50%;
+}
+
+.uploadIconButton.small {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+}
+
+.uploadIconButton.medium {
+  width: 64px;
+  height: 64px;
+}
+
+.uploadIconButton.large {
+  width: 120px;
+  height: 120px;
 }
 
 .uploadIconButton > img {
@@ -80,6 +93,6 @@
   }
 
   .uploadButton {
-    margin-left: 16px;
+    margin-left: 24px;
   }
 }

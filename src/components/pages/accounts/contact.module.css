@@ -1,16 +1,9 @@
-.controler {
-  margin-top: 24px;
-}
-
 .contents {
   margin-top: 64px;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 320px;
+.form div + div {
+  margin-top: 32px;
 }
 
 .sendButton {
@@ -27,7 +20,7 @@
   }
 
   .contents {
-    width: 50vw;
+    width: 35vw;
     margin: auto;
   }
 
