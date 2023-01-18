@@ -2,25 +2,25 @@
   margin-top: 64px;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 240px;
+.form div + div {
+  margin-top: 24px;
 }
 
 .form > button {
+  display: flex;
+  align-items: center;
   width: fit-content;
+  margin-top: 16px;
   margin-right: 0;
   margin-left: auto;
 }
 
-.fullWidthButton {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 120px;
+.fullWidthButton{
   margin-top: 64px;
+}
+
+.fullWidthButton button + button{
+  margin-top: 24px;
 }
 
 .controler {
@@ -33,8 +33,12 @@
   }
 
   .contents {
-    width: 50vw;
+    width: 35vw;
     margin: auto;
+  }
+
+  .form div + div {
+    margin-top: 32px;
   }
 
   .contents > h1 {

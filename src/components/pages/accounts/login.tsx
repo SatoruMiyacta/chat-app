@@ -83,6 +83,14 @@ const Login = () => {
     );
   };
 
+  const setVariant = () => {
+    if (window.matchMedia('(min-width:1024px)').matches) {
+      return 'outlined';
+    } else {
+      return 'standard';
+    }
+  };
+
   return (
     <>
       {renderErrorModal()}
@@ -104,7 +112,7 @@ const Login = () => {
               isFullWidth
               type="email"
               color="primary"
-              variant="standard"
+              variant={setVariant()}
               id="emailLogin"
               label="メールアドレス"
               value={email}
@@ -116,7 +124,7 @@ const Login = () => {
               isFullWidth
               type="password"
               color="primary"
-              variant="standard"
+              variant={setVariant()}
               id="passwordLogin"
               label="パスワード"
               value={password}
@@ -141,6 +149,7 @@ const Login = () => {
               パスワードを忘れた場合
             </Button>
           </div>
+
           <div className={styles.fullWidthButton}>
             <Button
               color="primary"

@@ -24,7 +24,7 @@ import { authUserAtom } from '@/store';
 import { getFirebaseError } from '@/utils';
 
 const DeleteAccount = () => {
-  const [open, setOpen] = useState(false);
+  const [isModal, setIsModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalTitle, setModalTitle] = useState('');
   const [userData, setUserData] = useAtom(authUserAtom);
@@ -48,30 +48,32 @@ const DeleteAccount = () => {
       await deleteUser(userData);
       setModalMessage('アカウントが削除されました。');
       setModalTitle('削除完了');
-      setOpen(true);
+      setIsModal(true);
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
         setModalMessage(getFirebaseError(errorCode));
       }
       setModalTitle('エラー');
-      setOpen(true);
+      setIsModal(true);
     }
   };
 
-  const completeDelete = () => {
-    if (!open) return;
+  const renderErrorModal = () => {
+    if (!isModal) return;
     return (
       <Modal
         title={modalTitle}
         titleAlign="center"
-        isOpen={open}
+        isOpen={isModal}
         hasInner
         isBoldTitle
-        onClose={() => setOpen(false)}
+        onClose={() => setIsModal(false)}
       >
-        <span className={styles.modalContent}>
-          {modalMessage}
+        <div>
+          <p>{modalMessage}</p>
+        </div>
+        <div className={styles.controler}>
           <Button
             color="primary"
             variant="contained"
@@ -80,26 +82,34 @@ const DeleteAccount = () => {
           >
             OK
           </Button>
-        </span>
+        </div>
       </Modal>
     );
   };
 
+  const setVariant = () => {
+    if (window.matchMedia('(min-width:1024px)').matches) {
+      return 'outlined';
+    } else {
+      return 'standard';
+    }
+  };
+
   return (
     <>
-      {completeDelete()}
+      {renderErrorModal()}
       <Header
         title="アカウント削除"
-        className={`${styles.header} sp responsive`}
+        className={`${styles.header} sp `}
         showBackButton
       />
-      <div className={`${styles.contents} inner`}>
+      <main className={`${styles.container} inner`}>
         <Heading
           tag="h1"
           align="center"
           color="inherit"
           size="xxl"
-          className={`${styles.responsiveTitle} pc responsive`}
+          className={'pc'}
         >
           アカウント削除
         </Heading>
@@ -113,12 +123,12 @@ const DeleteAccount = () => {
             アカウント削除すると、すべてデータは消えてしまいます。
           </p>
         </div>
-        <div className={styles.passwordForm}>
+        <div className={styles.form}>
           <Input
             isFullWidth
             type="password"
             color="primary"
-            variant="standard"
+            variant={setVariant()}
             id="passwordDeleteAccount"
             label="パスワード"
             value={password}
@@ -126,17 +136,18 @@ const DeleteAccount = () => {
             onChange={(event) => setPassword(event.target.value)}
           />
         </div>
-        <Button
-          className={styles.deleteButton}
-          color="primary"
-          variant="contained"
-          onClick={handleClick}
-          isFullWidth
-          isDisabled={!isComplete()}
-        >
-          削除する
-        </Button>
-      </div>
+        <div className={styles.fullWidthButton}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={handleClick}
+            isFullWidth
+            isDisabled={!isComplete()}
+          >
+            削除する
+          </Button>
+        </div>
+      </main>
     </>
   );
 };

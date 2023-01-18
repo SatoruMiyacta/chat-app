@@ -1,12 +1,11 @@
 import { User } from 'firebase/auth';
-import { Timestamp } from 'firebase/firestore';
 import { atom } from 'jotai';
 
 export interface UserData {
   name: string;
   iconUrl: string;
-  createdAt: Timestamp;
-  updateAt: Timestamp;
+  createdAt: Date;
+  updateAt: Date;
 }
 
 export interface Users {

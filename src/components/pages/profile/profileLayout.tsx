@@ -1,12 +1,19 @@
 import { Outlet } from 'react-router-dom';
 
 import BottomNavigation from '@/components/organisms/BottomNavigation';
+import SideMenu from '@/components/organisms/SideMenu';
 
 const ProfileLayout = () => {
   return (
     <>
-      <Outlet />
-      <BottomNavigation />
+      <div className="sp">
+        <Outlet />
+        <BottomNavigation />
+      </div>
+      <div style={{ display: 'flex' }} className="pc">
+        <SideMenu />
+        <Outlet />
+      </div>
     </>
   );
 };

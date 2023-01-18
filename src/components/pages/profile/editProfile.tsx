@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { FirebaseError } from 'firebase/app';
 import { useAtom } from 'jotai';
 
 import styles from './editProfile.module.css';
@@ -15,10 +14,8 @@ import Modal from '@/components/molecules/Modal';
 import BaCkgroundImage from '@/components/organisms/BackgroundImage';
 import Header, { ActionItem } from '@/components/organisms/Header';
 
-import { INITIAL_ICON_URL } from '@/constants';
 import { useEditProfile } from '@/hooks';
 import { authUserAtom } from '@/store';
-import { getFirebaseError } from '@/utils';
 
 const EditProfile = () => {
   const [userData, setUserData] = useAtom(authUserAtom);
@@ -35,39 +32,18 @@ const EditProfile = () => {
   ]);
 
   const {
-    onFileload,
-    getMyUserData,
-    uploadIcon,
     userIconFile,
     myIconUrl,
-    name,
+    userName,
     setName,
     email,
     setEmail,
-    nameErrorMessage,
     isComplete,
-    nameComplete,
-    setNameErrorMessage,
-    saveUserData,
   } = useEditProfile();
   const navigate = useNavigate();
 
   const onSave = async () => {
     if (!isComplete) return;
-    try {
-      if (!userData) return;
-      const userUid = userData.uid;
-      let userIconUrl = INITIAL_ICON_URL;
-      if (userIconFile) userIconUrl = await uploadIcon(userIconFile, userUid);
-      await saveUserData(userUid, userIconUrl, name, email);
-      navigate('/profile');
-    } catch (error) {
-      setIsErrorModal(true);
-      if (error instanceof FirebaseError) {
-        const errorCode = error.code;
-        setErrorMessage(getFirebaseError(errorCode));
-      }
-    }
   };
 
   const renderErrorModal = () => {
@@ -100,15 +76,24 @@ const EditProfile = () => {
     );
   };
 
+  const setVariant = () => {
+    if (window.matchMedia('(min-width:1024px)').matches) {
+      return 'outlined';
+    } else {
+      return 'standard';
+    }
+  };
+
   return (
     <>
       {renderErrorModal}
       <Header title="プロフィール" actionItems={actionItems} showBackButton />
-      <main>
+      <main className={styles.container}>
         <BaCkgroundImage
           hasCameraIcon
-          onChange={onFileload}
+          // onChange={onFileload}
           iconUrl={myIconUrl}
+          uploadIconButtonSize="small"
         />
         <div className={`${styles.contents} inner`}>
           <div className={styles.form}>
@@ -116,20 +101,18 @@ const EditProfile = () => {
               isFullWidth
               type="text"
               color="primary"
-              variant="standard"
+              variant={setVariant()}
               id="nameEditProfile"
               label="ユーザーネーム"
-              value={name}
-              errorMessage={nameErrorMessage}
+              value={userName}
               startIcon={<FontAwesomeIcon icon={faIdCard} />}
               onChange={(event) => setName(event.target.value)}
-              onBlur={() => setNameErrorMessage(nameComplete())}
             />
             <Input
               isFullWidth
               type="email"
               color="primary"
-              variant="standard"
+              variant={setVariant()}
               id="email"
               label="メールアドレス"
               value={email}

@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Input from '@/components/atoms/Input';
-import Tabs, { TabsItem } from '@/components/atoms/Tabs';
+import Tabs from '@/components/atoms/Tabs';
 import BottomNavigation from '@/components/organisms/BottomNavigation';
 import Header from '@/components/organisms/Header';
 
@@ -18,7 +18,7 @@ const Home = () => {
   const [search, setSearch] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const [items, setItems] = useState<TabsItem[]>([
+  const items = [
     {
       label: '友達',
       icon: <FontAwesomeIcon icon={faUser} />,
@@ -29,7 +29,7 @@ const Home = () => {
       icon: <FontAwesomeIcon icon={faUsers} />,
       isDisabled: false,
     },
-  ]);
+  ];
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     index: number
