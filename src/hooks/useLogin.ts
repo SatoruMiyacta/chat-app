@@ -34,7 +34,6 @@ export const useLogin = () => {
     password,
     setPassword,
     passwordErrorMessage,
-    // validatePassword,
     setPasswordErrorMessage,
     isComplete,
   };

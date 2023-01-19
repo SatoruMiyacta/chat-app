@@ -1,18 +1,15 @@
 .contents {
   position: relative;
   z-index: 10;
+  padding-top: 64px;
   background-color: #fff;
-}
-
-.form {
-  margin-top: 64px;
 }
 
 .form div + div {
   margin-top: 32px;
 }
 
-.fullWidthButton {
+.buttonArea {
   margin-top: 64px;
 }
 
