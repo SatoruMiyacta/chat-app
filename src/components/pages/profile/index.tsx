@@ -21,52 +21,62 @@ const Profile = () => {
 
   const { fetchUserData } = useProfile();
 
-  const [actionItems, setActionItems] = useState<ActionItem[]>([
+  const actionItems = [
     {
       item: '編集',
       onClick: () => navigate('/profile/edit'),
     },
-  ]);
+  ];
 
   try {
     // キャッシュのタイムアウト設定
     if (authUser) {
       const userId = authUser.uid;
-      const date = new Date();
+      const now = new Date();
 
-      if (users[userId] === undefined || users[userId].expiresIn < date) {
+      if (users[userId] === undefined || users[userId].expiresIn < now) {
         fetchUserData(userId).then((data) => {
           if (!data) return;
 
           const userData: UserData = {
             name: data.name,
             iconUrl: data.iconUrl,
-            createdAt: data.createdAt.toDate(),
-            updateAt: data.updateAt.toDate(),
+            createdAt: data.createdAt,
+            updateAt: data.updateAt,
           };
 
-          setUsers({ [userId]: { data: userData, expiresIn: date } });
+          setUsers((prevState) => ({
+            ...prevState,
+            [userId]: { data: userData, expiresIn: now },
+          }));
+
+          setUserName(userData.name);
+          setMyIconUrl(userData.iconUrl);
         });
+      } else {
+        if (userName === '') setUserName(users[userId].data.name);
+
+        if (myIconUrl === '') setMyIconUrl(users[userId].data.iconUrl);
       }
     }
   } catch (error) {
     console.error(error);
   }
 
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
       <Header
         title="プロフィール"
         actionItems={actionItems}
-        showBackButton
         className={`${styles.header} sp`}
       />
       <main className={styles.container}>
         <BackgroundImage
           className={styles.BackgroundImage}
-          iconPosition="under"
+          iconPosition={isPcWindow ? 'left' : 'under'}
           iconUrl={myIconUrl}
-          uploadIconButtonSize="small"
+          uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
         />
         <div className={styles.contents}>
           <Heading tag="h2" align="center" isBold>

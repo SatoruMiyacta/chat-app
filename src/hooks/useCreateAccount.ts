@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, serverTimestamp, setDoc, getDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useAtom } from 'jotai';
 
@@ -13,9 +13,8 @@ export interface InitialUserData {
   userName: string;
   userIconUrl: string;
 }
-export const useCreateAccounts = () => {
-  const [users, setUsers] = useAtom(usersAtom);
-  const [userName, setName] = useState('');
+export const useCreateAccount = () => {
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
@@ -55,36 +54,28 @@ export const useCreateAccounts = () => {
     const docRef = doc(db, 'users', useId);
     await setDoc(docRef, {
       name: userName,
-      iconURL: userIconUrl,
+      iconUrl: userIconUrl,
       createdAt: serverTimestamp(),
       updateAt: serverTimestamp(),
     });
   };
 
-  // データとる、firestoreから
+  const getUserData = async (useId: string) => {
+    const docRef = doc(db, 'users', useId);
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+    if (!data) return;
 
-  const saveUsersAtom = (
-    useId: string,
-    { userName, userIconUrl }: InitialUserData
-  ) => {
-    const date = new Date();
-    const userData: UserData = {
-      name: userName,
-      iconUrl: userIconUrl,
-      createdAt: date,
-      updateAt: date,
-    };
-
-    setUsers({ [useId]: { data: userData, expiresIn: date } });
+    return data;
   };
 
   return {
-    users,
-    saveUsersAtom,
+    getUserData,
+    // saveUsersAtom,
     registerUserDate,
     signUp,
     userName,
-    setName,
+    setUserName,
     email,
     setEmail,
     password,

@@ -83,14 +83,7 @@ const Login = () => {
     );
   };
 
-  const setVariant = () => {
-    if (window.matchMedia('(min-width:1024px)').matches) {
-      return 'outlined';
-    } else {
-      return 'standard';
-    }
-  };
-
+  const windowWidth = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
       {renderErrorModal()}
@@ -112,7 +105,7 @@ const Login = () => {
               isFullWidth
               type="email"
               color="primary"
-              variant={setVariant()}
+              variant={windowWidth ? 'outlined' : 'standard'}
               id="emailLogin"
               label="メールアドレス"
               value={email}
@@ -124,7 +117,7 @@ const Login = () => {
               isFullWidth
               type="password"
               color="primary"
-              variant={setVariant()}
+              variant={windowWidth ? 'outlined' : 'standard'}
               id="passwordLogin"
               label="パスワード"
               value={password}

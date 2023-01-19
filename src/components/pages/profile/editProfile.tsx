@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAtom } from 'jotai';
+import { FirebaseError } from 'firebase/app';
+import { updateEmail } from 'firebase/auth';
+import { useSetAtom } from 'jotai';
 
 import styles from './editProfile.module.css';
 
@@ -12,38 +14,116 @@ import Button from '@/components/atoms/Button';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
 import BaCkgroundImage from '@/components/organisms/BackgroundImage';
-import Header, { ActionItem } from '@/components/organisms/Header';
+import Header from '@/components/organisms/Header';
 
-import { useEditProfile } from '@/hooks';
-import { authUserAtom } from '@/store';
+import {} from '@/hooks';
+import { useEditProfile, InitialUserData } from '@/hooks';
+import { auth } from '@/main';
+import { UserData, usersAtom } from '@/store';
+import {
+  convertCanvasToBlob,
+  resizeFile,
+  validateBlobSize,
+  getFirebaseError,
+} from '@/utils';
 
 const EditProfile = () => {
-  const [userData, setUserData] = useAtom(authUserAtom);
-  const [isErrorModal, setIsErrorModal] = useState(false);
+  const setUsers = useSetAtom(usersAtom);
+  const [isErrorModal, setIsOpenErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
 
-  const [actionItems, setActionItems] = useState<ActionItem[]>([
+  const actionItems = [
     {
       item: '保存',
-      onClick: (event) => onSave(),
+      onClick: () => onSave(),
     },
-  ]);
+  ];
 
   const {
+    setUserIconFile,
+    getUserData,
+    uploadIcon,
+    updateUserDate,
     userIconFile,
     myIconUrl,
     userName,
-    setName,
+    setUserName,
+    setMyIconUrl,
     email,
     setEmail,
     isComplete,
+    setInitialDate,
   } = useEditProfile();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setInitialDate();
+  }, []);
+
   const onSave = async () => {
     if (!isComplete) return;
+
+    try {
+      if (!auth.currentUser) return;
+      const useId = auth.currentUser.uid;
+
+      await updateEmail(auth.currentUser, email);
+
+      let userIconUrl = myIconUrl;
+      if (userIconFile) userIconUrl = await uploadIcon(userIconFile, useId);
+
+      const initialUserData: InitialUserData = { userName, userIconUrl };
+      await updateUserDate(useId, initialUserData);
+
+      const data = await getUserData(useId);
+      if (!data) return;
+
+      const date = new Date();
+      const userData: UserData = {
+        name: data.name,
+        iconUrl: data.iconUrl,
+        createdAt: data.createdAt,
+        updateAt: data.updateAt,
+      };
+      setUsers({ [useId]: { data: userData, expiresIn: date } });
+
+      navigate('/profile');
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else if (error instanceof FirebaseError) {
+        const errorCode = error.code;
+        setErrorMessage(getFirebaseError(errorCode));
+      }
+
+      setIsOpenErrorModal(true);
+    }
+  };
+
+  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const canvas = await resizeFile(event);
+      if (!canvas) {
+        throw new Error(
+          '画像が読み込めません。お手数ですが、再度アップロードしてください。'
+        );
+      }
+
+      const blobFile = await convertCanvasToBlob(canvas);
+
+      const blob = validateBlobSize(blobFile);
+
+      setUserIconFile(blob);
+      setMyIconUrl(URL.createObjectURL(blob));
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      }
+
+      setIsOpenErrorModal(true);
+    }
   };
 
   const renderErrorModal = () => {
@@ -56,7 +136,7 @@ const EditProfile = () => {
         isOpen={isErrorModal}
         hasInner
         isBoldTitle
-        onClose={() => setIsErrorModal(false)}
+        onClose={() => setIsOpenErrorModal(false)}
       >
         <div>
           <p>{errorMessage}</p>
@@ -65,7 +145,7 @@ const EditProfile = () => {
           <Button
             color="primary"
             variant="contained"
-            onClick={() => setIsErrorModal(false)}
+            onClick={() => setIsOpenErrorModal(false)}
             isFullWidth
             size="small"
           >
@@ -76,43 +156,42 @@ const EditProfile = () => {
     );
   };
 
-  const setVariant = () => {
-    if (window.matchMedia('(min-width:1024px)').matches) {
-      return 'outlined';
-    } else {
-      return 'standard';
-    }
-  };
-
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
       {renderErrorModal}
-      <Header title="プロフィール" actionItems={actionItems} showBackButton />
+      <Header
+        title="プロフィール編集"
+        actionItems={actionItems}
+        showBackButton
+      />
       <main className={styles.container}>
-        <BaCkgroundImage
-          hasCameraIcon
-          // onChange={onFileload}
-          iconUrl={myIconUrl}
-          uploadIconButtonSize="small"
-        />
+        <div className={`${styles.iconImage} ${isPcWindow ? 'inner' : ''}`}>
+          <BaCkgroundImage
+            hasCameraIcon
+            onChange={onFileChange}
+            iconUrl={myIconUrl}
+            uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
+          />
+        </div>
         <div className={`${styles.contents} inner`}>
           <div className={styles.form}>
             <Input
               isFullWidth
               type="text"
               color="primary"
-              variant={setVariant()}
+              variant={isPcWindow ? 'outlined' : 'standard'}
               id="nameEditProfile"
               label="ユーザーネーム"
               value={userName}
               startIcon={<FontAwesomeIcon icon={faIdCard} />}
-              onChange={(event) => setName(event.target.value)}
+              onChange={(event) => setUserName(event.target.value)}
             />
             <Input
               isFullWidth
               type="email"
               color="primary"
-              variant={setVariant()}
+              variant={isPcWindow ? 'outlined' : 'standard'}
               id="email"
               label="メールアドレス"
               value={email}
@@ -120,7 +199,7 @@ const EditProfile = () => {
               onChange={(event) => setEmail(event.target.value)}
             />
           </div>
-          <div className={styles.fullWidthButton}>
+          <div className={styles.buttonArea}>
             <Button
               color="danger"
               variant="outlined"

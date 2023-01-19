@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 import { deleteUser } from 'firebase/auth';
-import { useAtom } from 'jotai';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { deleteObject, ref } from 'firebase/storage';
+import { useAtomValue } from 'jotai';
 
 import styles from './deleteAccount.module.css';
 
@@ -20,19 +22,21 @@ import Modal from '@/components/molecules/Modal';
 import Header from '@/components/organisms/Header';
 
 import { useDeleteAccount } from '@/hooks';
+import { auth, db, storage } from '@/main';
 import { authUserAtom } from '@/store';
-import { getFirebaseError } from '@/utils';
+import { getFirebaseError, isValidPassword } from '@/utils';
 
 const DeleteAccount = () => {
   const [isModal, setIsModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  const [modalMessage, setModalMessage] = useState(
+    '予期せぬエラーが発生しました。お手数ですが、再度実行してください。'
+  );
   const [modalTitle, setModalTitle] = useState('');
-  const [userData, setUserData] = useAtom(authUserAtom);
+  const userData = useAtomValue(authUserAtom);
 
   const navigate = useNavigate();
 
   const {
-    passwordComplete,
     setPasswordErrorMessage,
     passwordErrorMessage,
     setPassword,
@@ -40,15 +44,24 @@ const DeleteAccount = () => {
     isComplete,
   } = useDeleteAccount();
 
-  const handleClick = async () => {
+  const deleteAccount = async () => {
     if (!isComplete()) return;
 
     try {
       if (!userData) return;
+
+      if (!auth.currentUser) return;
+      const uid = auth.currentUser.uid;
+      await deleteDoc(doc(db, 'users', uid));
+
+      const desertRef = ref(storage, `iconImage/${uid}/userIcon`);
+      await deleteObject(desertRef);
+
       await deleteUser(userData);
-      setModalMessage('アカウントが削除されました。');
-      setModalTitle('削除完了');
-      setIsModal(true);
+
+      // setModalMessage('アカウントが削除されました。');
+      // setModalTitle('削除完了');
+      // setIsModal(true);
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
@@ -78,7 +91,6 @@ const DeleteAccount = () => {
             color="primary"
             variant="contained"
             onClick={() => navigate('/')}
-            className={styles.modalButton}
           >
             OK
           </Button>
@@ -87,14 +99,7 @@ const DeleteAccount = () => {
     );
   };
 
-  const setVariant = () => {
-    if (window.matchMedia('(min-width:1024px)').matches) {
-      return 'outlined';
-    } else {
-      return 'standard';
-    }
-  };
-
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
       {renderErrorModal()}
@@ -119,33 +124,42 @@ const DeleteAccount = () => {
             color="#ff971d"
             size="xl"
           />
-          <p className={styles.alertMessage}>
-            アカウント削除すると、すべてデータは消えてしまいます。
-          </p>
+          <p>アカウント削除すると、すべてデータは消えてしまいます。</p>
         </div>
-        <div className={styles.form}>
-          <Input
-            isFullWidth
-            type="password"
-            color="primary"
-            variant={setVariant()}
-            id="passwordDeleteAccount"
-            label="パスワード"
-            value={password}
-            startIcon={<FontAwesomeIcon icon={faLock} />}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </div>
-        <div className={styles.fullWidthButton}>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={handleClick}
-            isFullWidth
-            isDisabled={!isComplete()}
-          >
-            削除する
-          </Button>
+        <div className={styles.contents}>
+          <div className={styles.form}>
+            <Input
+              isFullWidth
+              type="password"
+              color="primary"
+              variant={isPcWindow ? 'outlined' : 'standard'}
+              label="パスワード"
+              id="pass_delete"
+              value={password}
+              errorMessage={passwordErrorMessage}
+              startIcon={<FontAwesomeIcon icon={faLock} />}
+              onChange={(event) => setPassword(event.target.value)}
+              onBlur={() => {
+                if (!isValidPassword(password)) {
+                  setPasswordErrorMessage('半角英数字で入力してください');
+                } else {
+                  setPasswordErrorMessage('');
+                }
+              }}
+              minLength={10}
+            />
+          </div>
+          <div className={styles.buttonArea}>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={deleteAccount}
+              isFullWidth
+              isDisabled={!isComplete()}
+            >
+              削除する
+            </Button>
+          </div>
         </div>
       </main>
     </>

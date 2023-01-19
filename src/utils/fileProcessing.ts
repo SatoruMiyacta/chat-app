@@ -1,14 +1,32 @@
 import loadImage from 'blueimp-load-image';
 
+// type resizeOptions = Pick<loadImage.LoadImageOptions, "maxWidth"|"maxHeight" | "minHeight"| "minWidth" | "contain"| "cover" | "crop"| "canvas" |"top" | "right" | "bottom" |"left" | "aspectRatio"| "pixelRatio" | "downsamplingRatio">
+
+type ResizeBasicOptions = Omit<
+  loadImage.BasicOptions,
+  'crossOrigin' | 'noRevoke'
+>;
+type ResizeCanvasTrueOptions = Omit<
+  loadImage.CanvasTrueOptions,
+  'orientation' | 'imageSmoothingEnabled' | 'imageSmoothigQuality'
+>;
+
+type ResizeOptions = ResizeBasicOptions &
+  ResizeCanvasTrueOptions &
+  loadImage.CropTrueOptions;
+
 export const resizeFile = async (
-  event: React.ChangeEvent<HTMLInputElement>
+  event: React.ChangeEvent<HTMLInputElement>,
+  resizeOptions?: ResizeOptions
 ) => {
   if (!event.target.files) return;
   const file = event.target.files[0];
 
+  const options = { maxWidth: 500, maxHeight: 500, ...resizeOptions };
+
   const loadImageResult = await loadImage(file, {
-    maxWidth: 500,
-    maxHeight: 500,
+    maxWidth: { ...options }.maxWidth,
+    maxHeight: { ...options }.maxHeight,
     canvas: true,
   });
 
@@ -17,7 +35,7 @@ export const resizeFile = async (
   return canvas;
 };
 
-export const convertBlobFile = async (canvas: HTMLCanvasElement) => {
+export const convertCanvasToBlob = async (canvas: HTMLCanvasElement) => {
   const blobFile: Blob | null = await new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob));
   });
@@ -25,7 +43,7 @@ export const convertBlobFile = async (canvas: HTMLCanvasElement) => {
   return blobFile;
 };
 
-export const validateBlobFile = (blob: Blob) => {
+export const validateBlobSize = (blob: Blob | null) => {
   if (!blob) {
     throw new Error(
       '画像読み込みに失敗しました。再度アップロードしてください。'

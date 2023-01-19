@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
+import { useAtom, useSetAtom } from 'jotai';
 
 import styles from './create.module.css';
 
@@ -21,30 +22,32 @@ import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
 
 import {
-  convertBlobFile,
+  convertCanvasToBlob,
   resizeFile,
-  validateBlobFile,
+  validateBlobSize,
 } from '@/utils/fileProcessing';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { InitialUserData, useCreateAccounts } from '@/hooks';
+import { InitialUserData, useCreateAccount } from '@/hooks';
+import { UserData, usersAtom } from '@/store';
 import { getFirebaseError, isValidPassword } from '@/utils';
 
-const CreateAcconunts = () => {
-  const [isErrorModal, setIsErrorModal] = useState(false);
+const CreateAcconunt = () => {
+  const setUsers = useSetAtom(usersAtom);
+  const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
-  const [userIconFile, setUserIconFile] = useState<Blob>();
+  const [userIconBlob, setUserIconBlob] = useState<Blob>();
   // プレビューのiconURL
   const [initialIconUrl, setInitialIconUrl] = useState(INITIAL_ICON_URL);
   const navigate = useNavigate();
 
   const {
-    saveUsersAtom,
+    getUserData,
     signUp,
     userName,
-    setName,
+    setUserName,
     email,
     setEmail,
     password,
@@ -54,9 +57,9 @@ const CreateAcconunts = () => {
     isComplete,
     uploadIcon,
     registerUserDate,
-  } = useCreateAccounts();
+  } = useCreateAccount();
 
-  const handleClick = async () => {
+  const createAccount = async () => {
     if (!isComplete()) return;
 
     try {
@@ -67,12 +70,28 @@ const CreateAcconunts = () => {
 
       // リサイズされたプロフィールアイコンをcloudstorageにアップロードする
       let userIconUrl = INITIAL_ICON_URL;
-      if (userIconFile) userIconUrl = await uploadIcon(userIconFile, useId);
+      if (userIconBlob) userIconUrl = await uploadIcon(userIconBlob, useId);
 
       const initialUserData: InitialUserData = { userName, userIconUrl };
       await registerUserDate(useId, initialUserData);
 
-      saveUsersAtom(useId, initialUserData);
+      const data = await getUserData(useId);
+      if (!data) return;
+
+      const userData: UserData = {
+        name: data.name,
+        iconUrl: data.iconUrl,
+        createdAt: data.createdAt,
+        updateAt: data.updateAt,
+      };
+
+      const now = new Date();
+      setUsers((prevState) => ({
+        ...prevState,
+        [useId]: { data: userData, expiresIn: now },
+      }));
+
+      // setUsers({ [useId]: { data: userData, expiresIn: now } });
 
       navigate('/');
     } catch (error) {
@@ -81,43 +100,45 @@ const CreateAcconunts = () => {
         setErrorMessage(getFirebaseError(errorCode));
       }
 
-      setIsErrorModal(true);
+      setIsOpenErrorModal(true);
     }
   };
 
   const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const canvas = await resizeFile(event);
-      if (!canvas) return;
+      if (!canvas) {
+        throw new Error(
+          '画像が読み込めません。お手数ですが、再度アップロードしてください。'
+        );
+      }
 
-      const blobFile = await convertBlobFile(canvas);
-      if (!blobFile) return;
+      const blobFile = await convertCanvasToBlob(canvas);
 
-      const blob = validateBlobFile(blobFile);
-      if (!blob) return;
+      const blob = validateBlobSize(blobFile);
 
-      setUserIconFile(blob);
+      setUserIconBlob(blob);
       setInitialIconUrl(URL.createObjectURL(blob));
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
       }
 
-      setIsErrorModal(true);
+      setIsOpenErrorModal(true);
     }
   };
 
   const renderErrorModal = () => {
-    if (!isErrorModal) return;
+    if (!isOpenErrorModal) return;
 
     return (
       <Modal
         title="エラー"
         titleAlign="center"
-        isOpen={isErrorModal}
+        isOpen={isOpenErrorModal}
         hasInner
         isBoldTitle
-        onClose={() => setIsErrorModal(false)}
+        onClose={() => setIsOpenErrorModal(false)}
       >
         <div>
           <p>{errorMessage}</p>
@@ -126,7 +147,7 @@ const CreateAcconunts = () => {
           <Button
             color="primary"
             variant="contained"
-            onClick={() => setIsErrorModal(false)}
+            onClick={() => setIsOpenErrorModal(false)}
             isFullWidth
             size="small"
           >
@@ -137,17 +158,8 @@ const CreateAcconunts = () => {
     );
   };
 
-  // 三項演算子、一行なら可
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
 
-  const getBackgroundClass = () => {
-    if (window.matchMedia('(min-width:1024px)').matches) {
-      return `${styles.iconImage} inner`;
-    } else {
-      return styles.iconImage;
-    }
-  };
-
-  const windowWidth = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
       {renderErrorModal()}
@@ -168,34 +180,34 @@ const CreateAcconunts = () => {
           >
             アカウント作成
           </Heading>
-          <div className={getBackgroundClass()}>
+          <div className={`${styles.iconImage} ${isPcWindow ? 'inner' : ''}`}>
             <BackgroundImage
               hasCameraIcon
               onChange={onFileChange}
               iconUrl={initialIconUrl}
               isUploadButton
-              uploadIconButtonSize={windowWidth ? 'medium' : 'small'}
+              uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
             />
           </div>
-          <div className={`${styles.formButtonWrapper} inner`}>
+          <div className={`${styles.formArea} inner`}>
             <div className={styles.form}>
               <Input
                 isFullWidth
                 type="text"
                 color="primary"
-                variant={windowWidth ? 'outlined' : 'standard'}
+                variant={isPcWindow ? 'outlined' : 'standard'}
                 id="textCreate"
                 label="ユーザーネーム"
                 value={userName}
                 isRequired
                 startIcon={<FontAwesomeIcon icon={faIdCard} />}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => setUserName(event.target.value)}
               />
               <Input
                 isFullWidth
                 type="email"
                 color="primary"
-                variant={windowWidth ? 'outlined' : 'standard'}
+                variant={isPcWindow ? 'outlined' : 'standard'}
                 id="emailCreate"
                 label="メールアドレス"
                 value={email}
@@ -207,7 +219,7 @@ const CreateAcconunts = () => {
                 isFullWidth
                 type="password"
                 color="primary"
-                variant={windowWidth ? 'outlined' : 'standard'}
+                variant={isPcWindow ? 'outlined' : 'standard'}
                 id="passwordCreate"
                 label="パスワード"
                 value={password}
@@ -224,11 +236,11 @@ const CreateAcconunts = () => {
                 minLength={10}
               />
             </div>
-            <div className={styles.fullWidthButton}>
+            <div className={styles.buttonArea}>
               <Button
                 color="primary"
                 variant="contained"
-                onClick={handleClick}
+                onClick={createAccount}
                 isFullWidth
                 isDisabled={!isComplete()}
                 size="medium"
@@ -243,4 +255,4 @@ const CreateAcconunts = () => {
   );
 };
 
-export default CreateAcconunts;
+export default CreateAcconunt;
