@@ -19,7 +19,7 @@ import { InitialUserData } from './useCreateAccount';
 
 import { db, storage, auth } from '@/main';
 import { authUserAtom, usersAtom } from '@/store';
-import { validateEmail } from '@/utils';
+import { isValidEmail } from '@/utils';
 
 export const useEditProfile = () => {
   const authUser = useAtomValue(authUserAtom);
@@ -28,15 +28,17 @@ export const useEditProfile = () => {
   const [email, setEmail] = useState('');
   const [myIconUrl, setMyIconUrl] = useState('');
   const [userIconFile, setUserIconFile] = useState<Blob>();
+  const [password, setPassword] = useState('');
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
 
   const isComplete = () => {
     if (!userName) return false;
-    if (!validateEmail(email)) return false;
+    if (!isValidEmail(email)) return false;
 
     return true;
   };
 
-  const setInitialDate = () => {
+  const setInitialDate = (userName: string, myIconUrl: string) => {
     if (authUser) {
       const userId = authUser.uid;
 
@@ -50,19 +52,13 @@ export const useEditProfile = () => {
     }
   };
 
-  // const reAuthenticate = async () => {
-  //   if (!auth.currentUser?.email) return;
-  //   const userEmail = auth.currentUser.email
+  const reAuthenticate = async () => {
+    if (!auth.currentUser?.email) return;
+    const userEmail = auth.currentUser.email;
 
-  //   const credential = EmailAuthProvider.credential(
-  //     userEmail,
-  //     userProvidedPassword
-  // )
-  // const result = await reauthenticateWithCredential(
-  //     auth.currentUser,
-  //     credential
-  // )
-  // };
+    const credential = EmailAuthProvider.credential(userEmail, password);
+    await reauthenticateWithCredential(auth.currentUser, credential);
+  };
 
   const uploadIcon = async (userIconFile: Blob, userId: string) => {
     if (!userIconFile) throw new Error('画像をアップロードしてください。');
@@ -82,7 +78,7 @@ export const useEditProfile = () => {
     await updateDoc(docRef, {
       name: userName,
       iconUrl: userIconUrl,
-      updateAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     });
   };
 
@@ -96,6 +92,7 @@ export const useEditProfile = () => {
   };
 
   return {
+    reAuthenticate,
     setUserIconFile,
     getUserData,
     updateUserDate,
@@ -109,5 +106,9 @@ export const useEditProfile = () => {
     isComplete,
     uploadIcon,
     setInitialDate,
+    setPasswordErrorMessage,
+    setPassword,
+    passwordErrorMessage,
+    password,
   };
 };

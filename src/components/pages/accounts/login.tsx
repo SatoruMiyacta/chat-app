@@ -58,12 +58,12 @@ const Login = () => {
 
     return (
       <Modal
+        onClose={() => setIsErrorModalOpen(false)}
         title="エラー"
         titleAlign="center"
-        isOpen={isErrorModalOpen}
         hasInner
+        isOpen={isErrorModalOpen}
         isBoldTitle
-        onClose={() => setIsErrorModalOpen(false)}
       >
         <div>
           <p>{firebaseErrorMessage}</p>
@@ -71,8 +71,8 @@ const Login = () => {
         <div className={styles.controler}>
           <Button
             color="primary"
-            variant="contained"
             onClick={() => setIsErrorModalOpen(false)}
+            variant="contained"
             isFullWidth
             size="small"
           >
@@ -83,86 +83,88 @@ const Login = () => {
     );
   };
 
-  const windowWidth = window.matchMedia('(min-width:1024px)').matches;
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
       {renderErrorModal()}
-      <Header title="ログイン" className={`${styles.header} sp`} />
-      <main className={styles.container}>
+      <Header title="ログイン" className="sp" />
+      <main className={isPcWindow ? 'flex' : ''}>
         <CoverImageOnlyPc />
-        <section className={`${styles.contents} inner`}>
-          <Heading
-            tag="h1"
-            align="center"
-            color="inherit"
-            size="xxl"
-            className={'pc'}
-          >
-            ログイン
-          </Heading>
-          <div className={styles.form}>
-            <Input
-              isFullWidth
-              type="email"
-              color="primary"
-              variant={windowWidth ? 'outlined' : 'standard'}
-              id="emailLogin"
-              label="メールアドレス"
-              value={email}
-              isRequired
-              startIcon={<FontAwesomeIcon icon={faEnvelope} />}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            <Input
-              isFullWidth
-              type="password"
-              color="primary"
-              variant={windowWidth ? 'outlined' : 'standard'}
-              id="passwordLogin"
-              label="パスワード"
-              value={password}
-              isRequired
-              errorMessage={passwordErrorMessage}
-              startIcon={<FontAwesomeIcon icon={faLock} />}
-              onChange={(event) => setPassword(event.target.value)}
-              onBlur={() => {
-                if (!isValidPassword(password)) {
-                  setPasswordErrorMessage('半角英数字で入力してください');
-                } else {
-                  setPasswordErrorMessage('');
-                }
-              }}
-              minLength={10}
-            />
-            <Button
-              color="primary"
-              variant="text"
-              onClick={() => navigate('/accounts/reset-password')}
+        <div className={styles.container}>
+          <section className={`${styles.contents} inner`}>
+            <Heading
+              tag="h1"
+              align="center"
+              color="inherit"
+              className="pc"
+              size="xxl"
             >
-              パスワードを忘れた場合
-            </Button>
-          </div>
+              ログイン
+            </Heading>
+            <div className={styles.form}>
+              <Input
+                color="primary"
+                id="email"
+                onChange={(event) => setEmail(event.target.value)}
+                type="email"
+                value={email}
+                variant={isPcWindow ? 'outlined' : 'standard'}
+                isFullWidth
+                isRequired
+                label="メールアドレス"
+                startIcon={<FontAwesomeIcon icon={faEnvelope} />}
+              />
+              <Input
+                color="primary"
+                id="password"
+                onChange={(event) => setPassword(event.target.value)}
+                type="password"
+                value={password}
+                variant={isPcWindow ? 'outlined' : 'standard'}
+                errorMessage={passwordErrorMessage}
+                isFullWidth
+                isRequired
+                label="パスワード"
+                minLength={10}
+                startIcon={<FontAwesomeIcon icon={faLock} />}
+                onBlur={() => {
+                  if (!isValidPassword(password)) {
+                    setPasswordErrorMessage('半角英数字で入力してください');
+                  } else {
+                    setPasswordErrorMessage('');
+                  }
+                }}
+              />
+              <Button
+                color="primary"
+                onClick={() => navigate('/accounts/reset-password')}
+                variant="text"
+              >
+                パスワードを忘れた場合
+              </Button>
+            </div>
 
-          <div className={styles.fullWidthButton}>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={signInAndRedirect}
-              isFullWidth
-              isDisabled={!isComplete()}
-            >
-              サインイン
-            </Button>
-            <Button
-              color="primary"
-              variant="text"
-              isFullWidth
-              onClick={() => navigate('/accounts/create')}
-            >
-              アカウント作成
-            </Button>
-          </div>
-        </section>
+            <div className={styles.fullWidthButton}>
+              <Button
+                color="primary"
+                onClick={signInAndRedirect}
+                variant="contained"
+                isDisabled={!isComplete()}
+                isFullWidth
+              >
+                サインイン
+              </Button>
+              <Button
+                color="primary"
+                onClick={() => navigate('/accounts/create')}
+                variant="text"
+                isFullWidth
+              >
+                アカウント作成
+              </Button>
+            </div>
+          </section>
+        </div>
       </main>
     </>
   );

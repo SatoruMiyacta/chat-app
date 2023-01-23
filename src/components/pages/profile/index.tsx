@@ -7,7 +7,7 @@ import styles from './index.module.css';
 
 import Heading from '@/components/atoms/Heading';
 import BackgroundImage from '@/components/organisms/BackgroundImage';
-import Header, { ActionItem } from '@/components/organisms/Header';
+import Header from '@/components/organisms/Header';
 
 import { useProfile } from '@/hooks';
 import { authUserAtom, UserData, usersAtom } from '@/store';
@@ -42,7 +42,7 @@ const Profile = () => {
             name: data.name,
             iconUrl: data.iconUrl,
             createdAt: data.createdAt,
-            updateAt: data.updateAt,
+            updatedAt: data.updatedAt,
           };
 
           setUsers((prevState) => ({
@@ -66,11 +66,7 @@ const Profile = () => {
   const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
-      <Header
-        title="プロフィール"
-        actionItems={actionItems}
-        className={`${styles.header} sp`}
-      />
+      <Header title="プロフィール" className="sp" actionItems={actionItems} />
       <main className={styles.container}>
         <BackgroundImage
           className={styles.BackgroundImage}

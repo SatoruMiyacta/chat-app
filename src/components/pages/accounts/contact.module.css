@@ -1,5 +1,5 @@
 .contents {
-  margin-top: 64px;
+  margin-top: 32px;
 }
 
 .form div + div {
@@ -16,11 +16,12 @@
 
 @media screen and (min-width: 1024px) {
   .container {
-    display: flex;
+    width: 50vw;
+    margin-top: 96px;
   }
 
   .contents {
-    width: 35vw;
+    width: 70%;
     margin: auto;
   }
 

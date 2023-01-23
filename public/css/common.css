@@ -12,6 +12,22 @@ html {
   padding-left: 16px;
 }
 
+.flex {
+  display: flex;
+}
+
+.jcc {
+  justify-content: center;
+}
+
+.alic {
+  align-items: center;
+}
+
+.fdrc {
+flex-direction: column;
+}
+
 @media screen and (min-width:1024px) {
   .sp {
     display: none !important;

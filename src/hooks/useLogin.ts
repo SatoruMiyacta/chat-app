@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import { auth } from '@/main';
-import { isValidPassword, validateEmail } from '@/utils';
+import { isValidPassword, isValidEmail } from '@/utils';
 
 export const useLogin = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +11,7 @@ export const useLogin = () => {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
 
   const isComplete = () => {
-    if (!validateEmail(email)) return false;
+    if (!isValidEmail(email)) return false;
     if (!isValidPassword(password)) return false;
 
     return true;
