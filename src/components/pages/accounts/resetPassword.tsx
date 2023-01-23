@@ -21,7 +21,7 @@ import { auth } from '@/main';
 import { getFirebaseError } from '@/utils';
 
 const ResetPassword = () => {
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [modalMessage, setModalMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度送信してください。'
   );
@@ -30,15 +30,17 @@ const ResetPassword = () => {
 
   const { email, setEmail, isComplete } = useResetPassword();
 
-  const handleClick = async () => {
+  const resetPassword = async () => {
     if (!isComplete()) return;
 
     try {
       await sendPasswordResetEmail(auth, email);
 
       setModalTitle('送信完了');
-      setModalMessage('メールが送信されました。');
-      setIsErrorModalOpen(true);
+      setModalMessage(
+        'パスワードリセットメールが送信されました。入力したメールアドレスより、パスワードを再設定してください。'
+      );
+      setIsOpenErrorModal(true);
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
@@ -46,21 +48,21 @@ const ResetPassword = () => {
       }
 
       setModalTitle('エラー');
-      setIsErrorModalOpen(true);
+      setIsOpenErrorModal(true);
     }
   };
 
   const renderModal = () => {
-    if (!isErrorModalOpen) return;
+    if (!isOpenErrorModal) return;
 
     return (
       <Modal
+        onClose={() => setIsOpenErrorModal(false)}
         title={modalTitle}
         titleAlign="center"
-        isOpen={isErrorModalOpen}
         hasInner
+        isOpen={isOpenErrorModal}
         isBoldTitle
-        onClose={() => setIsErrorModalOpen(false)}
       >
         <div>
           <p>{modalMessage}</p>
@@ -68,8 +70,8 @@ const ResetPassword = () => {
         <div className={styles.controler}>
           <Button
             color="primary"
+            onClick={() => setIsOpenErrorModal(false)}
             variant="contained"
-            onClick={() => setIsErrorModalOpen(false)}
             isFullWidth
             size="small"
           >
@@ -80,71 +82,63 @@ const ResetPassword = () => {
     );
   };
 
-  const setVariant = () => {
-    if (window.matchMedia('(min-width:1024px)').matches) {
-      return 'outlined';
-    } else {
-      return 'standard';
-    }
-  };
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
 
   return (
     <>
       {renderModal()}
-      <Header
-        title="パスワードリセット"
-        className={`${styles.header} sp `}
-        showBackButton
-      />
-      <main className={styles.container}>
+      <Header title="パスワードリセット" className="sp" showBackButton />
+      <main className={isPcWindow ? 'flex' : ''}>
         <CoverImageOnlyPc />
-        <section className={`${styles.contents} inner`}>
-          <Heading
-            tag="h1"
-            align="center"
-            color="inherit"
-            size="xxl"
-            className={'pc'}
-          >
-            パスワードリセット
-          </Heading>
-          <p>
-            パスワードをリセットします。登録したメールアドレスを入力して送信してください。
-          </p>
-          <div className={styles.form}>
-            <Input
-              isFullWidth
-              type="email"
-              color="primary"
-              variant={setVariant()}
-              id="emailResetPassword"
-              label="メールアドレス"
-              value={email}
-              startIcon={<FontAwesomeIcon icon={faEnvelope} />}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-          </div>
-          <div className={styles.fullWidthButton}>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleClick}
-              isFullWidth
-              isDisabled={!isComplete()}
-            >
-              メール送信
-            </Button>
-            <hr />
-            <Button
+        <div className={styles.container}>
+          <section className={`${styles.contents} inner`}>
+            <Heading
+              tag="h1"
+              align="center"
               color="inherit"
-              variant="outlined"
-              onClick={() => navigate('/accounts/contact')}
-              isFullWidth
+              className="pc"
+              size="xxl"
             >
-              問い合わせ
-            </Button>
-          </div>
-        </section>
+              パスワードリセット
+            </Heading>
+            <div className={styles.formArea}>
+              <p>
+                パスワードをリセットします。登録したメールアドレスを入力して送信してください。
+              </p>
+              <Input
+                color="primary"
+                id="email"
+                onChange={(event) => setEmail(event.target.value)}
+                type="email"
+                value={email}
+                variant={isPcWindow ? 'outlined' : 'standard'}
+                isFullWidth
+                label="メールアドレス"
+                startIcon={<FontAwesomeIcon icon={faEnvelope} />}
+              />
+              <Button
+                color="primary"
+                onClick={resetPassword}
+                variant="contained"
+                isDisabled={!isComplete()}
+                isFullWidth
+              >
+                メール送信
+              </Button>
+            </div>
+            <hr />
+            <div className={styles.buttonArea}>
+              <Button
+                color="inherit"
+                onClick={() => navigate('/accounts/contact')}
+                variant="outlined"
+                isFullWidth
+              >
+                問い合わせ
+              </Button>
+            </div>
+          </section>
+        </div>
       </main>
     </>
   );

@@ -76,21 +76,21 @@ const DeleteAccount = () => {
     if (!isModal) return;
     return (
       <Modal
+        onClose={() => setIsModal(false)}
         title={modalTitle}
         titleAlign="center"
-        isOpen={isModal}
         hasInner
         isBoldTitle
-        onClose={() => setIsModal(false)}
       >
+        isOpen={isModal}
         <div>
           <p>{modalMessage}</p>
         </div>
         <div className={styles.controler}>
           <Button
             color="primary"
-            variant="contained"
             onClick={() => navigate('/')}
+            variant="contained"
           >
             OK
           </Button>
@@ -103,25 +103,21 @@ const DeleteAccount = () => {
   return (
     <>
       {renderErrorModal()}
-      <Header
-        title="アカウント削除"
-        className={`${styles.header} sp `}
-        showBackButton
-      />
+      <Header title="アカウント削除" className="sp" showBackButton />
       <main className={`${styles.container} inner`}>
         <Heading
           tag="h1"
           align="center"
+          className="pc"
           color="inherit"
           size="xxl"
-          className={'pc'}
         >
           アカウント削除
         </Heading>
         <div className={styles.caution}>
           <FontAwesomeIcon
-            icon={faTriangleExclamation}
             color="#ff971d"
+            icon={faTriangleExclamation}
             size="xl"
           />
           <p>アカウント削除すると、すべてデータは消えてしまいます。</p>
@@ -129,16 +125,16 @@ const DeleteAccount = () => {
         <div className={styles.contents}>
           <div className={styles.form}>
             <Input
-              isFullWidth
-              type="password"
               color="primary"
-              variant={isPcWindow ? 'outlined' : 'standard'}
-              label="パスワード"
               id="pass_delete"
-              value={password}
-              errorMessage={passwordErrorMessage}
-              startIcon={<FontAwesomeIcon icon={faLock} />}
               onChange={(event) => setPassword(event.target.value)}
+              type="password"
+              value={password}
+              variant={isPcWindow ? 'outlined' : 'standard'}
+              errorMessage={passwordErrorMessage}
+              isFullWidth
+              label="パスワード"
+              minLength={10}
               onBlur={() => {
                 if (!isValidPassword(password)) {
                   setPasswordErrorMessage('半角英数字で入力してください');
@@ -146,16 +142,16 @@ const DeleteAccount = () => {
                   setPasswordErrorMessage('');
                 }
               }}
-              minLength={10}
+              startIcon={<FontAwesomeIcon icon={faLock} />}
             />
           </div>
           <div className={styles.buttonArea}>
             <Button
               color="primary"
-              variant="contained"
               onClick={deleteAccount}
-              isFullWidth
+              variant="contained"
               isDisabled={!isComplete()}
+              isFullWidth
             >
               削除する
             </Button>

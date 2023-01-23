@@ -1,15 +1,15 @@
 import { useState } from 'react';
 
-import { validateEmail } from '@/utils';
+import { isValidEmail } from '@/utils';
 
 export const useContact = () => {
-  const [userName, setName] = useState('');
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [contactText, setContactText] = useState('');
 
   const isComplete = () => {
     if (!userName) return false;
-    if (!validateEmail(email)) return false;
+    if (!isValidEmail(email)) return false;
     if (!contactText) return false;
 
     return true;
@@ -17,7 +17,7 @@ export const useContact = () => {
 
   return {
     userName,
-    setName,
+    setUserName,
     email,
     setEmail,
     contactText,

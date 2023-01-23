@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
@@ -21,16 +21,16 @@ import BackgroundImage from '@/components/organisms/BackgroundImage';
 import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
 
-import {
-  convertCanvasToBlob,
-  resizeFile,
-  validateBlobSize,
-} from '@/utils/fileProcessing';
-
 import { INITIAL_ICON_URL } from '@/constants';
 import { InitialUserData, useCreateAccount } from '@/hooks';
 import { UserData, usersAtom } from '@/store';
-import { getFirebaseError, isValidPassword } from '@/utils';
+import {
+  resizeFile,
+  validateBlobSize,
+  getFirebaseError,
+  isValidPassword,
+  convertCanvasToBlob,
+} from '@/utils';
 
 const CreateAcconunt = () => {
   const setUsers = useSetAtom(usersAtom);
@@ -82,7 +82,7 @@ const CreateAcconunt = () => {
         name: data.name,
         iconUrl: data.iconUrl,
         createdAt: data.createdAt,
-        updateAt: data.updateAt,
+        updatedAt: data.updatedAt,
       };
 
       const now = new Date();
@@ -106,7 +106,10 @@ const CreateAcconunt = () => {
 
   const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      const canvas = await resizeFile(event);
+      if (!event.target.files) return;
+      const file = event.target.files[0];
+      const canvas = await resizeFile(file);
+
       if (!canvas) {
         throw new Error(
           '画像が読み込めません。お手数ですが、再度アップロードしてください。'
@@ -133,12 +136,12 @@ const CreateAcconunt = () => {
 
     return (
       <Modal
+        onClose={() => setIsOpenErrorModal(false)}
         title="エラー"
         titleAlign="center"
-        isOpen={isOpenErrorModal}
         hasInner
+        isOpen={isOpenErrorModal}
         isBoldTitle
-        onClose={() => setIsOpenErrorModal(false)}
       >
         <div>
           <p>{errorMessage}</p>
@@ -146,8 +149,8 @@ const CreateAcconunt = () => {
         <div className={styles.controler}>
           <Button
             color="primary"
-            variant="contained"
             onClick={() => setIsOpenErrorModal(false)}
+            variant="contained"
             isFullWidth
             size="small"
           >
@@ -163,93 +166,91 @@ const CreateAcconunt = () => {
   return (
     <>
       {renderErrorModal()}
-      <Header
-        title="アカウント作成"
-        className={`${styles.header} sp `}
-        showBackButton
-      />
-      <main className={styles.container}>
+      <Header title="アカウント作成" className="sp" showBackButton />
+      <main className={isPcWindow ? 'flex' : ''}>
         <CoverImageOnlyPc />
-        <section className={styles.contents}>
-          <Heading
-            tag="h1"
-            align="center"
-            color="inherit"
-            size="xxl"
-            className="pc"
-          >
-            アカウント作成
-          </Heading>
-          <div className={`${styles.iconImage} ${isPcWindow ? 'inner' : ''}`}>
-            <BackgroundImage
-              hasCameraIcon
-              onChange={onFileChange}
-              iconUrl={initialIconUrl}
-              isUploadButton
-              uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
-            />
-          </div>
-          <div className={`${styles.formArea} inner`}>
-            <div className={styles.form}>
-              <Input
-                isFullWidth
-                type="text"
-                color="primary"
-                variant={isPcWindow ? 'outlined' : 'standard'}
-                id="textCreate"
-                label="ユーザーネーム"
-                value={userName}
-                isRequired
-                startIcon={<FontAwesomeIcon icon={faIdCard} />}
-                onChange={(event) => setUserName(event.target.value)}
-              />
-              <Input
-                isFullWidth
-                type="email"
-                color="primary"
-                variant={isPcWindow ? 'outlined' : 'standard'}
-                id="emailCreate"
-                label="メールアドレス"
-                value={email}
-                isRequired
-                startIcon={<FontAwesomeIcon icon={faEnvelope} />}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-              <Input
-                isFullWidth
-                type="password"
-                color="primary"
-                variant={isPcWindow ? 'outlined' : 'standard'}
-                id="passwordCreate"
-                label="パスワード"
-                value={password}
-                errorMessage={passwordErrorMessage}
-                startIcon={<FontAwesomeIcon icon={faLock} />}
-                onChange={(event) => setPassword(event.target.value)}
-                onBlur={() => {
-                  if (!isValidPassword(password)) {
-                    setPasswordErrorMessage('半角英数字で入力してください');
-                  } else {
-                    setPasswordErrorMessage('');
-                  }
-                }}
-                minLength={10}
+        <div className={styles.container}>
+          <section className={styles.contents}>
+            <Heading
+              tag="h1"
+              align="center"
+              color="inherit"
+              className="pc"
+              size="xxl"
+            >
+              アカウント作成
+            </Heading>
+            <div className={`${styles.iconImage} ${isPcWindow ? 'inner' : ''}`}>
+              <BackgroundImage
+                onChange={onFileChange}
+                iconUrl={initialIconUrl}
+                hasCameraIcon
+                isUploadButton
+                uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
               />
             </div>
-            <div className={styles.buttonArea}>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={createAccount}
-                isFullWidth
-                isDisabled={!isComplete()}
-                size="medium"
-              >
-                作成
-              </Button>
+            <div className={`${styles.formArea} inner`}>
+              <div className={styles.form}>
+                <Input
+                  color="primary"
+                  id="name"
+                  onChange={(event) => setUserName(event.target.value)}
+                  type="text"
+                  value={userName}
+                  variant={isPcWindow ? 'outlined' : 'standard'}
+                  isFullWidth
+                  isRequired
+                  label="ユーザーネーム"
+                  startIcon={<FontAwesomeIcon icon={faIdCard} />}
+                />
+                <Input
+                  color="primary"
+                  id="email"
+                  onChange={(event) => setEmail(event.target.value)}
+                  type="email"
+                  value={email}
+                  variant={isPcWindow ? 'outlined' : 'standard'}
+                  isFullWidth
+                  isRequired
+                  label="メールアドレス"
+                  startIcon={<FontAwesomeIcon icon={faEnvelope} />}
+                />
+                <Input
+                  color="primary"
+                  id="password"
+                  onChange={(event) => setPassword(event.target.value)}
+                  type="password"
+                  value={password}
+                  variant={isPcWindow ? 'outlined' : 'standard'}
+                  errorMessage={passwordErrorMessage}
+                  isFullWidth
+                  label="パスワード"
+                  minLength={10}
+                  onBlur={() => {
+                    if (!isValidPassword(password)) {
+                      setPasswordErrorMessage('半角英数字で入力してください');
+                    } else {
+                      setPasswordErrorMessage('');
+                    }
+                  }}
+                  startIcon={<FontAwesomeIcon icon={faLock} />}
+                />
+              </div>
+              <div className={styles.buttonArea}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={createAccount}
+                  isDisabled={!isComplete()}
+                  isFullWidth
+                  size="medium"
+                >
+                  作成
+                </Button>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </main>
     </>
   );

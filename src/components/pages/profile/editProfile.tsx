@@ -7,7 +7,11 @@ import { useSetAtom } from 'jotai';
 
 import styles from './editProfile.module.css';
 
-import { faEnvelope, faIdCard } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEnvelope,
+  faIdCard,
+  faLock,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Button from '@/components/atoms/Button';
@@ -25,14 +29,18 @@ import {
   resizeFile,
   validateBlobSize,
   getFirebaseError,
+  isValidPassword,
 } from '@/utils';
 
 const EditProfile = () => {
   const setUsers = useSetAtom(usersAtom);
-  const [isErrorModal, setIsOpenErrorModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(
+  const [isModal, setIsModal] = useState(false);
+  const [isPasswordAuthModal, setIsPasswordAuthModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
+  const [modalTitle, setModalTitle] = useState('エラー');
+  const navigate = useNavigate();
 
   const actionItems = [
     {
@@ -43,8 +51,8 @@ const EditProfile = () => {
 
   const {
     setUserIconFile,
+    reAuthenticate,
     getUserData,
-    uploadIcon,
     updateUserDate,
     userIconFile,
     myIconUrl,
@@ -54,12 +62,16 @@ const EditProfile = () => {
     email,
     setEmail,
     isComplete,
+    uploadIcon,
     setInitialDate,
+    setPasswordErrorMessage,
+    setPassword,
+    passwordErrorMessage,
+    password,
   } = useEditProfile();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    setInitialDate();
+    setInitialDate(userName, myIconUrl);
   }, []);
 
   const onSave = async () => {
@@ -68,8 +80,6 @@ const EditProfile = () => {
     try {
       if (!auth.currentUser) return;
       const useId = auth.currentUser.uid;
-
-      await updateEmail(auth.currentUser, email);
 
       let userIconUrl = myIconUrl;
       if (userIconFile) userIconUrl = await uploadIcon(userIconFile, useId);
@@ -85,26 +95,61 @@ const EditProfile = () => {
         name: data.name,
         iconUrl: data.iconUrl,
         createdAt: data.createdAt,
-        updateAt: data.updateAt,
+        updatedAt: data.updatedAt,
       };
-      setUsers({ [useId]: { data: userData, expiresIn: date } });
+      setUsers((preveState) => ({
+        ...preveState,
+        [useId]: { data: userData, expiresIn: date },
+      }));
 
-      navigate('/profile');
+      if (email !== auth.currentUser.email) {
+        setIsPasswordAuthModal(true);
+        console.log('email');
+      } else {
+        setModalTitle('完了');
+        setModalMessage('保存されました');
+        setIsModal(true);
+      }
     } catch (error) {
       if (error instanceof Error) {
-        setErrorMessage(error.message);
+        setModalMessage(error.message);
       } else if (error instanceof FirebaseError) {
         const errorCode = error.code;
-        setErrorMessage(getFirebaseError(errorCode));
+        setModalMessage(getFirebaseError(errorCode));
       }
 
-      setIsOpenErrorModal(true);
+      setIsModal(true);
+    }
+  };
+
+  const authenticatePassword = async () => {
+    try {
+      if (!auth.currentUser) return;
+
+      if (!isValidPassword) return;
+
+      await reAuthenticate();
+      await updateEmail(auth.currentUser, email);
+      navigate('/profile');
+    } catch (error) {
+      setIsPasswordAuthModal(false);
+      if (error instanceof FirebaseError) {
+        const errorCode = error.code;
+        setModalMessage(getFirebaseError(errorCode));
+      } else if (error instanceof Error) {
+        setModalMessage(error.message);
+      }
+
+      setIsModal(true);
     }
   };
 
   const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      const canvas = await resizeFile(event);
+      if (!event.target.files) return;
+      const file = event.target.files[0];
+      const canvas = await resizeFile(file);
+
       if (!canvas) {
         throw new Error(
           '画像が読み込めません。お手数ですが、再度アップロードしてください。'
@@ -119,33 +164,86 @@ const EditProfile = () => {
       setMyIconUrl(URL.createObjectURL(blob));
     } catch (error) {
       if (error instanceof Error) {
-        setErrorMessage(error.message);
+        setModalMessage(error.message);
       }
 
-      setIsOpenErrorModal(true);
+      setIsModal(true);
     }
   };
 
-  const renderErrorModal = () => {
-    if (!isErrorModal) return;
+  const renderModal = () => {
+    if (!isModal) return;
 
     return (
       <Modal
-        title="エラー"
+        onClose={() => setIsModal(false)}
+        title={modalTitle}
         titleAlign="center"
-        isOpen={isErrorModal}
         hasInner
+        isOpen={isModal}
         isBoldTitle
-        onClose={() => setIsOpenErrorModal(false)}
       >
         <div>
-          <p>{errorMessage}</p>
+          <p>{modalMessage}</p>
         </div>
         <div className={styles.controler}>
           <Button
             color="primary"
+            onClick={() => {
+              setIsModal(false);
+              navigate('/profile');
+            }}
             variant="contained"
-            onClick={() => setIsOpenErrorModal(false)}
+            isFullWidth
+            size="small"
+          >
+            OK
+          </Button>
+        </div>
+      </Modal>
+    );
+  };
+
+  const renderPasswordAuthModal = () => {
+    if (!isPasswordAuthModal) return;
+
+    return (
+      <Modal
+        onClose={() => setIsPasswordAuthModal(false)}
+        title="パスワード認証"
+        titleAlign="center"
+        hasInner
+        isOpen={isPasswordAuthModal}
+        isBoldTitle
+      >
+        <div className={styles.form}>
+          <Input
+            color="primary"
+            id="passwordEdit"
+            onChange={(event) => setPassword(event.target.value)}
+            type="password"
+            value={password}
+            variant="outlined"
+            errorMessage={passwordErrorMessage}
+            isFullWidth
+            minLength={10}
+            onBlur={() => {
+              if (!isValidPassword(password)) {
+                setPasswordErrorMessage('半角英数字で入力してください');
+              } else {
+                setPasswordErrorMessage('');
+              }
+            }}
+            placeholder="パスワード"
+            startIcon={<FontAwesomeIcon icon={faLock} />}
+          />
+        </div>
+        <div className={styles.controler}>
+          <Button
+            color="primary"
+            onClick={authenticatePassword}
+            variant="contained"
+            isDisabled={!isValidPassword(password)}
             isFullWidth
             size="small"
           >
@@ -159,17 +257,19 @@ const EditProfile = () => {
   const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
-      {renderErrorModal}
+      {renderModal()}
+      {renderPasswordAuthModal()}
       <Header
         title="プロフィール編集"
         actionItems={actionItems}
+        className="sp"
         showBackButton
       />
       <main className={styles.container}>
         <div className={`${styles.iconImage} ${isPcWindow ? 'inner' : ''}`}>
           <BaCkgroundImage
-            hasCameraIcon
             onChange={onFileChange}
+            hasCameraIcon
             iconUrl={myIconUrl}
             uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
           />
@@ -177,35 +277,35 @@ const EditProfile = () => {
         <div className={`${styles.contents} inner`}>
           <div className={styles.form}>
             <Input
-              isFullWidth
-              type="text"
               color="primary"
-              variant={isPcWindow ? 'outlined' : 'standard'}
               id="nameEditProfile"
-              label="ユーザーネーム"
-              value={userName}
-              startIcon={<FontAwesomeIcon icon={faIdCard} />}
               onChange={(event) => setUserName(event.target.value)}
+              type="text"
+              value={userName}
+              variant={isPcWindow ? 'outlined' : 'standard'}
+              isFullWidth
+              label="ユーザーネーム"
+              startIcon={<FontAwesomeIcon icon={faIdCard} />}
             />
             <Input
-              isFullWidth
-              type="email"
               color="primary"
-              variant={isPcWindow ? 'outlined' : 'standard'}
               id="email"
-              label="メールアドレス"
-              value={email}
-              startIcon={<FontAwesomeIcon icon={faEnvelope} />}
               onChange={(event) => setEmail(event.target.value)}
+              type="email"
+              value={email}
+              variant={isPcWindow ? 'outlined' : 'standard'}
+              isFullWidth
+              label="メールアドレス"
+              startIcon={<FontAwesomeIcon icon={faEnvelope} />}
             />
           </div>
           <div className={styles.buttonArea}>
             <Button
               color="danger"
-              variant="outlined"
               onClick={() => navigate('/profile/delete-account')}
-              isFullWidth
+              variant="outlined"
               className={styles.deleteButton}
+              isFullWidth
             >
               アカウント削除
             </Button>

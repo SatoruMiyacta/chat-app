@@ -22,7 +22,7 @@ import { useContact } from '@/hooks';
 import { getFirebaseError, sendToSlack } from '@/utils';
 
 const Contact = () => {
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalMessage, setModalMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度送信してください。'
   );
@@ -30,7 +30,7 @@ const Contact = () => {
 
   const {
     userName,
-    setName,
+    setUserName,
     email,
     setEmail,
     contactText,
@@ -38,14 +38,17 @@ const Contact = () => {
     isComplete,
   } = useContact();
 
-  const handleClick = async () => {
+  const contact = async () => {
     if (!isComplete()) return;
 
     try {
       await sendToSlack(userName, email, contactText);
+
       setModalTitle('送信完了');
-      setModalMessage('メールが送信されました。');
-      setIsErrorModalOpen(true);
+      setModalMessage(
+        'お問い合わせを受けつけました。返信が必要な場合は7日以内にご連絡いたします。'
+      );
+      setIsOpenModal(true);
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
@@ -53,20 +56,21 @@ const Contact = () => {
       }
 
       setModalTitle('エラー');
-      setIsErrorModalOpen(true);
+      setIsOpenModal(true);
     }
   };
 
   const renderModal = () => {
-    if (!isErrorModalOpen) return;
+    if (!isOpenModal) return;
+
     return (
       <Modal
+        onClose={() => setIsOpenModal(false)}
         title={modalTitle}
         titleAlign="center"
-        isOpen={isErrorModalOpen}
         hasInner
+        isOpen={isOpenModal}
         isBoldTitle
-        onClose={() => setIsErrorModalOpen(false)}
       >
         <div>
           <p>{modalMessage}</p>
@@ -74,8 +78,8 @@ const Contact = () => {
         <div className={styles.controler}>
           <Button
             color="primary"
+            onClick={() => setIsOpenModal(false)}
             variant="contained"
-            onClick={() => setIsErrorModalOpen(false)}
             isFullWidth
             size="small"
           >
@@ -85,80 +89,79 @@ const Contact = () => {
       </Modal>
     );
   };
-
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
       {renderModal()}
-      <Header
-        title="お問い合わせ"
-        className={`${styles.header} sp `}
-        showBackButton
-      />
-      <main className={styles.container}>
+      <Header title="お問い合わせ" className="sp" showBackButton />
+      <main className={isPcWindow ? 'flex' : ''}>
         <CoverImageOnlyPc />
-        <section className={`${styles.contents} inner`}>
-          <Heading
-            tag="h1"
-            align="center"
-            color="inherit"
-            size="xxl"
-            className={'pc'}
-          >
-            お問い合わせ
-          </Heading>
-          <div className={styles.form}>
-            <Input
-              isFullWidth
-              type="text"
-              color="primary"
-              variant="outlined"
-              id="nameContact"
-              label="ユーザーネーム"
-              value={userName}
-              startIcon={<FontAwesomeIcon icon={faIdCard} />}
-              onChange={(event) => setName(event.target.value)}
-              isRequired
-            />
-            <Input
-              isFullWidth
-              type="email"
-              color="primary"
-              variant="outlined"
-              id="emailContact"
-              label="メールアドレス"
-              value={email}
-              isRequired
-              startIcon={<FontAwesomeIcon icon={faEnvelope} />}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            <Input
-              isFullWidth
-              type="text"
-              color="primary"
-              variant="outlined"
-              id="contact"
-              label="お問い合わせ内容"
-              value={contactText}
-              startIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
-              onChange={(event) => setContactText(event.target.value)}
-              rows={6}
-              isMultiLines
-              isRequired
-              maxLength={300}
-            />
-          </div>
-          <div className={styles.sendButton}>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleClick}
-              isFullWidth
-              isDisabled={!isComplete()}
+        <div className={styles.container}>
+          <section className={`${styles.contents} inner`}>
+            <Heading
+              tag="h1"
+              align="center"
+              color="inherit"
+              className="pc"
+              size="xxl"
             >
-              送信
-            </Button>
-          </div>
-        </section>
+              お問い合わせ
+            </Heading>
+            <div className={styles.form}>
+              <Input
+                color="primary"
+                id="name"
+                onChange={(event) => setUserName(event.target.value)}
+                type="text"
+                value={userName}
+                variant="outlined"
+                isFullWidth
+                isRequired
+                label="ユーザーネーム"
+                startIcon={<FontAwesomeIcon icon={faIdCard} />}
+              />
+              <Input
+                color="primary"
+                id="email"
+                onChange={(event) => setEmail(event.target.value)}
+                type="email"
+                value={email}
+                variant="outlined"
+                isFullWidth
+                isRequired
+                label="メールアドレス"
+                startIcon={<FontAwesomeIcon icon={faEnvelope} />}
+              />
+              <Input
+                color="primary"
+                id="contact"
+                onChange={(event) => setContactText(event.target.value)}
+                type="text"
+                variant="outlined"
+                value={contactText}
+                isFullWidth
+                isMultiLines
+                isRequired
+                label="お問い合わせ内容"
+                maxRows={13}
+                minRows={2}
+                maxLength={1000}
+                startIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
+              />
+            </div>
+            <div className={styles.sendButton}>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={contact}
+                isDisabled={!isComplete()}
+                isFullWidth
+              >
+                送信
+              </Button>
+            </div>
+          </section>
+        </div>
       </main>
     </>
   );

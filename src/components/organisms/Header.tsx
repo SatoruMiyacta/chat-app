@@ -79,7 +79,7 @@ const Header = ({
       <Heading
         tag="h1"
         color="inherit"
-        size="xl"
+        size="l"
         align="start"
         className={styles.title}
       >

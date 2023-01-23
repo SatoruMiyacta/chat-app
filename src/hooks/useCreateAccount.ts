@@ -7,7 +7,7 @@ import { useAtom } from 'jotai';
 
 import { auth, db, storage } from '@/main';
 import { UserData, usersAtom } from '@/store';
-import { isValidPassword, validateEmail } from '@/utils';
+import { isValidPassword, isValidEmail } from '@/utils';
 
 export interface InitialUserData {
   userName: string;
@@ -21,7 +21,7 @@ export const useCreateAccount = () => {
 
   const isComplete = () => {
     if (!userName) return false;
-    if (!validateEmail(email)) return false;
+    if (!isValidEmail(email)) return false;
     if (!isValidPassword(password)) return false;
 
     return true;
@@ -56,7 +56,7 @@ export const useCreateAccount = () => {
       name: userName,
       iconUrl: userIconUrl,
       createdAt: serverTimestamp(),
-      updateAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     });
   };
 
