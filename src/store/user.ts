@@ -5,7 +5,7 @@ export interface UserData {
   name: string;
   iconUrl: string;
   createdAt: Date;
-  updateAt: Date;
+  updatedAt: Date;
 }
 
 export interface Users {
@@ -27,21 +27,21 @@ export const usersAtom = atom<Users>({});
 //     name: 'a',
 //     iconUrl: 'aaa',
 //     createdAt: Timestamp,
-//     upDateAt: Timestamp,
+//     updatedAt: Timestamp,
 //   },
 //   {
 //     id: 'bbbbbbbb',
 //     name: 'b',
 //     iconUrl: 'bbb',
 //     createdAt: Timestamp,
-//     upDateAt: Timestamp,
+//     updatedAt: Timestamp,
 //   },
 //   {
 //     id: 'cccccccc',
 //     name: 'c',
 //     iconUrl: 'ccc',
 //     createdAt: Timestamp,
-//     upDateAt: Timestamp,
+//     updatedAt: Timestamp,
 //   },
 // ];
 
@@ -54,21 +54,21 @@ export const usersAtom = atom<Users>({});
 //     name: 'c',
 //     iconUrl: 'ccc',
 //     createdAt: Timestamp,
-//     upDateAt: Timestamp,
+//     updatedAt: Timestamp,
 //     accessTime: Date,
 //   },
 //   bbb: {
 //     name: 'c',
 //     iconUrl: 'ccc',
 //     createdAt: Timestamp,
-//     upDateAt: Timestamp,
+//     updatedAt: Timestamp,
 //     accessTime: Date,
 //   },
 //   ccc: {
 //     name: 'c',
 //     iconUrl: 'ccc',
 //     createdAt: Timestamp,
-//     upDateAt: Timestamp,
+//     updatedAt: Timestamp,
 //     accessTime: Date,
 //   },
 // };

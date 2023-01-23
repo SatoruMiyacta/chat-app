@@ -1,8 +1,50 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+    function isUserAuthenticated(userId) {
+      return request.auth.uid == userId
     }
+
+    function isAuthenticated() {
+      return request.auth != null
+    }
+
+    match /users/{userId} {
+      allow delete: if isUserAuthenticated(userId)
+      allow read: if isAuthenticated()
+      allow update: if isUserAuthenticated(userId) && request.resource.data.name.size() <= 20 
+      // && request.time == resource.data.updatedAt
+      allow create: if isAuthenticated() && request.resource.data.name.size() <= 20 
+      // && request.time == resource.data.createdAt
+
+      match /friends {
+      allow read, update, create, delete: if isUserAuthenticated(userId)
+    }
+      match /groups {
+      allow read, update, create, delete: if isUserAuthenticated(userId)
+    }
+      match /joinedRooms {
+      allow read, update, create, delete: if isUserAuthenticated(userId)
+    }
+    }
+
+    match /rooms/{roomId} {
+      allow read, update, delete: if isAuthenticated() && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedRooms/$(roomId))
+      allow create: if isAuthenticated()
+
+      match /messages {
+        allow read, update, create, delete: if isAuthenticated()
+      }
+    }
+
+    match /groups/{groupsId} {
+      allow read, update, delete: if isAuthenticated() && exists(/databases/$(database)/documents/users/$(request.auth.uid)/groups/$(groupsId))
+      allow create: if isAuthenticated()
+
+      match /members {
+        allow read, update, create, delete: if isAuthenticated()
+      }
+    }
+    
   }
 }

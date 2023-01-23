@@ -17,7 +17,6 @@ module.exports = {
     project: './tsconfig.json',
   },
   plugins: ['react', '@typescript-eslint', 'import'],
-  ignorePatterns: ['vite.config.ts'],
   settings: {
     'import/extensions': ['.ts', '.tsx'],
     'import/parsers': { '@typescript-eslint/parser': ['.ts', '.tsx'] },
