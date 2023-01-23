@@ -20,7 +20,7 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "tests/firebase.ts"],
   "exclude":["node_modules"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
