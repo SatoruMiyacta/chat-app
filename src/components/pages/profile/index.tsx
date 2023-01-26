@@ -5,9 +5,15 @@ import { useAtom } from 'jotai';
 
 import styles from './index.module.css';
 
+import { faCamera, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
+import Input from '@/components/atoms/Input';
 import BackgroundImage from '@/components/organisms/BackgroundImage';
 import Header from '@/components/organisms/Header';
+import Message from '@/components/organisms/Message';
 
 import { useProfile } from '@/hooks';
 import { authUserAtom, UserData, usersAtom } from '@/store';
@@ -27,6 +33,10 @@ const Profile = () => {
       onClick: () => navigate('/profile/edit'),
     },
   ];
+
+  const handleChange = () => {
+    console.log('');
+  };
 
   try {
     // キャッシュのタイムアウト設定
@@ -68,18 +78,32 @@ const Profile = () => {
     <>
       <Header title="プロフィール" className="sp" actionItems={actionItems} />
       <main className={styles.container}>
-        <BackgroundImage
-          className={styles.BackgroundImage}
-          iconPosition={isPcWindow ? 'left' : 'under'}
-          iconUrl={myIconUrl}
-          uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
-        />
-        <div className={styles.contents}>
-          <Heading tag="h2" align="center" isBold>
+        <div className={styles.BackgroundImage}>
+          <BackgroundImage
+            hasBackgroundImage
+            iconPosition={isPcWindow ? 'left' : 'under'}
+            iconUrl={myIconUrl}
+            uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
+          />
+        </div>
+        <section className={`${styles.contents} inner`}>
+          <Heading tag="h2" align={isPcWindow ? 'start' : 'center'} isBold>
             {userName}
           </Heading>
-        </div>
+          {isPcWindow && (
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => navigate('/profile/create')}
+            >
+              編集
+            </Button>
+          )}
+        </section>
       </main>
+      <aside className={`${styles.aside} pc`}>
+        <Message />
+      </aside>
     </>
   );
 };

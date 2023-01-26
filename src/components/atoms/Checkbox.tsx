@@ -16,13 +16,13 @@ export interface CheckboxProps {
     event: React.ChangeEvent<HTMLInputElement>,
     index?: number
   ) => void;
+  items?: checkoboxItem[];
   isDisabled?: boolean;
   size?: 'small' | 'medium';
   label?: string;
   id?: string;
   isChecked?: boolean;
   vertical?: boolean;
-  items: checkoboxItem[];
 }
 
 const Checkbox = ({

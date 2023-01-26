@@ -35,7 +35,7 @@ const NotFound = () => {
         className={styles.button}
         color="primary"
         variant="outlined"
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/home')}
       >
         ホームに戻る
       </Button>

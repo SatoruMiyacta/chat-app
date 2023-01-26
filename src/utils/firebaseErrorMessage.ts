@@ -112,6 +112,8 @@ export const getFirebaseError = (errorCode: string) => {
       return 'アカウントがありません。メールアドレスまたはパスワードに誤りがある可能性があります。';
     case 'auth/too-many-requests':
       return '認証に失敗しました。';
+    case 'auth/wrong-password':
+      return 'パスワードに誤りがある可能性があります。';
 
     default:
       return '';

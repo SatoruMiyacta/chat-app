@@ -1,5 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
+import Message from '../rooms/message';
+
 import BottomNavigation from '@/components/organisms/BottomNavigation';
 import SideMenu from '@/components/organisms/SideMenu';
 

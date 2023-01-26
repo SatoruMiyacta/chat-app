@@ -35,6 +35,7 @@
 
 .uploadWrapper.left {
   align-items: flex-end;
+  justify-content: start;
 }
 
 .uploadWrapper.right {
@@ -48,6 +49,14 @@
   border-radius: 50%;
 }
 
+.left .uploadIconButton {
+  margin-left: 16px;
+}
+
+.right .uploadIconButton {
+  margin-right: 16px;
+}
+
 .uploadIconButton.small {
   width: 48px;
   height: 48px;
@@ -59,8 +68,8 @@
 }
 
 .uploadIconButton.large {
-  width: 120px;
-  height: 120px;
+  width: 82px;
+  height: 82px;
 }
 
 .uploadIconButton > img {
@@ -88,9 +97,9 @@
 }
 
 @media screen and (min-width: 1024px) {
-  .uploadWrapper {
+  /* .uploadWrapper {
     height: fit-content;
-  }
+  } */
 
   .uploadButton {
     margin-left: 24px;
