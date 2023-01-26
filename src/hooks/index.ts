@@ -6,3 +6,4 @@ export * from './useLogin';
 export * from './useProfile';
 export * from './useResetPassword';
 export * from './useEditProfile';
+export * from './useHome';

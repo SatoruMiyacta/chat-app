@@ -270,6 +270,7 @@ const EditProfile = () => {
           <BaCkgroundImage
             onChange={onFileChange}
             hasCameraIcon
+            hasBackgroundImage={!isPcWindow}
             iconUrl={myIconUrl}
             uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
           />

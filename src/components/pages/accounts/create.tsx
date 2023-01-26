@@ -185,6 +185,7 @@ const CreateAcconunt = () => {
                 onChange={onFileChange}
                 iconUrl={initialIconUrl}
                 hasCameraIcon
+                hasBackgroundImage={!isPcWindow}
                 isUploadButton
                 uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
               />

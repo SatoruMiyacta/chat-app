@@ -31,7 +31,7 @@ import {
 //   });
 // });
 
-describe('isValidEmail', () => {
+describe('/utils/validation', () => {
   it('test.gmail.com を渡したら、falseを返す', () => {
     const email = 'test.gmail.com';
     const validEmail = isValidEmail(email);
@@ -75,7 +75,7 @@ describe('isValidEmail', () => {
   });
 });
 
-describe('isValidPassword', () => {
+describe('/utils/validation', () => {
   it('パスワードテストを渡したら、falseを返す', () => {
     const password = 'パスワードテスト';
     const validPassword = isValidPassword(password);
@@ -98,7 +98,7 @@ describe('isValidPassword', () => {
   });
 });
 
-describe('validateBlobSize', () => {
+describe('/utils/validation', () => {
   it('制限に引っかからないサイズ(10MB)のblobを渡したら、blobを返す', () => {
     let str = '';
 

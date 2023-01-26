@@ -11,6 +11,7 @@ export interface BackgroundImageProps {
   iconUrl: string;
   onChange?: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
   hasCameraIcon?: boolean;
+  hasBackgroundImage?: boolean;
   iconPosition?: 'center' | 'under' | 'left' | 'right';
   isUploadButton?: boolean;
   uploadIconButtonSize?: 'small' | 'medium' | 'large';
@@ -22,6 +23,7 @@ const BackgroundImage = ({
   onChange,
   hasCameraIcon = false,
   iconPosition = 'center',
+  hasBackgroundImage = false,
   isUploadButton = false,
   uploadIconButtonSize = 'medium',
   className,
@@ -39,12 +41,18 @@ const BackgroundImage = ({
     styles[uploadIconButtonSize],
   ];
 
+  const showBackgroundImage = () => {
+    if (!hasBackgroundImage) return {};
+    if (hasBackgroundImage) {
+      return { backgroundImage: `url(${iconUrl})` };
+    }
+  };
+
   return (
     <>
-      {/* 画面サイズが1024px以下のとき、背景を表示させる。 */}
       <div
-        className={`${uploadWrapperClassList.join(' ')} sp`}
-        style={{ backgroundImage: `url(${iconUrl})` }}
+        className={`${uploadWrapperClassList.join(' ')} `}
+        style={showBackgroundImage()}
       >
         <button
           id="imageUpload"
@@ -69,9 +77,30 @@ const BackgroundImage = ({
           accept=".png, .jpeg, .jpg"
           onChange={onChange}
         />
+        {isUploadButton && (
+          <div className="pc">
+            <Button
+              color="primary"
+              variant="outlined"
+              onClick={() => inputFileRef.current?.click()}
+              className={styles.uploadButton}
+              size="small"
+            >
+              画像選択
+            </Button>
+            <input
+              id="imageUpload"
+              ref={inputFileRef}
+              type="file"
+              className={styles.uploadInput}
+              accept=".png, .jpeg, .jpg"
+              onChange={onChange}
+            />
+          </div>
+        )}
       </div>
 
-      {/* 画面サイズが1024px以上のとき、背景を表示させない。 */}
+      {/*      
       <div className={`${styles.uploadWrapper} pc`}>
         <button
           id="imageUpload"
@@ -109,7 +138,7 @@ const BackgroundImage = ({
             onChange={onChange}
           />
         </div>
-      )}
+      )} */}
     </>
   );
 };
