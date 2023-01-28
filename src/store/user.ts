@@ -8,8 +8,13 @@ export interface UserData {
   updatedAt: Date;
 }
 
+export interface UserCacheObject {
+  data: UserData;
+  expiresIn: Date;
+}
+
 export interface Users {
-  [userId: string]: { data: UserData; expiresIn: Date };
+  [userId: string]: UserCacheObject;
 }
 
 export const authUserAtom = atom<User | null>(null);

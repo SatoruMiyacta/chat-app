@@ -10,8 +10,9 @@ service firebase.storage {
     }
 
     match /iconImage/{userId}/userIcon {
-      allow create, update, delete: if isUserAuthenticated(userId) && requset.resource.size() <= 10 * 1024 * 1024
+      allow create, update: if isUserAuthenticated(userId) && requset.resource.size() <= 10 * 1024 * 1024
       allow read: if isAuthenticated()
+      allow delete: if if isUserAuthenticated(userId)
     }
   }
 }
