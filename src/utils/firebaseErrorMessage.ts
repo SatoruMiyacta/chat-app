@@ -1,3 +1,6 @@
+/**
+ * 引数でerrorを受け取り、該当するエラーメッセージを返す
+ */
 export const getFirebaseError = (errorCode: string) => {
   switch (errorCode) {
     case 'auth/claims-too-large':

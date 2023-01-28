@@ -3,6 +3,8 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useAtom } from 'jotai';
 
+import SideMenu from '@/components/organisms/SideMenu';
+
 import { authUserAtom } from '@/store/user';
 
 const AuthProvider = () => {
@@ -18,7 +20,17 @@ const AuthProvider = () => {
       navigate('/accounts/login');
     }
   });
-  return <Outlet />;
+  return (
+    <>
+      <div className="sp">
+        <Outlet />
+      </div>
+      <div className="pc flex">
+        <SideMenu />
+        <Outlet />
+      </div>
+    </>
+  );
 };
 
 export default AuthProvider;
