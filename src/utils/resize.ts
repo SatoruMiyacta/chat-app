@@ -13,6 +13,10 @@ export type ResizeOptions = ResizeBasicOptions &
   ResizeCanvasTrueOptions &
   loadImage.CropTrueOptions;
 
+/**
+ * 引数で受け取ったfileをデフォルト値、
+ * または指定したサイズに変換してcanvasで返す
+ */
 export const resizeFile = async (file: File, resizeOptions?: ResizeOptions) => {
   const options = {
     maxWidth: 500,

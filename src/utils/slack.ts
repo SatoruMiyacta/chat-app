@@ -1,3 +1,6 @@
+/**
+ * ユーザーネーム、メールアドレス、お問い合わせ内容をslackに送信する
+ */
 export const sendToSlack = async (
   name: string,
   email: string,

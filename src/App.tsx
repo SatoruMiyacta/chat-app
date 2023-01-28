@@ -12,7 +12,9 @@ import ResetPassword from '@/components/pages/accounts/resetPassword';
 import CreateMember from '@/components/pages/group/createMember';
 import CreateName from '@/components/pages/group/createName';
 import Edit from '@/components/pages/group/editGroup';
+import HomeLayout from '@/components/pages/home/homeLayout';
 import Home from '@/components/pages/home/index';
+import Search from '@/components/pages/home/search';
 import NotFound from '@/components/pages/not-found';
 import DeleteAccount from '@/components/pages/profile/deleteAccount';
 import EditProfile from '@/components/pages/profile/editProfile';
@@ -21,7 +23,8 @@ import ProfileLayout from '@/components/pages/profile/profileLayout';
 import Rooms from '@/components/pages/rooms/index';
 import Message from '@/components/pages/rooms/message';
 
-import AuthProvider from '@/provider/AuthProvider';
+import AuthProvider from '@/provider/AuthenticatedPageLayout';
+
 import './App.css';
 // library.add(fas, far, fab);
 
@@ -41,7 +44,10 @@ const App = () => {
 
         {/* ここ見ただけでログインが必要なpageがわかる */}
         <Route path="/" element={<AuthProvider />}>
-          <Route index element={<Home />} />
+          <Route element={<HomeLayout />}>
+            <Route index element={<Home />} />
+            <Route path="search" element={<Search />} />
+          </Route>
           <Route path="rooms" element={<Rooms />}>
             <Route index element={<NotFound />} />
             <Route path="message" element={<Message />} />

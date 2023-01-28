@@ -1,5 +1,8 @@
 import { EMAIL_REGEX, PASSWORD_REGEX } from '@/constants';
 
+/**
+ * メールアドレスが入力されていて、入力内容が正しければtrueを返す
+ */
 export const isValidEmail = (email: string) => {
   const emailRegex = new RegExp(EMAIL_REGEX);
   if (!email) return false;
@@ -8,6 +11,9 @@ export const isValidEmail = (email: string) => {
   return true;
 };
 
+/**
+ * パスワードが入力されていて、入力内容が正しければtrueを返す
+ */
 export const isValidPassword = (password: string) => {
   const passwordRegex = new RegExp(PASSWORD_REGEX);
   if (!password) return false;
@@ -16,6 +22,9 @@ export const isValidPassword = (password: string) => {
   return true;
 };
 
+/**
+ * 引数で受け取ったblobが10MB以下の容量ならblobを返す
+ */
 export const validateBlobSize = (blob: Blob | null) => {
   if (!blob) {
     throw new Error(

@@ -30,9 +30,11 @@ import BackgroundImage from '@/components/organisms/BackgroundImage';
 import BottomNavigation from '@/components/organisms/BottomNavigation';
 import Header from '@/components/organisms/Header';
 
-import { useHome } from '@/hooks';
+import { INITIAL_ICON_URL } from '@/constants';
+import { useHome, useExchangeData } from '@/hooks';
 import { db } from '@/main';
 import { usersAtom, authUserAtom, UserData } from '@/store';
+import { getCacheExpirationDate, fetchUserData, isCacheActive } from '@/utils';
 
 const Home = () => {
   const [search, setSearch] = useState('');
@@ -40,9 +42,10 @@ const Home = () => {
   const [users, setUsers] = useAtom(usersAtom);
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [friendList, setFriendList] = useState([{}]);
+  const [friendList, setFriendList] = useState<string[]>([]);
+  const [friendsData, setFriendsData] = useState({});
   const { fetchfriendsData, fetchGloupsData } = useHome();
-
+  const { getUserData, updateCacheUserData } = useExchangeData();
   const tabs = [
     {
       label: '友達',
@@ -63,16 +66,71 @@ const Home = () => {
     if (tabs[index] !== tabs[activeIndex]) setActiveIndex(index);
   };
 
+  const getFriendIdList = async (userId: string) => {
+    const querySnapshot = await fetchfriendsData(userId);
+    const friendIdList: string[] = [];
+
+    querySnapshot.forEach(async (doc) => {
+      const friendId = doc.id;
+      friendIdList.push(friendId);
+
+      const userData = await getUserData(friendId);
+      let friendUserData = userData;
+
+      if (!friendUserData) {
+        const now = new Date();
+        const deletedUserData = {
+          name: '退会済みユーザー',
+          iconUrl: INITIAL_ICON_URL,
+          createdAt: now,
+          updatedAt: now,
+        };
+
+        friendUserData = deletedUserData;
+      }
+      updateCacheUserData(userId, friendUserData);
+    });
+
+    return friendIdList;
+  };
+
   try {
     if (authUser) {
       const userId = authUser.uid;
 
       if (!friendList) {
-        fetchfriendsData(userId).then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            setFriendList([{ id: doc.id }]);
-          });
+        getFriendIdList(userId).then((friendIdList) => {
+          setFriendList(friendIdList);
         });
+        // fetchfriendsData(userId).then((querySnapshot) => {
+        //   const friendIdList: string[] = [];
+        //   querySnapshot.forEach((doc) => {
+        //     const friendId = doc.id;
+        //     friendIdList.push(friendId);
+        //     getUserData(friendId).then((userData) => {
+        //       let friendUserData = userData;
+        //       if (!friendUserData) {
+        //         const now = new Date();
+        //         const deletedUserData = {
+        //           name: '退会済みユーザー',
+        //           iconUrl: INITIAL_ICON_URL,
+        //           createdAt: now,
+        //           updatedAt: now,
+        //         };
+        //         friendUserData = deletedUserData;
+        //       }
+        //       const data = friendUserData;
+        //       setUsers((prevState) => ({
+        //         ...prevState,
+        //         [friendId]: {
+        //           data: data,
+        //           expiresIn: getCacheExpirationDate(),
+        //         },
+        //       }));
+        //     });
+        //   });
+        //   setFriendList(friendIdList);
+        // });
       }
     }
   } catch (error) {

@@ -74,7 +74,7 @@ const BackgroundImage = ({
           ref={inputFileRef}
           type="file"
           className={styles.uploadInput}
-          accept=".png, .jpeg, .jpg"
+          accept=".png, .jpeg, .jpg, .gif"
           onChange={onChange}
         />
         {isUploadButton && (
@@ -93,7 +93,7 @@ const BackgroundImage = ({
               ref={inputFileRef}
               type="file"
               className={styles.uploadInput}
-              accept=".png, .jpeg, .jpg"
+              accept=".png, .jpeg, .jpg, .gif"
               onChange={onChange}
             />
           </div>
