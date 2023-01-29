@@ -1,0 +1,14 @@
+.contents {
+  position: relative;
+  z-index: 10;
+  padding-top: 40px;
+  background-color: #fff;
+}
+
+@media screen and (min-width: 1024px) {
+  .myChat {
+    flex: 1;
+    border-left: 1px solid rgb(227, 227, 227);
+  }
+
+}

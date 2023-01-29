@@ -20,6 +20,7 @@ import Modal from '@/components/molecules/Modal';
 import BackgroundImage from '@/components/organisms/BackgroundImage';
 import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
+import IconImage from '@/components/organisms/IconImage';
 
 import { INITIAL_ICON_URL } from '@/constants';
 import { InitialUserData, useCreateAccount } from '@/hooks';
@@ -33,7 +34,6 @@ import {
 } from '@/utils';
 
 const CreateAcconunt = () => {
-  const setUsers = useSetAtom(usersAtom);
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
@@ -44,7 +44,7 @@ const CreateAcconunt = () => {
   const navigate = useNavigate();
 
   const {
-    getUserData,
+    setUserData,
     signUp,
     userName,
     setUserName,
@@ -75,24 +75,7 @@ const CreateAcconunt = () => {
       const initialUserData: InitialUserData = { userName, userIconUrl };
       await registerUserDate(useId, initialUserData);
 
-      const data = await getUserData(useId);
-      if (!data) return;
-
-      const userData: UserData = {
-        name: data.name,
-        iconUrl: data.iconUrl,
-        createdAt: data.createdAt,
-        updatedAt: data.updatedAt,
-      };
-
-      const now = new Date();
-      setUsers((prevState) => ({
-        ...prevState,
-        [useId]: { data: userData, expiresIn: now },
-      }));
-
-      // setUsers({ [useId]: { data: userData, expiresIn: now } });
-
+      await setUserData(useId);
       navigate('/');
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -181,13 +164,20 @@ const CreateAcconunt = () => {
               アカウント作成
             </Heading>
             <div className={`${styles.iconImage} ${isPcWindow ? 'inner' : ''}`}>
-              <BackgroundImage
-                onChange={onFileChange}
+              <BackgroundImage imageUrl={initialIconUrl} className="sp">
+                <IconImage
+                  iconUrl={initialIconUrl}
+                  onChange={onFileChange}
+                  hasCameraIcon
+                  isUploadButton={!isPcWindow}
+                />
+              </BackgroundImage>
+              <IconImage
                 iconUrl={initialIconUrl}
+                onChange={onFileChange}
+                className="pc"
                 hasCameraIcon
-                hasBackgroundImage={!isPcWindow}
-                isUploadButton
-                uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
+                isUploadButton={isPcWindow}
               />
             </div>
             <div className={`${styles.formArea} inner`}>

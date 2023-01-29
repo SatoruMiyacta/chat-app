@@ -1,0 +1,51 @@
+.uploadIcon {
+  position: relative;
+  z-index: 20;
+  border-radius: 50%;
+}
+
+.uploadIcon.small {
+  width: 48px;
+  height: 48px;
+}
+
+.uploadIcon.medium {
+  width: 64px;
+  height: 64px;
+}
+
+.uploadIcon.large {
+  width: 82px;
+  height: 82px;
+}
+
+.uploadIcon > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.uploadInput {
+  display: none;
+}
+
+.cameraIcon {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  background-color: #fff;
+  border: 1px solid #333;
+  border-radius: 50%;
+}
+
+@media screen and (min-width: 1024px) {
+
+  .uploadButton {
+    margin-left: 24px;
+  }
+}

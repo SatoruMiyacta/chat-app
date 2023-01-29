@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FirebaseError } from 'firebase/app';
 import { updateEmail } from 'firebase/auth';
 import { useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 
 import styles from './editProfile.module.css';
 
@@ -20,10 +21,9 @@ import Modal from '@/components/molecules/Modal';
 import BaCkgroundImage from '@/components/organisms/BackgroundImage';
 import Header from '@/components/organisms/Header';
 
-import {} from '@/hooks';
 import { useEditProfile, InitialUserData } from '@/hooks';
 import { auth } from '@/main';
-import { UserData, usersAtom } from '@/store';
+import { authUserAtom, usersAtom } from '@/store';
 import {
   convertCanvasToBlob,
   resizeFile,
@@ -33,7 +33,7 @@ import {
 } from '@/utils';
 
 const EditProfile = () => {
-  const setUsers = useSetAtom(usersAtom);
+  const [authUser] = useAtom(authUserAtom);
   const [isModal, setIsModal] = useState(false);
   const [isPasswordAuthModal, setIsPasswordAuthModal] = useState(false);
   const [modalMessage, setModalMessage] = useState(
@@ -52,7 +52,6 @@ const EditProfile = () => {
   const {
     setUserIconFile,
     reAuthenticate,
-    getUserData,
     updateUserDate,
     userIconFile,
     myIconUrl,
@@ -63,15 +62,29 @@ const EditProfile = () => {
     setEmail,
     isComplete,
     uploadIcon,
-    setInitialDate,
+    userId,
     setPasswordErrorMessage,
     setPassword,
     passwordErrorMessage,
     password,
+    getUserData,
   } = useEditProfile();
 
   useEffect(() => {
-    setInitialDate(userName, myIconUrl);
+    try {
+      getUserData(userId).then((data) => {
+        if (!data) throw new Error('ユーザー情報がありません。');
+
+        const userEmail = authUser?.email;
+        if (!userEmail) throw new Error('ユーザー情報がありません。');
+        setEmail(userEmail);
+
+        setUserName(data.name);
+        setMyIconUrl(data.iconUrl);
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
 
   const onSave = async () => {
@@ -79,32 +92,16 @@ const EditProfile = () => {
 
     try {
       if (!auth.currentUser) return;
-      const useId = auth.currentUser.uid;
+      // const useId = auth.currentUser.uid;
 
       let userIconUrl = myIconUrl;
-      if (userIconFile) userIconUrl = await uploadIcon(userIconFile, useId);
+      if (userIconFile) userIconUrl = await uploadIcon(userIconFile, userId);
 
       const initialUserData: InitialUserData = { userName, userIconUrl };
-      await updateUserDate(useId, initialUserData);
-
-      const data = await getUserData(useId);
-      if (!data) return;
-
-      const date = new Date();
-      const userData: UserData = {
-        name: data.name,
-        iconUrl: data.iconUrl,
-        createdAt: data.createdAt,
-        updatedAt: data.updatedAt,
-      };
-      setUsers((preveState) => ({
-        ...preveState,
-        [useId]: { data: userData, expiresIn: date },
-      }));
+      await updateUserDate(userId, initialUserData);
 
       if (email !== auth.currentUser.email) {
         setIsPasswordAuthModal(true);
-        console.log('email');
       } else {
         setModalTitle('完了');
         setModalMessage('保存されました');

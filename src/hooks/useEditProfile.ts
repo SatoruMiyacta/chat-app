@@ -13,17 +13,22 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 
 import { InitialUserData } from './useCreateAccount';
 
 import { db, storage, auth } from '@/main';
-import { authUserAtom, usersAtom } from '@/store';
-import { isValidEmail } from '@/utils';
+import { authUserAtom, usersAtom, UserCacheObject } from '@/store';
+import {
+  isValidEmail,
+  getCacheExpirationDate,
+  fetchUserData,
+  isCacheActive,
+} from '@/utils';
 
 export const useEditProfile = () => {
-  const authUser = useAtomValue(authUserAtom);
-  const users = useAtomValue(usersAtom);
+  const [authUser] = useAtom(authUserAtom);
+  const [users, setUsers] = useAtom(usersAtom);
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [myIconUrl, setMyIconUrl] = useState('');
@@ -38,18 +43,20 @@ export const useEditProfile = () => {
     return true;
   };
 
-  const setInitialDate = (userName: string, myIconUrl: string) => {
-    if (authUser) {
-      const userId = authUser.uid;
+  const userId = authUser?.uid || '';
 
-      if (userName === '') setUserName(users[userId].data.name);
+  const getUserData = async (userId: string) => {
+    if (isCacheActive(users[userId])) return users[userId].data;
 
-      if (myIconUrl === '') setMyIconUrl(users[userId].data.iconUrl);
+    const userData = await fetchUserData(userId);
+    if (!userData) return;
 
-      const userEmail = authUser.email;
-      if (!userEmail) return;
-      if (email === '') setEmail(userEmail);
-    }
+    setUsers((prevState) => ({
+      ...prevState,
+      [userId]: { data: userData, expiresIn: getCacheExpirationDate() },
+    }));
+
+    return userData;
   };
 
   const reAuthenticate = async () => {
@@ -71,30 +78,30 @@ export const useEditProfile = () => {
   };
 
   const updateUserDate = async (
-    useId: string,
+    userId: string,
     { userName, userIconUrl }: InitialUserData
   ) => {
-    const docRef = doc(db, 'users', useId);
-    await updateDoc(docRef, {
+    const docRef = doc(db, 'users', userId);
+    const updateData = {
       name: userName,
       iconUrl: userIconUrl,
       updatedAt: serverTimestamp(),
-    });
-  };
+    };
+    const updateTimestamp = await updateDoc(docRef, updateData);
 
-  const getUserData = async (useId: string) => {
-    const docRef = doc(db, 'users', useId);
-    const docSnap = await getDoc(docRef);
-    const data = docSnap.data();
-    if (!data) return;
-
-    return data;
+    console.log(updateTimestamp);
+    setUsers((prevState) => ({
+      ...prevState,
+      [userId]: {
+        data: { ...users[userId].data },
+        expiresIn: getCacheExpirationDate(),
+      },
+    }));
   };
 
   return {
     reAuthenticate,
     setUserIconFile,
-    getUserData,
     updateUserDate,
     userIconFile,
     myIconUrl,
@@ -105,10 +112,11 @@ export const useEditProfile = () => {
     setEmail,
     isComplete,
     uploadIcon,
-    setInitialDate,
     setPasswordErrorMessage,
+    getUserData,
     setPassword,
     passwordErrorMessage,
     password,
+    userId,
   };
 };
