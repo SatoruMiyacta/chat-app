@@ -3,17 +3,23 @@ import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, serverTimestamp, setDoc, getDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 
 import { auth, db, storage } from '@/main';
-import { UserData, usersAtom } from '@/store';
-import { isValidPassword, isValidEmail } from '@/utils';
+import { usersAtom } from '@/store';
+import {
+  isValidPassword,
+  isValidEmail,
+  getCacheExpirationDate,
+  fetchUserData,
+} from '@/utils';
 
 export interface InitialUserData {
   userName: string;
   userIconUrl: string;
 }
 export const useCreateAccount = () => {
+  const setUsers = useSetAtom(usersAtom);
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -48,10 +54,10 @@ export const useCreateAccount = () => {
   };
 
   const registerUserDate = async (
-    useId: string,
+    userId: string,
     { userName, userIconUrl }: InitialUserData
   ) => {
-    const docRef = doc(db, 'users', useId);
+    const docRef = doc(db, 'users', userId);
     await setDoc(docRef, {
       name: userName,
       iconUrl: userIconUrl,
@@ -60,17 +66,18 @@ export const useCreateAccount = () => {
     });
   };
 
-  const getUserData = async (useId: string) => {
-    const docRef = doc(db, 'users', useId);
-    const docSnap = await getDoc(docRef);
-    const data = docSnap.data();
-    if (!data) return;
+  const setUserData = async (userId: string) => {
+    const userData = await fetchUserData(userId);
+    if (!userData) return;
 
-    return data;
+    setUsers((prevState) => ({
+      ...prevState,
+      [userId]: { data: userData, expiresIn: getCacheExpirationDate() },
+    }));
   };
 
   return {
-    getUserData,
+    setUserData,
     // saveUsersAtom,
     registerUserDate,
     signUp,

@@ -1,4 +1,4 @@
-.uploadWrapper {
+.backgroundImage {
   position: relative;
   display: flex;
   align-items: center;
@@ -9,7 +9,7 @@
   background-size: cover;
 }
 
-.uploadWrapper::before {
+.backgroundImage::before {
   position: absolute;
   top: -5px;
   right: 0;
@@ -22,86 +22,35 @@
   filter: blur(5px);
 }
 
-.uploadWrapper.under > .uploadIconButton,
-.uploadWrapper.left > .uploadIconButton,
-.uploadWrapper.right > .uploadIconButton {
+.backgroundImage.under > div,
+.backgroundImage.left > div,
+.backgroundImage.right > div {
   transform: translateY(50%);
 }
 
-.uploadWrapper.under {
+.backgroundImage.under {
   align-items: flex-end;
   justify-content: center;
 }
 
-.uploadWrapper.left {
+.backgroundImage.left {
   align-items: flex-end;
   justify-content: start;
 }
 
-.uploadWrapper.right {
+.backgroundImage.right {
   align-items: flex-end;
   justify-content: end;
 }
 
-.uploadIconButton {
-  position: relative;
+.backgroundImage > div {
   z-index: 20;
-  border-radius: 50%;
 }
 
-.left .uploadIconButton {
+.backgroundImage.left > div {
   margin-left: 16px;
 }
 
-.right .uploadIconButton {
+.backgroundImage.right > div {
   margin-right: 16px;
-}
-
-.uploadIconButton.small {
-  width: 48px;
-  height: 48px;
-}
-
-.uploadIconButton.medium {
-  width: 64px;
-  height: 64px;
-}
-
-.uploadIconButton.large {
-  width: 82px;
-  height: 82px;
-}
-
-.uploadIconButton > img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.uploadInput {
-  display: none;
-}
-
-.cameraIcon {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px;
-  background-color: #fff;
-  border: 1px solid #333;
-  border-radius: 50%;
-}
-
-@media screen and (min-width: 1024px) {
-  /* .uploadWrapper {
-    height: fit-content;
-  } */
-
-  .uploadButton {
-    margin-left: 24px;
-  }
 }
