@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 import { updateEmail } from 'firebase/auth';
-import { useSetAtom } from 'jotai';
 import { useAtom } from 'jotai';
 
 import styles from './editProfile.module.css';
@@ -18,10 +17,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@/components/atoms/Button';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
-import BaCkgroundImage from '@/components/organisms/BackgroundImage';
 import Header from '@/components/organisms/Header';
+import ProfileImage from '@/components/organisms/ProfileImage';
 
-import { useEditProfile, InitialUserData } from '@/hooks';
+import { useEditProfile, InitialUserData, useUser } from '@/hooks';
 import { auth } from '@/main';
 import { authUserAtom, usersAtom } from '@/store';
 import {
@@ -30,6 +29,7 @@ import {
   validateBlobSize,
   getFirebaseError,
   isValidPassword,
+  fetchUserData,
 } from '@/utils';
 
 const EditProfile = () => {
@@ -67,25 +67,30 @@ const EditProfile = () => {
     setPassword,
     passwordErrorMessage,
     password,
-    getUserData,
   } = useEditProfile();
 
+  const { getUser, saveUser } = useUser();
+
   useEffect(() => {
-    try {
-      getUserData(userId).then((data) => {
-        if (!data) throw new Error('ユーザー情報がありません。');
+    if (!userId) return;
+
+    getUser(userId)
+      .then((userData) => {
+        if (!userData) throw new Error('ユーザー情報がありません。');
 
         const userEmail = authUser?.email;
         if (!userEmail) throw new Error('ユーザー情報がありません。');
         setEmail(userEmail);
 
-        setUserName(data.name);
-        setMyIconUrl(data.iconUrl);
+        setUserName(userData.name);
+        setMyIconUrl(userData.iconUrl);
+
+        saveUser(userId, userData);
+      })
+      .catch((error) => {
+        console.error(error);
       });
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+  }, [userId]);
 
   const onSave = async () => {
     if (!isComplete) return;
@@ -99,6 +104,11 @@ const EditProfile = () => {
 
       const initialUserData: InitialUserData = { userName, userIconUrl };
       await updateUserDate(userId, initialUserData);
+
+      const userData = await fetchUserData(userId);
+      if (!userData) throw new Error('ユーザー情報がありません。');
+
+      saveUser(userId, userData);
 
       if (email !== auth.currentUser.email) {
         setIsPasswordAuthModal(true);
@@ -264,12 +274,10 @@ const EditProfile = () => {
       />
       <main className={styles.container}>
         <div className={`${styles.iconImage} ${isPcWindow ? 'inner' : ''}`}>
-          <BaCkgroundImage
+          <ProfileImage
             onChange={onFileChange}
             hasCameraIcon
-            hasBackgroundImage={!isPcWindow}
-            iconUrl={myIconUrl}
-            uploadIconButtonSize={isPcWindow ? 'medium' : 'small'}
+            imageUrl={myIconUrl}
           />
         </div>
         <div className={`${styles.contents} inner`}>

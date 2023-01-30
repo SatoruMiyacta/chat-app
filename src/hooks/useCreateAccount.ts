@@ -66,19 +66,7 @@ export const useCreateAccount = () => {
     });
   };
 
-  const setUserData = async (userId: string) => {
-    const userData = await fetchUserData(userId);
-    if (!userData) return;
-
-    setUsers((prevState) => ({
-      ...prevState,
-      [userId]: { data: userData, expiresIn: getCacheExpirationDate() },
-    }));
-  };
-
   return {
-    setUserData,
-    // saveUsersAtom,
     registerUserDate,
     signUp,
     userName,
