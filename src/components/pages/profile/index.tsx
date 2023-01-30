@@ -1,20 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import styles from './spIndex.module.css';
+import { useAtom } from 'jotai';
+
+import styles from './index.module.css';
 
 import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
+import Skeleton from '@/components/atoms/Skeleton';
 import Modal from '@/components/molecules/Modal';
-import BackgroundImage from '@/components/organisms/BackgroundImage';
+import AvatarImage from '@/components/organisms/AvatarImage';
 import Header from '@/components/organisms/Header';
-import IconImage from '@/components/organisms/IconImage';
 import Message from '@/components/organisms/MessageForm';
+import ProfileImage from '@/components/organisms/ProfileImage';
 
-import { useExchangeData } from '@/hooks';
+import { useUser } from '@/hooks';
 import { auth } from '@/main';
+import { authUserAtom, usersAtom, UserData } from '@/store';
 
-const SpProfile = () => {
+const Profile = () => {
   const [userName, setUserName] = useState('');
   const [myIconUrl, setMyIconUrl] = useState('');
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
@@ -22,9 +26,10 @@ const SpProfile = () => {
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [authUser] = useAtom(authUserAtom);
   const navigate = useNavigate();
 
-  const { getUserData, userId, updateCacheUserData } = useExchangeData();
+  const { getUser, saveUser } = useUser();
 
   const actionItems = [
     {
@@ -33,14 +38,16 @@ const SpProfile = () => {
     },
   ];
 
+  const userId = authUser?.uid || '';
+
   useEffect(() => {
     if (!userId) return;
 
-    getUserData(userId)
+    getUser(userId)
       .then((userData) => {
         if (!userData) throw new Error('ユーザー情報がありません。');
 
-        updateCacheUserData(userId, userData);
+        saveUser(userId, userData);
 
         setUserName(userData.name);
         setMyIconUrl(userData.iconUrl);
@@ -86,29 +93,37 @@ const SpProfile = () => {
     );
   };
 
-  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
       {renderErrorModal()}
       <Header title="プロフィール" className="sp" actionItems={actionItems} />
       <main>
         {isLoading && (
-          <Heading tag="h1" align="center" isBold>
-            ローディング中...
-          </Heading>
+          <>
+            <div className={`${styles.contents} sp`}>
+              <Skeleton variant="rectangular" height={160} />
+              <Skeleton variant="circular" height={48} width={48} />
+              <section className="inner">
+                <Skeleton variant="text" width={120} />
+              </section>
+            </div>
+            <div className={`${styles.myChat} pc`}></div>
+          </>
         )}
         {!isLoading && (
           <>
-            <div className={`${styles.BackgroundImage} sp`}>
-              <BackgroundImage imageUrl={myIconUrl} childrenPosition="under">
-                <IconImage iconUrl={myIconUrl} isNotUpload />
-              </BackgroundImage>
+            <div className={`${styles.contents} sp`}>
+              <ProfileImage
+                imageUrl={myIconUrl}
+                avatarIconPosition="under"
+                isNotUpload
+              />
+              <section className="inner flex jcc alic">
+                <Heading tag="h2" align="center" isBold>
+                  {userName}
+                </Heading>
+              </section>
             </div>
-            <section className={`${styles.contents} inner sp`}>
-              <Heading tag="h2" align="center" isBold>
-                {userName}
-              </Heading>
-            </section>
             <div className={`${styles.myChat} pc`}></div>
           </>
         )}
@@ -117,4 +132,4 @@ const SpProfile = () => {
   );
 };
 
-export default SpProfile;
+export default Profile;

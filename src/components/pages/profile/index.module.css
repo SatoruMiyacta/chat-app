@@ -1,8 +1,18 @@
-.contents {
+.contents > section {
   position: relative;
   z-index: 10;
-  padding-top: 40px;
+  height: 100px;
   background-color: #fff;
+}
+
+.contents span + span {
+  display: flex;
+  margin: 0 auto;
+  transform: translateY(-60%);
+}
+
+.contents > section {
+  text-align: center;
 }
 
 @media screen and (min-width: 1024px) {
@@ -10,5 +20,4 @@
     flex: 1;
     border-left: 1px solid rgb(227, 227, 227);
   }
-
 }

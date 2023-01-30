@@ -1,11 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
-import Message from '../rooms/message';
-
-import PcProfile from './pcIndex';
-
 import BottomNavigation from '@/components/organisms/BottomNavigation';
-import SideMenu from '@/components/organisms/SideMenu';
+import ProfileOverview from '@/components/organisms/profileOverview';
 
 const ProfileLayout = () => {
   return (
@@ -15,7 +11,7 @@ const ProfileLayout = () => {
         <BottomNavigation />
       </div>
       <div className="pc">
-        <PcProfile />
+        <ProfileOverview />
         <Outlet />
       </div>
     </>

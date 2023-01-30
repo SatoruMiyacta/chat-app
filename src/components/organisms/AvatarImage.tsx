@@ -2,12 +2,12 @@ import React, { useRef } from 'react';
 
 import Button from '../atoms/Button';
 
-import styles from './IconImage.module.css';
+import styles from './AvatarImage.module.css';
 
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export interface IconImageProps {
+export interface AvatarImageProps {
   iconUrl: string;
   onChange?: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
   hasCameraIcon?: boolean;
@@ -17,7 +17,7 @@ export interface IconImageProps {
   className?: string;
 }
 
-const IconImage = ({
+const AvatarImage = ({
   iconUrl,
   onChange,
   hasCameraIcon = false,
@@ -25,40 +25,39 @@ const IconImage = ({
   isNotUpload = false,
   uploadIconSize = 'medium',
   className,
-}: IconImageProps) => {
+}: AvatarImageProps) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
+
+  const showUploadButton = () => {
+    if (!isUploadButton) return;
+
+    return (
+      <div className={styles.uploadButton}>
+        <Button
+          color="primary"
+          variant="outlined"
+          onClick={() => inputFileRef.current?.click()}
+          size="small"
+        >
+          画像選択
+        </Button>
+        <input
+          id="imageUpload"
+          ref={inputFileRef}
+          type="file"
+          className={styles.uploadInput}
+          accept=".png, .jpeg, .jpg, .gif"
+          onChange={onChange}
+        />
+      </div>
+    );
+  };
 
   const uploadIconClassList = [
     styles.uploadIcon,
     styles[uploadIconSize],
     className,
   ];
-
-  const showUploadButton = () => {
-    if (isUploadButton) {
-      return (
-        <div className="pc">
-          <Button
-            color="primary"
-            variant="outlined"
-            onClick={() => inputFileRef.current?.click()}
-            className={styles.uploadButton}
-            size="small"
-          >
-            画像選択
-          </Button>
-          <input
-            id="imageUpload"
-            ref={inputFileRef}
-            type="file"
-            className={styles.uploadInput}
-            accept=".png, .jpeg, .jpg, .gif"
-            onChange={onChange}
-          />
-        </div>
-      );
-    }
-  };
 
   return (
     <>
@@ -76,7 +75,7 @@ const IconImage = ({
         </div>
       )}
       {!isNotUpload && (
-        <>
+        <div>
           <button
             id="imageUpload"
             className={`${uploadIconClassList.join(' ')}`}
@@ -100,10 +99,10 @@ const IconImage = ({
             accept=".png, .jpeg, .jpg, .gif"
             onChange={onChange}
           />
-        </>
+        </div>
       )}
       {showUploadButton()}
     </>
   );
 };
-export default IconImage;
+export default AvatarImage;

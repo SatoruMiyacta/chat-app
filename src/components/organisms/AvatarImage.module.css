@@ -1,3 +1,7 @@
+.uploadInput {
+  display: none;
+}
+
 .uploadIcon {
   position: relative;
   z-index: 20;
@@ -5,18 +9,18 @@
 }
 
 .uploadIcon.small {
+  width: 32px;
+  height: 32px;
+}
+
+.uploadIcon.medium {
   width: 48px;
   height: 48px;
 }
 
-.uploadIcon.medium {
+.uploadIcon.large {
   width: 64px;
   height: 64px;
-}
-
-.uploadIcon.large {
-  width: 82px;
-  height: 82px;
 }
 
 .uploadIcon > img {
@@ -24,10 +28,6 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-}
-
-.uploadInput {
-  display: none;
 }
 
 .cameraIcon {
@@ -44,7 +44,6 @@
 }
 
 @media screen and (min-width: 1024px) {
-
   .uploadButton {
     margin-left: 24px;
   }

@@ -3,13 +3,11 @@ import { useAtom } from 'jotai';
 import { authUserAtom, usersAtom, UserData } from '@/store';
 import { getCacheExpirationDate, fetchUserData, isCacheActive } from '@/utils';
 
-export const useExchangeData = () => {
+export const useUser = () => {
   const [users, setUsers] = useAtom(usersAtom);
   const [authUser] = useAtom(authUserAtom);
 
-  const userId = authUser?.uid || '';
-
-  const getUserData = async (userId: string) => {
+  const getUser = async (userId: string) => {
     if (isCacheActive(users[userId])) return users[userId].data;
 
     const userData = await fetchUserData(userId);
@@ -18,12 +16,12 @@ export const useExchangeData = () => {
     return userData;
   };
 
-  const updateCacheUserData = (userId: string, userData: UserData) => {
+  const saveUser = (userId: string, userData: UserData) => {
     setUsers((prevState) => ({
       ...prevState,
       [userId]: { data: userData, expiresIn: getCacheExpirationDate() },
     }));
   };
 
-  return { getUserData, userId, updateCacheUserData };
+  return { getUser, saveUser };
 };

@@ -45,20 +45,6 @@ export const useEditProfile = () => {
 
   const userId = authUser?.uid || '';
 
-  const getUserData = async (userId: string) => {
-    if (isCacheActive(users[userId])) return users[userId].data;
-
-    const userData = await fetchUserData(userId);
-    if (!userData) return;
-
-    setUsers((prevState) => ({
-      ...prevState,
-      [userId]: { data: userData, expiresIn: getCacheExpirationDate() },
-    }));
-
-    return userData;
-  };
-
   const reAuthenticate = async () => {
     if (!auth.currentUser?.email) return;
     const userEmail = auth.currentUser.email;
@@ -87,16 +73,7 @@ export const useEditProfile = () => {
       iconUrl: userIconUrl,
       updatedAt: serverTimestamp(),
     };
-    const updateTimestamp = await updateDoc(docRef, updateData);
-
-    console.log(updateTimestamp);
-    setUsers((prevState) => ({
-      ...prevState,
-      [userId]: {
-        data: { ...users[userId].data },
-        expiresIn: getCacheExpirationDate(),
-      },
-    }));
+    await updateDoc(docRef, updateData);
   };
 
   return {
@@ -113,7 +90,6 @@ export const useEditProfile = () => {
     isComplete,
     uploadIcon,
     setPasswordErrorMessage,
-    getUserData,
     setPassword,
     passwordErrorMessage,
     password,

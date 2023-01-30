@@ -18,8 +18,8 @@ import Search from '@/components/pages/home/search';
 import NotFound from '@/components/pages/not-found';
 import DeleteAccount from '@/components/pages/profile/deleteAccount';
 import EditProfile from '@/components/pages/profile/editProfile';
+import Profile from '@/components/pages/profile/index';
 import ProfileLayout from '@/components/pages/profile/profileLayout';
-import SpProfile from '@/components/pages/profile/spIndex';
 import Rooms from '@/components/pages/rooms/index';
 import Message from '@/components/pages/rooms/message';
 
@@ -54,7 +54,7 @@ const App = () => {
           </Route>
           {/* notfoundじゃない共通するコンポーネント */}
           <Route path="profile" element={<ProfileLayout />}>
-            <Route index element={<SpProfile />} />
+            <Route index element={<Profile />} />
             <Route path="edit" element={<EditProfile />} />
             <Route path="delete-account" element={<DeleteAccount />} />
           </Route>
