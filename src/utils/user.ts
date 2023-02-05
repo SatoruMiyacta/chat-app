@@ -1,4 +1,4 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { getDocs, collection, doc, getDoc } from 'firebase/firestore';
 
 import { db } from '@/main';
 import { UserData } from '@/store';
@@ -23,8 +23,12 @@ export const fetchUserData = async (userId: string) => {
   return userData;
 };
 
+/**
+ * ユーザー情報のキャッシュ（expiresIn）が有効期限内であればtrueを返す
+ */
 export const isCacheActive = (userObject: UserCacheObject) => {
   const now = new Date();
-  const isCacheActive = userObject?.expiresIn > now;
+  const isCacheActive = userObject.expiresIn > now;
+
   return isCacheActive;
 };
