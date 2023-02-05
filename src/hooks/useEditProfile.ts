@@ -45,6 +45,9 @@ export const useEditProfile = () => {
 
   const userId = authUser?.uid || '';
 
+  /**
+   * メールアドレスを変更する際、パスワードで再認証を行う。
+   */
   const reAuthenticate = async () => {
     if (!auth.currentUser?.email) return;
     const userEmail = auth.currentUser.email;
@@ -53,6 +56,9 @@ export const useEditProfile = () => {
     await reauthenticateWithCredential(auth.currentUser, credential);
   };
 
+  /**
+   * storageにアバターを保存し、URLを取得する。
+   */
   const uploadIcon = async (userIconFile: Blob, userId: string) => {
     if (!userIconFile) throw new Error('画像をアップロードしてください。');
 
@@ -63,6 +69,9 @@ export const useEditProfile = () => {
     return url;
   };
 
+  /**
+   * 変更されたユーザー情報をfirestoreに保存する。
+   */
   const updateUserDate = async (
     userId: string,
     { userName, userIconUrl }: InitialUserData

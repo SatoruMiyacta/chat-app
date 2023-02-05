@@ -20,15 +20,15 @@
 @media screen and (min-width: 1024px) {
   .container {
     position: relative;
-    height: 100vh;
     z-index: 10;
+    height: 100vh;
     background-color: #fff;
   }
 
   .container > section {
     margin-top: 96px;
   }
-  
+
   .container > section > h1 {
     color: #ff971d;
   }
@@ -38,8 +38,8 @@
   }
 
   .container > section > div > button {
-    margin-left: auto;
     margin-right: 0;
+    margin-left: auto;
   }
 
   .contents {
@@ -47,8 +47,8 @@
   }
 
   .buttonArea {
-    margin-top: 96px;
-    padding-left: 96px;
     padding-right: 96px;
+    padding-left: 96px;
+    margin-top: 96px;
   }
 }

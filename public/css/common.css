@@ -28,6 +28,14 @@ html {
 flex-direction: column;
 }
 
+.grow {
+  flex: 1;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
 @media screen and (min-width:1024px) {
   .sp {
     display: none !important;
