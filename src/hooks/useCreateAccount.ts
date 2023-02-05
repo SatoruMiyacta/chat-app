@@ -43,6 +43,9 @@ export const useCreateAccount = () => {
     return userCredential.user;
   };
 
+  /**
+   * storageにアバターを保存し、URLを取得する。
+   */
   const uploadIcon = async (userIconFile: Blob, userId: string) => {
     if (!userIconFile) throw new Error('画像をアップロードしてください。');
 
@@ -53,6 +56,9 @@ export const useCreateAccount = () => {
     return url;
   };
 
+  /**
+   * firestoreに該当のユーザー情報を保存する
+   */
   const registerUserDate = async (
     userId: string,
     { userName, userIconUrl }: InitialUserData

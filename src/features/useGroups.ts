@@ -10,6 +10,11 @@ import {
 export const useGroup = () => {
   const [groups, setGroups] = useAtom(groupsAtom);
 
+  /**
+   * グループデータのキャッシュが古くないか
+   * キャッシュが新しければグローバルstateからデータ取得。
+   * 古ければfirestoreから取得
+   */
   const getGroups = async (groupId: string) => {
     if (isGroupCacheActive(groups[groupId])) return groups[groupId].data;
 
@@ -19,6 +24,9 @@ export const useGroup = () => {
     return groupsData;
   };
 
+  /**
+   * グローバルstateの情報を更新
+   */
   const saveGroups = (groupId: string, groupsData: GroupData) => {
     setGroups((prevState) => ({
       ...prevState,
