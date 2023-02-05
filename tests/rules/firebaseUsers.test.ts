@@ -398,6 +398,7 @@ describe('friends/{friendUserId}', () => {
   //         updatedAt: serverTimestamp(),
   //       })
   //     );
+
   //   });
 
   //   it('user本人以外は友達追加不可。', async () => {

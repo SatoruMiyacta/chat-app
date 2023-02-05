@@ -1,37 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { i } from 'vitest/dist/index-220c1d70';
 import {
-  test,
   isValidEmail,
   isValidPassword,
   validateBlobSize,
-} from '../src/utils';
+} from '../../src/utils';
 
-// // discribeがtestのブロックを作る関数
-// // 引数にtestブロック名とコールバック関数
-// describe('test', () => {
-//   // itは一つのtestにつき、一つ作る
-//   // 日付をYYYY/MM/DDで返すtest
-//   it('今日の日付をYYYY/MM/DDで返す', () => {
-//     const date = new Date(2023, 11, 1);
-//     // console.log(date)
-//     const dateTest = test(date);
-//     // expectが検査したい値
-//     // tobeがイコール正しいか検査する
-//     expect(dateTest).toBe('2023/12/01');
-//   });
-
-//   it('今日の日付をYYYY/MM/DDで返す', () => {
-//     const date = new Date(2023, 0, 1);
-//     // console.log(date)
-//     const dateTest = test(date);
-//     // expectが検査したい値
-//     // tobeがイコール正しいか検査する
-//     expect(dateTest).toBe('2023/01/01');
-//   });
-// });
-
-describe('/utils/validation', () => {
+describe('isValidEmail', () => {
   it('test.gmail.com を渡したら、falseを返す', () => {
     const email = 'test.gmail.com';
     const validEmail = isValidEmail(email);
@@ -75,7 +49,7 @@ describe('/utils/validation', () => {
   });
 });
 
-describe('/utils/validation', () => {
+describe('isValidPassword', () => {
   it('パスワードテストを渡したら、falseを返す', () => {
     const password = 'パスワードテスト';
     const validPassword = isValidPassword(password);
@@ -98,7 +72,7 @@ describe('/utils/validation', () => {
   });
 });
 
-describe('/utils/validation', () => {
+describe('validateBlobSize', () => {
   it('制限に引っかからないサイズ(10MB)のblobを渡したら、blobを返す', () => {
     let str = '';
 
@@ -127,7 +101,6 @@ describe('/utils/validation', () => {
     }
 
     const blob = new Blob([str], { type: 'text' });
-    // console.log(blob.size);
 
     const file = validateBlobSize(blob);
 
