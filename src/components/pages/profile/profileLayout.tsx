@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
 import BottomNavigation from '@/components/organisms/BottomNavigation';
-import ProfileOverview from '@/components/organisms/profileOverview';
+import ProfileOverview from '@/components/organisms/ProfileOverview';
 
 const ProfileLayout = () => {
   return (
@@ -10,7 +10,7 @@ const ProfileLayout = () => {
         <Outlet />
         <BottomNavigation />
       </div>
-      <div className="pc">
+      <div className="pc flex fullWidth">
         <ProfileOverview />
         <Outlet />
       </div>

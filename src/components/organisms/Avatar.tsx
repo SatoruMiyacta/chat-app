@@ -2,12 +2,12 @@ import React, { useRef } from 'react';
 
 import Button from '../atoms/Button';
 
-import styles from './AvatarImage.module.css';
+import styles from './Avatar.module.css';
 
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export interface AvatarImageProps {
+export interface AvatarProps {
   iconUrl: string;
   onChange?: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
   hasCameraIcon?: boolean;
@@ -17,7 +17,7 @@ export interface AvatarImageProps {
   className?: string;
 }
 
-const AvatarImage = ({
+const Avatar = ({
   iconUrl,
   onChange,
   hasCameraIcon = false,
@@ -25,7 +25,7 @@ const AvatarImage = ({
   isNotUpload = false,
   uploadIconSize = 'medium',
   className,
-}: AvatarImageProps) => {
+}: AvatarProps) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const showUploadButton = () => {
@@ -105,4 +105,4 @@ const AvatarImage = ({
     </>
   );
 };
-export default AvatarImage;
+export default Avatar;

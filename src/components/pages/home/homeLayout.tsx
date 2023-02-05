@@ -6,10 +6,15 @@ import SideMenu from '@/components/organisms/SideMenu';
 
 const HomeLayout = () => {
   return (
-    <div>
-      <Outlet />
-      <BottomNavigation />
-    </div>
+    <>
+      <div className="sp">
+        <Outlet />
+        <BottomNavigation />
+      </div>
+      <div className="pc">
+        <Outlet />
+      </div>
+    </>
   );
 };
 

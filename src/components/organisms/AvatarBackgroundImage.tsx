@@ -1,27 +1,25 @@
-import AvatarImage, { AvatarImageProps } from './AvatarImage';
-import styles from './ProfileImage.module.css';
+import Avatar, { AvatarProps } from './Avatar';
+import styles from './AvatarBackgroundImage.module.css';
 
-export interface ProfileImageProps {
+export interface AvatarBackgroundImageProps {
   imageUrl: string;
   avatarIconPosition?: 'center' | 'under' | 'left' | 'right';
-  onChange?: AvatarImageProps['onChange'];
-  hasCameraIcon?: AvatarImageProps['hasCameraIcon'];
-  isUploadButton?: AvatarImageProps['isUploadButton'];
-  isNotUpload?: AvatarImageProps['isNotUpload'];
-  uploadIconSize?: AvatarImageProps['uploadIconSize'];
+  onChange?: AvatarProps['onChange'];
+  hasCameraIcon?: AvatarProps['hasCameraIcon'];
+  isNotUpload?: AvatarProps['isNotUpload'];
+  uploadIconSize?: AvatarProps['uploadIconSize'];
   className?: string;
 }
 
-const ProfileImage = ({
+const AvatarBackgroundImage = ({
   imageUrl,
   avatarIconPosition = 'center',
   onChange,
   hasCameraIcon = false,
-  isUploadButton = false,
   isNotUpload = false,
   uploadIconSize = 'medium',
   className,
-}: ProfileImageProps) => {
+}: AvatarBackgroundImageProps) => {
   const backgroundImageClassList = [
     styles.backgroundImage,
     styles[avatarIconPosition],
@@ -33,15 +31,14 @@ const ProfileImage = ({
       className={`${backgroundImageClassList.join(' ')} `}
       style={{ backgroundImage: `url(${imageUrl})` }}
     >
-      <AvatarImage
+      <Avatar
         iconUrl={imageUrl}
         onChange={onChange}
         hasCameraIcon={hasCameraIcon}
-        isUploadButton={isUploadButton}
         isNotUpload={isNotUpload}
         uploadIconSize={uploadIconSize}
       />
     </div>
   );
 };
-export default ProfileImage;
+export default AvatarBackgroundImage;

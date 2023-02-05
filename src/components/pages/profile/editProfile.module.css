@@ -1,7 +1,7 @@
 .contents {
   position: relative;
   z-index: 10;
-  padding-top: 64px;
+  padding-top: 32px;
   background-color: #fff;
 }
 
@@ -15,4 +15,40 @@
 
 .controler {
   margin-top: 24px;
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    position: relative;
+    height: 100vh;
+    z-index: 10;
+    background-color: #fff;
+  }
+
+  .container > section {
+    margin-top: 96px;
+  }
+  
+  .container > section > h1 {
+    color: #ff971d;
+  }
+
+  .container > section > div {
+    margin-top: 32px;
+  }
+
+  .container > section > div > button {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  .contents {
+    padding-top: 0;
+  }
+
+  .buttonArea {
+    margin-top: 96px;
+    padding-left: 96px;
+    padding-right: 96px;
+  }
 }

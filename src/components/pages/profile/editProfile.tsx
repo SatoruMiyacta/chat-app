@@ -15,14 +15,17 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Button from '@/components/atoms/Button';
+import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
+import Avatar from '@/components/organisms/Avatar';
+import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
 import Header from '@/components/organisms/Header';
-import ProfileImage from '@/components/organisms/ProfileImage';
 
-import { useEditProfile, InitialUserData, useUser } from '@/hooks';
+import { useUser } from '@/features';
+import { useEditProfile, InitialUserData } from '@/hooks';
 import { auth } from '@/main';
-import { authUserAtom, usersAtom } from '@/store';
+import { authUserAtom } from '@/store';
 import {
   convertCanvasToBlob,
   resizeFile,
@@ -97,7 +100,6 @@ const EditProfile = () => {
 
     try {
       if (!auth.currentUser) return;
-      // const useId = auth.currentUser.uid;
 
       let userIconUrl = myIconUrl;
       if (userIconFile) userIconUrl = await uploadIcon(userIconFile, userId);
@@ -262,6 +264,7 @@ const EditProfile = () => {
   };
 
   const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
+
   return (
     <>
       {renderModal()}
@@ -272,51 +275,78 @@ const EditProfile = () => {
         className="sp"
         showBackButton
       />
-      <main className={styles.container}>
-        <div className={`${styles.iconImage} ${isPcWindow ? 'inner' : ''}`}>
-          <ProfileImage
-            onChange={onFileChange}
-            hasCameraIcon
-            imageUrl={myIconUrl}
-          />
-        </div>
-        <div className={`${styles.contents} inner`}>
-          <div className={styles.form}>
-            <Input
-              color="primary"
-              id="nameEditProfile"
-              onChange={(event) => setUserName(event.target.value)}
-              type="text"
-              value={userName}
-              variant={isPcWindow ? 'outlined' : 'standard'}
-              isFullWidth
-              label="ユーザーネーム"
-              startIcon={<FontAwesomeIcon icon={faIdCard} />}
+      <main className={`${styles.container} ${isPcWindow ? 'inner' : ''} grow`}>
+        <section>
+          <Heading
+            tag="h1"
+            align="start"
+            color="inherit"
+            className="pc"
+            size="xxl"
+          >
+            プロフィール編集
+          </Heading>
+          <div className={isPcWindow ? 'flex alic' : ''}>
+            <AvatarBackgroundImage
+              imageUrl={myIconUrl}
+              className="sp"
+              hasCameraIcon
+              onChange={onFileChange}
             />
-            <Input
-              color="primary"
-              id="email"
-              onChange={(event) => setEmail(event.target.value)}
-              type="email"
-              value={email}
-              variant={isPcWindow ? 'outlined' : 'standard'}
-              isFullWidth
-              label="メールアドレス"
-              startIcon={<FontAwesomeIcon icon={faEnvelope} />}
+            <Avatar
+              iconUrl={myIconUrl}
+              className="pc"
+              hasCameraIcon
+              isUploadButton={isPcWindow}
+              onChange={onFileChange}
+              uploadIconSize="large"
             />
-          </div>
-          <div className={styles.buttonArea}>
             <Button
-              color="danger"
-              onClick={() => navigate('/profile/delete-account')}
-              variant="outlined"
-              className={styles.deleteButton}
-              isFullWidth
+              color="primary"
+              variant="contained"
+              className="pc"
+              onClick={onSave}
             >
-              アカウント削除
+              保存
             </Button>
           </div>
-        </div>
+          <div className={`${styles.contents} ${isPcWindow ? '' : 'inner'}`}>
+            <div className={styles.form}>
+              <Input
+                color="primary"
+                id="nameEditProfile"
+                onChange={(event) => setUserName(event.target.value)}
+                type="text"
+                value={userName}
+                variant={isPcWindow ? 'outlined' : 'standard'}
+                isFullWidth
+                label="ユーザーネーム"
+                startIcon={<FontAwesomeIcon icon={faIdCard} />}
+              />
+              <Input
+                color="primary"
+                id="email"
+                onChange={(event) => setEmail(event.target.value)}
+                type="email"
+                value={email}
+                variant={isPcWindow ? 'outlined' : 'standard'}
+                isFullWidth
+                label="メールアドレス"
+                startIcon={<FontAwesomeIcon icon={faEnvelope} />}
+              />
+            </div>
+            <div className={styles.buttonArea}>
+              <Button
+                color="danger"
+                onClick={() => navigate('/profile/delete-account')}
+                variant="outlined"
+                isFullWidth
+              >
+                アカウント削除
+              </Button>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );
