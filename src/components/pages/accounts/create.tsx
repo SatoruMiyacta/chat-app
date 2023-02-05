@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
-import { useAtom, useSetAtom } from 'jotai';
 
 import styles from './create.module.css';
 
@@ -17,19 +16,20 @@ import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
-import BackgroundImage from '@/components/organisms/BackgroundImage';
+import Avatar from '@/components/organisms/Avatar';
+import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
 import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
-import IconImage from '@/components/organisms/IconImage';
 
 import { INITIAL_ICON_URL } from '@/constants';
+import { useUser } from '@/features';
 import { InitialUserData, useCreateAccount } from '@/hooks';
-import { UserData, usersAtom } from '@/store';
 import {
   resizeFile,
   validateBlobSize,
   getFirebaseError,
   isValidPassword,
+  fetchUserData,
   convertCanvasToBlob,
 } from '@/utils';
 
@@ -44,7 +44,6 @@ const CreateAcconunt = () => {
   const navigate = useNavigate();
 
   const {
-    setUserData,
     signUp,
     userName,
     setUserName,
@@ -59,6 +58,8 @@ const CreateAcconunt = () => {
     registerUserDate,
   } = useCreateAccount();
 
+  const { saveUser } = useUser();
+
   const createAccount = async () => {
     if (!isComplete()) return;
 
@@ -66,16 +67,20 @@ const CreateAcconunt = () => {
       // emailとpasswordでサインアップ
       // user情報を返す
       const user = await signUp(email, password);
-      const useId = user.uid;
+      const userId = user.uid;
 
       // リサイズされたプロフィールアイコンをcloudstorageにアップロードする
       let userIconUrl = INITIAL_ICON_URL;
-      if (userIconBlob) userIconUrl = await uploadIcon(userIconBlob, useId);
+      if (userIconBlob) userIconUrl = await uploadIcon(userIconBlob, userId);
 
       const initialUserData: InitialUserData = { userName, userIconUrl };
-      await registerUserDate(useId, initialUserData);
+      await registerUserDate(userId, initialUserData);
 
-      await setUserData(useId);
+      const userData = await fetchUserData(userId);
+
+      if (!userData) throw new Error('ユーザー情報がありません。');
+      saveUser(userId, userData);
+
       navigate('/');
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -164,20 +169,19 @@ const CreateAcconunt = () => {
               アカウント作成
             </Heading>
             <div className={`${styles.iconImage} ${isPcWindow ? 'inner' : ''}`}>
-              <BackgroundImage imageUrl={initialIconUrl} className="sp">
-                <IconImage
-                  iconUrl={initialIconUrl}
-                  onChange={onFileChange}
-                  hasCameraIcon
-                  isUploadButton={!isPcWindow}
-                />
-              </BackgroundImage>
-              <IconImage
-                iconUrl={initialIconUrl}
+              <AvatarBackgroundImage
+                imageUrl={initialIconUrl}
+                className="sp"
+                hasCameraIcon
                 onChange={onFileChange}
+              />
+              <Avatar
+                iconUrl={initialIconUrl}
                 className="pc"
                 hasCameraIcon
-                isUploadButton={isPcWindow}
+                isUploadButton
+                onChange={onFileChange}
+                uploadIconSize="large"
               />
             </div>
             <div className={`${styles.formArea} inner`}>

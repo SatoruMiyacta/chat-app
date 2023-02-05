@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { FirebaseError } from 'firebase/app';
 import { useAtom } from 'jotai';
 
 import styles from './index.module.css';
@@ -9,14 +10,13 @@ import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Skeleton from '@/components/atoms/Skeleton';
 import Modal from '@/components/molecules/Modal';
-import AvatarImage from '@/components/organisms/AvatarImage';
+import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
 import Header from '@/components/organisms/Header';
 import Message from '@/components/organisms/MessageForm';
-import ProfileImage from '@/components/organisms/ProfileImage';
 
-import { useUser } from '@/hooks';
-import { auth } from '@/main';
-import { authUserAtom, usersAtom, UserData } from '@/store';
+import { useUser } from '@/features';
+import { authUserAtom } from '@/store';
+import { getFirebaseError } from '@/utils';
 
 const Profile = () => {
   const [userName, setUserName] = useState('');
@@ -57,6 +57,9 @@ const Profile = () => {
       .catch((error) => {
         if (error instanceof Error) {
           setErrorMessage(error.message);
+        } else if (error instanceof FirebaseError) {
+          const errorCode = error.code;
+          setErrorMessage(getFirebaseError(errorCode));
         }
 
         setIsOpenErrorModal(true);
@@ -97,7 +100,7 @@ const Profile = () => {
     <>
       {renderErrorModal()}
       <Header title="プロフィール" className="sp" actionItems={actionItems} />
-      <main>
+      <main className="grow">
         {isLoading && (
           <>
             <div className={`${styles.contents} sp`}>
@@ -113,7 +116,7 @@ const Profile = () => {
         {!isLoading && (
           <>
             <div className={`${styles.contents} sp`}>
-              <ProfileImage
+              <AvatarBackgroundImage
                 imageUrl={myIconUrl}
                 avatarIconPosition="under"
                 isNotUpload
@@ -124,7 +127,9 @@ const Profile = () => {
                 </Heading>
               </section>
             </div>
-            <div className={`${styles.myChat} pc`}></div>
+            <div className={`${styles.myChat} pc `}>
+              <Message />
+            </div>
           </>
         )}
       </main>

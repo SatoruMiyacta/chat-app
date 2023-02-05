@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 import {
@@ -15,6 +16,11 @@ import { useAtom } from 'jotai';
 import styles from './index.module.css';
 
 import {
+  faHouse,
+  faCircleUser,
+  faComment,
+} from '@fortawesome/free-solid-svg-icons';
+import {
   faMagnifyingGlass,
   faUser,
   faUsers,
@@ -22,30 +28,50 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import Button from '@/components/atoms/Button';
 import Fab from '@/components/atoms/FloatingActionButton';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
 import Tabs from '@/components/atoms/Tabs';
-import BackgroundImage from '@/components/organisms/BackgroundImage';
+import Modal from '@/components/molecules/Modal';
+import Avatar from '@/components/organisms/Avatar';
+import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
 import BottomNavigation from '@/components/organisms/BottomNavigation';
 import Header from '@/components/organisms/Header';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { useHome, useExchangeData } from '@/hooks';
+import { useUser, useGroup } from '@/features';
+import { useHome } from '@/hooks';
 import { db } from '@/main';
-import { usersAtom, authUserAtom, UserData } from '@/store';
-import { getCacheExpirationDate, fetchUserData, isCacheActive } from '@/utils';
+import { usersAtom, authUserAtom, UserData, groupsAtom } from '@/store';
+import {
+  getFirebaseError,
+  getCacheExpirationDate,
+  fetchUserData,
+  isCacheActive,
+} from '@/utils';
 
 const Home = () => {
   const [search, setSearch] = useState('');
   const [authUser, setAuthUser] = useAtom(authUserAtom);
   const [users, setUsers] = useAtom(usersAtom);
+  const [groups, setGroups] = useAtom(groupsAtom);
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
   const [friendList, setFriendList] = useState<string[]>([]);
-  const [friendsData, setFriendsData] = useState({});
-  const { fetchfriendsData, fetchGloupsData } = useHome();
-  const { getUserData, updateCacheUserData } = useExchangeData();
+  const [groupList, setGroupList] = useState<string[]>([]);
+  const [errorMessage, setErrorMessage] = useState(
+    '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
+  );
+  const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const [modalAvatarUrl, setModalAvatarUrl] = useState('');
+  const [modalAvatarname, setModalAvatarname] = useState('');
+
+  const { getGroupIdList, getFriendIdList } = useHome();
+
   const tabs = [
     {
       label: '友達',
@@ -59,150 +85,211 @@ const Home = () => {
     },
   ];
 
-  const activeTabs = (
+  const changeActiveTab = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     index: number
   ) => {
     if (tabs[index] !== tabs[activeIndex]) setActiveIndex(index);
   };
 
-  const getFriendIdList = async (userId: string) => {
-    const querySnapshot = await fetchfriendsData(userId);
-    const friendIdList: string[] = [];
+  const userId = authUser?.uid || '';
+  useEffect(() => {
+    try {
+      if (!userId) return;
 
-    querySnapshot.forEach(async (doc) => {
-      const friendId = doc.id;
-      friendIdList.push(friendId);
+      getFriendIdList(userId).then((friendIdList) => {
+        setFriendList(friendIdList);
+      });
 
-      const userData = await getUserData(friendId);
-      let friendUserData = userData;
-
-      if (!friendUserData) {
-        const now = new Date();
-        const deletedUserData = {
-          name: '退会済みユーザー',
-          iconUrl: INITIAL_ICON_URL,
-          createdAt: now,
-          updatedAt: now,
-        };
-
-        friendUserData = deletedUserData;
+      getGroupIdList(userId).then((groupIdList) => {
+        setGroupList(groupIdList);
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        setModalMessage(error.message);
+      } else if (error instanceof FirebaseError) {
+        const errorCode = error.code;
+        setModalMessage(getFirebaseError(errorCode));
       }
-      updateCacheUserData(userId, friendUserData);
-    });
 
-    return friendIdList;
+      setIsOpenModal(true);
+    }
+  }, [userId]);
+
+  const showFriendsList = () => {
+    if (!userId) return;
+    if (!users[friendList[0]]) return;
+
+    return (
+      <div className={styles.list}>
+        {friendList.map((list) => (
+          <ul key={list} className={`${styles.oneLine} flex alic inner`}>
+            <li>
+              <button
+                className="flex alic"
+                onClick={() => {
+                  setModalAvatarUrl(users[list].data.iconUrl);
+                  setModalAvatarname(users[list].data.name);
+                  setIsOpenModal(true);
+                }}
+                type="button"
+              >
+                <Avatar
+                  iconUrl={users[list].data.iconUrl}
+                  uploadIconSize="small"
+                  isNotUpload
+                />
+                <Heading tag="h1">{users[list].data.name}</Heading>
+              </button>
+            </li>
+          </ul>
+        ))}
+      </div>
+    );
   };
 
-  try {
-    if (authUser) {
-      const userId = authUser.uid;
+  const showGroupsList = () => {
+    if (!userId) return;
+    if (!groups[groupList[0]]) return;
 
-      if (!friendList) {
-        getFriendIdList(userId).then((friendIdList) => {
-          setFriendList(friendIdList);
-        });
-        // fetchfriendsData(userId).then((querySnapshot) => {
-        //   const friendIdList: string[] = [];
-        //   querySnapshot.forEach((doc) => {
-        //     const friendId = doc.id;
-        //     friendIdList.push(friendId);
-        //     getUserData(friendId).then((userData) => {
-        //       let friendUserData = userData;
-        //       if (!friendUserData) {
-        //         const now = new Date();
-        //         const deletedUserData = {
-        //           name: '退会済みユーザー',
-        //           iconUrl: INITIAL_ICON_URL,
-        //           createdAt: now,
-        //           updatedAt: now,
-        //         };
-        //         friendUserData = deletedUserData;
-        //       }
-        //       const data = friendUserData;
-        //       setUsers((prevState) => ({
-        //         ...prevState,
-        //         [friendId]: {
-        //           data: data,
-        //           expiresIn: getCacheExpirationDate(),
-        //         },
-        //       }));
-        //     });
-        //   });
-        //   setFriendList(friendIdList);
-        // });
-      }
+    return (
+      <div className={styles.list}>
+        {groupList.map((list) => (
+          <ul key={list} className={`${styles.oneLine} flex alic inner`}>
+            <li>
+              <button
+                className="flex alic"
+                onClick={() => {
+                  setModalAvatarUrl(users[list].data.iconUrl);
+                  setModalAvatarname(users[list].data.name);
+                  setIsOpenModal(true);
+                }}
+                type="button"
+              >
+                <Avatar
+                  iconUrl={groups[list].data.iconUrl}
+                  uploadIconSize="small"
+                  isNotUpload
+                />
+                <Heading tag="h1">{groups[list].data.name}</Heading>
+              </button>
+            </li>
+          </ul>
+        ))}
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    if (!search && !friendList) {
+      getFriendIdList(userId).then((friendIdList) => {
+        setFriendList(friendIdList);
+      });
     }
-  } catch (error) {
-    if (error instanceof FirebaseError) {
-      const errorCode = error.code;
-      console.error(errorCode);
-      // setModalMessage(getFirebaseError(errorCode));
-    } else if (error instanceof Error) {
-      // setModalMessage(error.message);
+    const resultList = Object.keys(users).filter(
+      (key) => users[key].data.name.indexOf(search) > -1
+    );
+
+    setFriendList(resultList);
+  }, [search]);
+
+  const renderErrorModal = () => {
+    if (!isOpenErrorModal) return;
+
+    return (
+      <Modal
+        onClose={() => setIsOpenErrorModal(false)}
+        title="エラー"
+        titleAlign="center"
+        hasInner
+        isOpen={isOpenErrorModal}
+        isBoldTitle
+      >
+        <div>
+          <p>{errorMessage}</p>
+        </div>
+        <div className={styles.controler}>
+          <Button
+            color="primary"
+            onClick={() => setIsOpenErrorModal(false)}
+            variant="contained"
+            isFullWidth
+            size="small"
+          >
+            OK
+          </Button>
+        </div>
+      </Modal>
+    );
+  };
+
+  const renderUserModal = () => {
+    if (!isOpenModal) return;
+
+    return (
+      <div className={styles.modal}>
+        <Modal
+          onClose={() => setIsOpenModal(false)}
+          hasInner
+          isOpen={isOpenModal}
+        >
+          <div className={styles.avatarArea}>
+            <Avatar
+              iconUrl={modalAvatarUrl}
+              isNotUpload
+              uploadIconSize="large"
+            />
+            <Heading tag="h1" align="center" size="xl">
+              {modalAvatarname}
+            </Heading>
+          </div>
+          <div className={styles.controler}>
+            <button>
+              <Link to={'/rooms'}>
+                <FontAwesomeIcon
+                  icon={faComment}
+                  style={{ marginBottom: '4px' }}
+                  size={'xl'}
+                />
+                トーク
+              </Link>
+            </button>
+            <button>
+              <Link to={'/rooms'}>
+                <FontAwesomeIcon
+                  icon={faCircleUser}
+                  style={{ marginBottom: '4px' }}
+                  size={'xl'}
+                />
+                プルフィール
+              </Link>
+            </button>
+          </div>
+        </Modal>
+      </div>
+    );
+  };
+
+  const navigatePath = () => {
+    if (activeIndex === 0) {
+      return navigate('/search');
+    } else {
+      return navigate('/groups/create');
     }
-  }
-
-  // const showFriensList = () => {
-  //   return (
-  //     <div className={styles.list}>
-  //       {friends.map((list, index) => (
-  //         <ul
-  //           key={`tabs-${index}`}
-  //           className={`${styles.oneLine} flex alic inner`}
-  //         >
-  //           {/* <li>
-  //             <BackgroundImage
-  //               iconUrl={list.iconUrl}
-  //               uploadIconButtonSize="small"
-  //             />
-  //           </li>
-  //           <li>
-  //             <Heading tag="h1" size="l">
-  //               {list.userName}
-  //             </Heading>
-  //           </li> */}
-  //         </ul>
-  //       ))}
-  //     </div>
-  //   );
-  // };
-
-  // const showGroupsList = () => {
-  //   return (
-  //     <div className={styles.list}>
-  //       {groups.map((list, index) => (
-  //         <ul
-  //           key={`tabs-${index}`}
-  //           className={`${styles.oneLine} flex alic inner`}
-  //         >
-  //           <li>
-  //             <BackgroundImage
-  //               iconUrl={list.iconUrl}
-  //               uploadIconButtonSize="small"
-  //             />
-  //           </li>
-  //           <li>
-  //             <Heading tag="h1" size="l">
-  //               {list.groupName}
-  //             </Heading>
-  //           </li>
-  //         </ul>
-  //       ))}
-  //     </div>
-  //   );
-  // };
+  };
 
   return (
     <>
-      <Header title="ホーム" />
+      {renderUserModal()}
+      {renderErrorModal()}
+      <Header title="ホーム" className="sp" />
       <div className={styles.container}>
         <div className={styles.tabs}>
           <Tabs
             activeIndex={activeIndex}
             color="black"
             items={tabs}
-            onClick={(event, index) => activeTabs(event, index)}
+            onClick={(event, index) => changeActiveTab(event, index)}
             isBorder
           />
         </div>
@@ -220,12 +307,10 @@ const Home = () => {
           />
         </div>
         <div className={styles.contents}>
-          {/* {activeIndex === 0 ? showFriensList() : showGroupsList()} */}
+          {activeIndex === 0 ? showFriendsList() : showGroupsList()}
           <Fab
             color="primary"
-            onClick={() => {
-              tabs[0] ? navigate('/search') : navigate('/groups/create');
-            }}
+            onClick={() => navigatePath()}
             variant="circular"
             className={styles.fab}
             size="large"
@@ -233,10 +318,8 @@ const Home = () => {
             <FontAwesomeIcon icon={faPlus} />
           </Fab>
         </div>
-        <div>
-          <BottomNavigation />
-        </div>
       </div>
+      <div className={`${styles.myChat} pc`}></div>
     </>
   );
 };

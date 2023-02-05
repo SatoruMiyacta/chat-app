@@ -7,13 +7,14 @@ import styles from './ProfileOverview.module.css';
 
 import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
-import IconImage from '@/components/organisms/AvatarImage';
+import IconImage from '@/components/organisms/Avatar';
+import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
 import Header from '@/components/organisms/Header';
 import Message from '@/components/organisms/MessageForm';
-import ProfileImage from '@/components/organisms/ProfileImage';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { useHome, useUser } from '@/hooks';
+import { useUser } from '@/features';
+import { useHome } from '@/hooks';
 import { auth } from '@/main';
 import { authUserAtom } from '@/store';
 
@@ -26,7 +27,7 @@ const ProfileOverview = () => {
   const location = useLocation();
 
   const { getUser, saveUser } = useUser();
-  const { fetchfriendsData } = useHome();
+  const { fetchfriendsData } = useUser();
 
   const userId = authUser?.uid || '';
 
@@ -96,7 +97,7 @@ const ProfileOverview = () => {
     <>
       <main className={styles.container}>
         <div className={styles.contents}>
-          <ProfileImage
+          <AvatarBackgroundImage
             imageUrl={myIconUrl}
             avatarIconPosition="left"
             isNotUpload
