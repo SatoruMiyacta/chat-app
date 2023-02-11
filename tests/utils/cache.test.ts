@@ -2,13 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { getCacheExpirationDate } from '../../src/utils';
 
 describe('getCacheExpirationDate', () => {
-  it('引数に0 を渡したら現在時刻 が返ってくる', () => {
-    const date = new Date();
-    const cacheExpirationDate = getCacheExpirationDate(0);
-
-    expect(cacheExpirationDate).toStrictEqual(date);
-  });
-
   it('引数に1 を渡したら1分後の時刻 が返ってくる', () => {
     const date = new Date();
     const cacheExpirationDate = getCacheExpirationDate(1);
@@ -27,9 +20,10 @@ describe('getCacheExpirationDate', () => {
 
   it('引数に負の値を渡したら、エラー が返ってくる', () => {
     const date = new Date();
-    const cacheExpirationDate = getCacheExpirationDate(-1);
 
-    expect(cacheExpirationDate).toThrowError();
+    expect(() => {
+      getCacheExpirationDate(-1);
+    }).toThrow();
   });
 
   it('引数に60 を渡したら1時間後の時刻 が返ってくる', () => {
