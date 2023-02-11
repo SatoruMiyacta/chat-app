@@ -13,92 +13,94 @@ service cloud.firestore {
       return request.resource.data
     }
 
-    function isValidString(fieldName,maxNumber,minNumber) {
-     return requestData()[fieldName] is string 
-       && requestData()[fieldName].size() <= maxNumber 
-       && requestData()[fieldName].size() >= minNumber 
+    function isValidString(fieldName,minNumber,maxNumber) {
+     return request.resource.data[fieldName] is string 
+       && request.resource.data[fieldName].size() <= maxNumber 
+       && request.resource.data[fieldName].size() >= minNumber 
     }
 
-    function isValidNumber(fieldName,maxNumber,minNumber) {
-     return requestData()[fieldName] is number
-       && requestData()[fieldName].size() <= maxNumber 
-       && requestData()[fieldName].size() >= minNumber 
+    function isValidNumber(fieldName,minNumber,maxNumber) {
+     return request.resource.data[fieldName] is number
+       && request.resource.data[fieldName].size() <= maxNumber 
+       && request.resource.data[fieldName].size() >= minNumber 
     }
 
     function isExist(fieldName) {
-      return requestData()[fieldName] != null
+      return request.resource.data[fieldName] != null
     }
 
     function isNotExist(fieldName) {
-      return requestData()[fieldName] == null
+      return request.resource.data[fieldName] == null
     }
 
     function isRequestServertimestamp(fieldName) {
       return isExist(fieldName)
-      && request.time == requestData()[fieldName]
+      && request.time == request.resource.data[fieldName]
     }
 
     function isNotUpdated(fieldName) {
       return isNotExist(fieldName)
-      || requestData()[fieldName] == resource.data[fieldName]
+      || request.resource.data[fieldName] == resource.data[fieldName]
     }
 
     match /users/{userId} {
       allow delete: if isUserAuthenticated(userId);
       allow read: if isAuthenticated();
       allow update: if isUserAuthenticated(userId) 
-        && isValidString('name',20,1)
-        && isValidString('iconUrl',10000,1)
+        && isValidString('name',1,20)
+        && isValidString('iconUrl',10,10000)
         && isNotUpdated('createdAt')
         && isRequestServertimestamp('updatedAt');
-      allow create: if isAuthenticated() 
-        && isValidString('name',20,1)
-        && isValidString('iconUrl',10000,1)
+      allow create: if isUserAuthenticated(userId) 
+        && isValidString('name',1,20)
+        && isValidString('iconUrl',10,10000)
         && isRequestServertimestamp('createdAt')
         && isRequestServertimestamp('updatedAt');
 
       match /friends/{friendUserId} {
-      allow read, update, create: if isUserAuthenticated(userId);
-      allow delete: if isAuthenticated();
+      allow read, create, delete: if isUserAuthenticated(userId);
     }
-      match /groups/{groupId} {
-      allow read, update, create, delete: if isUserAuthenticated(userId);
+      match /joinedGroups/{groupId} {
+      allow read, create, delete: if isUserAuthenticated(userId);
     }
       match /joinedRooms/{roomId} {
-      allow read, update, create, delete: if isUserAuthenticated(userId);
+      allow read, delete: if isUserAuthenticated(userId);
+      allow create: if isAuthenticated();
     }
     }
 
     match /rooms/{roomId} {
       allow read: if isAuthenticated() 
         && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedRooms/$(roomId));
-      allow create: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && isExist('authorId')
+        && isValidString('authorId',1,50);
       allow delete: if isUserAuthenticated(resource.data.authorId);
-      allow update: if isAuthenticated() 
-        && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedRooms/$(roomId)) 
-        && isRequestServertimestamp('updatedAt');
 
       match /messages/{messageId} {
-        allow read, create, delete: if isAuthenticated()
-          && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedRooms/$(roomId));
-        allow update: if isAuthenticated()
-          && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedRooms/$(roomId));
+        allow create, read: if isAuthenticated()
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedRooms/$(roomId)) 
+        allow delete: if isUserAuthenticated(resource.data.postUserId);
+        allow update: if isUserAuthenticated(resource.data.postUserId)
+          && isValidString('message',1,10000)
+          && isRequestServertimestamp('updatedAt');
       }
     }
 
     match /groups/{groupId} {
       allow read: if isAuthenticated() 
-        && exists(/databases/$(database)/documents/users/$(request.auth.uid)/groups/$(groupId));
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedGroups/$(groupId))
       allow update: if isAuthenticated() 
-        && exists(/databases/$(database)/documents/users/$(request.auth.uid)/groups/$(groupId));
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedGroups/$(groupId));
       allow create: if isAuthenticated();
       allow delete: if isUserAuthenticated(resource.data.authorId);
 
       match /members/{memberId} {
-        allow read, create, delete: if isAuthenticated();
-        allow update: if isAuthenticated()
-          && isNotUpdated('createdAt')
-          && isRequestServertimestamp('updatedAt');
+        allow create: if isAuthenticated();
+        allow read: if isAuthenticated()
+          // && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(memberId))
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedGroups/$(groupId))
+        allow delete: if isUserAuthenticated(memberId)
       }
     }
     
