@@ -17,7 +17,7 @@ import Modal from '@/components/molecules/Modal';
 import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
 
-import { useLogin } from '@/hooks';
+import { useLogin } from '@/features';
 import { getFirebaseError, isValidPassword } from '@/utils';
 
 const Login = () => {

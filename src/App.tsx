@@ -5,6 +5,8 @@ import { Route, Routes } from 'react-router-dom';
 // import { far } from '@fortawesome/free-regular-svg-icons';
 // import { fas } from '@fortawesome/free-solid-svg-icons';
 
+import RoomLayout from './components/pages/rooms/roomLayout';
+
 import Contact from '@/components/pages/accounts/contact';
 import CreateAcconunts from '@/components/pages/accounts/create';
 import Login from '@/components/pages/accounts/login';
@@ -48,8 +50,8 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="search" element={<Search />} />
           </Route>
-          <Route path="rooms" element={<Rooms />}>
-            <Route index element={<NotFound />} />
+          <Route path="rooms" element={<RoomLayout />}>
+            <Route index element={<Rooms />} />
             <Route path="message" element={<Message />} />
           </Route>
           {/* notfoundじゃない共通するコンポーネント */}

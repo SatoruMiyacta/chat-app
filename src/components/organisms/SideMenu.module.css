@@ -1,4 +1,5 @@
 .sideMenu {
+  z-index: 10;
   width: 160px;
   min-width: max-content;
   height: 100vh;
@@ -24,4 +25,9 @@
 
 .navigationItems > li a:hover {
   background-color: rgba(196, 196, 196, 0.2);
+}
+
+.navigationItems > li a.active {
+  color: #fff;
+  background-color: #ff971d;
 }

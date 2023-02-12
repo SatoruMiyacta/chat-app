@@ -10,7 +10,7 @@ import {
 import { useAtom } from 'jotai';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { useUser, useGroup } from '@/features';
+import { useUser, useGroup } from '@/hooks';
 import { db } from '@/main';
 import { authUserAtom, usersAtom } from '@/store';
 import { getCacheExpirationDate, fetchUserData, isCacheActive } from '@/utils';

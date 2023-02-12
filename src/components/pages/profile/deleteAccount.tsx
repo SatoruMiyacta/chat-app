@@ -21,7 +21,7 @@ import Input from '@/components/atoms/Input';
 import Modal from '@/components/molecules/Modal';
 import Header from '@/components/organisms/Header';
 
-import { useDeleteAccount } from '@/hooks';
+import { useDeleteAccount } from '@/features';
 import { auth, db, storage } from '@/main';
 import { authUserAtom } from '@/store';
 import { getFirebaseError, isValidPassword } from '@/utils';
@@ -81,8 +81,8 @@ const DeleteAccount = () => {
         titleAlign="center"
         hasInner
         isBoldTitle
-      >
         isOpen={isModal}
+      >
         <div>
           <p>{modalMessage}</p>
         </div>
@@ -104,59 +104,61 @@ const DeleteAccount = () => {
     <>
       {renderErrorModal()}
       <Header title="アカウント削除" className="sp" showBackButton />
-      <main className={`${styles.container} inner`}>
-        <Heading
-          tag="h1"
-          align="center"
-          className="pc"
-          color="inherit"
-          size="xxl"
-        >
-          アカウント削除
-        </Heading>
-        <div className={styles.caution}>
-          <FontAwesomeIcon
-            color="#ff971d"
-            icon={faTriangleExclamation}
-            size="xl"
-          />
-          <p>アカウント削除すると、すべてデータは消えてしまいます。</p>
-        </div>
-        <div className={styles.contents}>
-          <div className={styles.form}>
-            <Input
-              color="primary"
-              id="pass_delete"
-              onChange={(event) => setPassword(event.target.value)}
-              type="password"
-              value={password}
-              variant={isPcWindow ? 'outlined' : 'standard'}
-              errorMessage={passwordErrorMessage}
-              isFullWidth
-              label="パスワード"
-              minLength={10}
-              onBlur={() => {
-                if (!isValidPassword(password)) {
-                  setPasswordErrorMessage('半角英数字で入力してください');
-                } else {
-                  setPasswordErrorMessage('');
-                }
-              }}
-              startIcon={<FontAwesomeIcon icon={faLock} />}
+      <main className={`${styles.container} inner grow`}>
+        <section>
+          <Heading
+            tag="h1"
+            align="start"
+            className="pc"
+            color="inherit"
+            size="xxl"
+          >
+            アカウント削除
+          </Heading>
+          <div className={`${styles.caution} flex alic fdrc`}>
+            <FontAwesomeIcon
+              color="#ff971d"
+              icon={faTriangleExclamation}
+              size="xl"
             />
+            <p>アカウント削除すると、すべてデータは消えてしまいます。</p>
           </div>
-          <div className={styles.buttonArea}>
-            <Button
-              color="primary"
-              onClick={deleteAccount}
-              variant="contained"
-              isDisabled={!isComplete()}
-              isFullWidth
-            >
-              削除する
-            </Button>
+          <div className={styles.contents}>
+            <div className={styles.form}>
+              <Input
+                color="primary"
+                id="pass_delete"
+                onChange={(event) => setPassword(event.target.value)}
+                type="password"
+                value={password}
+                variant={isPcWindow ? 'outlined' : 'standard'}
+                errorMessage={passwordErrorMessage}
+                isFullWidth
+                label="パスワード"
+                minLength={10}
+                onBlur={() => {
+                  if (!isValidPassword(password)) {
+                    setPasswordErrorMessage('半角英数字で入力してください');
+                  } else {
+                    setPasswordErrorMessage('');
+                  }
+                }}
+                startIcon={<FontAwesomeIcon icon={faLock} />}
+              />
+            </div>
+            <div className={styles.buttonArea}>
+              <Button
+                color="primary"
+                onClick={deleteAccount}
+                variant="contained"
+                isDisabled={!isComplete()}
+                isFullWidth
+              >
+                削除する
+              </Button>
+            </div>
           </div>
-        </div>
+        </section>
       </main>
     </>
   );

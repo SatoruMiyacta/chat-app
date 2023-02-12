@@ -16,7 +16,7 @@ import Modal from '@/components/molecules/Modal';
 import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
 
-import { useResetPassword } from '@/hooks';
+import { useResetPassword } from '@/features';
 import { auth } from '@/main';
 import { getFirebaseError } from '@/utils';
 

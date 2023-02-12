@@ -22,8 +22,8 @@ import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { useUser } from '@/features';
-import { InitialUserData, useCreateAccount } from '@/hooks';
+import { InitialUserData, useCreateAccount } from '@/features';
+import { useUser } from '@/hooks';
 import {
   resizeFile,
   validateBlobSize,
@@ -179,7 +179,7 @@ const CreateAcconunt = () => {
                 iconUrl={initialIconUrl}
                 className="pc"
                 hasCameraIcon
-                isUploadButton
+                isUploadButton={isPcWindow}
                 onChange={onFileChange}
                 uploadIconSize="large"
               />
