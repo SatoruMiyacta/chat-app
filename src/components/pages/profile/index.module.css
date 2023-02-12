@@ -1,18 +1,18 @@
 .contents > section {
   position: relative;
   z-index: 10;
-  height: 100px;
+  height: 160px;
   background-color: #fff;
+}
+
+.contents > section > span {
+  font-weight: bold;
 }
 
 .contents span + span {
   display: flex;
   margin: 0 auto;
   transform: translateY(-60%);
-}
-
-.contents > section {
-  text-align: center;
 }
 
 @media screen and (min-width: 1024px) {

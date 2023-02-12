@@ -22,8 +22,8 @@ import Avatar from '@/components/organisms/Avatar';
 import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
 import Header from '@/components/organisms/Header';
 
-import { useUser } from '@/features';
-import { useEditProfile, InitialUserData } from '@/hooks';
+import { useEditProfile, InitialUserData } from '@/features';
+import { useUser } from '@/hooks';
 import { auth } from '@/main';
 import { authUserAtom } from '@/store';
 import {

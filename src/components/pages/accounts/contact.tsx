@@ -18,7 +18,7 @@ import Modal from '@/components/molecules/Modal';
 import CoverImageOnlyPc from '@/components/organisms/CoverImageOnlyPc';
 import Header from '@/components/organisms/Header';
 
-import { useContact } from '@/hooks';
+import { useContact } from '@/features';
 import { getFirebaseError, sendToSlack } from '@/utils';
 
 const Contact = () => {

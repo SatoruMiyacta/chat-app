@@ -6,6 +6,9 @@ import { useAtom } from 'jotai';
 
 import styles from './index.module.css';
 
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Skeleton from '@/components/atoms/Skeleton';
@@ -14,7 +17,8 @@ import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage'
 import Header from '@/components/organisms/Header';
 import Message from '@/components/organisms/MessageForm';
 
-import { useUser } from '@/features';
+import { useHome } from '@/features';
+import { useUser } from '@/hooks';
 import { authUserAtom } from '@/store';
 import { getFirebaseError } from '@/utils';
 
@@ -27,9 +31,11 @@ const Profile = () => {
   );
   const [isLoading, setIsLoading] = useState(true);
   const [authUser] = useAtom(authUserAtom);
+  const [friendList, setFriendList] = useState<string[]>([]);
   const navigate = useNavigate();
 
   const { getUser, saveUser } = useUser();
+  const { getGroupIdList, getFriendIdList } = useHome();
 
   const actionItems = [
     {
@@ -43,8 +49,8 @@ const Profile = () => {
   useEffect(() => {
     if (!userId) return;
 
-    getUser(userId)
-      .then((userData) => {
+    try {
+      getUser(userId).then((userData) => {
         if (!userData) throw new Error('ユーザー情報がありません。');
 
         saveUser(userId, userData);
@@ -53,17 +59,21 @@ const Profile = () => {
         setMyIconUrl(userData.iconUrl);
 
         setIsLoading(false);
-      })
-      .catch((error) => {
-        if (error instanceof Error) {
-          setErrorMessage(error.message);
-        } else if (error instanceof FirebaseError) {
-          const errorCode = error.code;
-          setErrorMessage(getFirebaseError(errorCode));
-        }
-
-        setIsOpenErrorModal(true);
       });
+
+      getFriendIdList(userId).then((friendIdList) => {
+        setFriendList(friendIdList);
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else if (error instanceof FirebaseError) {
+        const errorCode = error.code;
+        setErrorMessage(getFirebaseError(errorCode));
+      }
+
+      setIsOpenErrorModal(true);
+    }
   }, [userId]);
 
   const renderErrorModal = () => {
@@ -118,13 +128,22 @@ const Profile = () => {
             <div className={`${styles.contents} sp`}>
               <AvatarBackgroundImage
                 imageUrl={myIconUrl}
-                avatarIconPosition="under"
+                avatarIconPosition="left"
                 isNotUpload
+                uploadIconSize="large"
               />
-              <section className="inner flex jcc alic">
-                <Heading tag="h2" align="center" isBold>
+              <section className="inner flex jcc fdrc">
+                <Heading tag="h1" align="start" isBold size="xxl">
                   {userName}
                 </Heading>
+                <span>
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    size="lg"
+                    style={{ marginRight: '8px', opacity: 0.3 }}
+                  />
+                  {friendList.length}
+                </span>
               </section>
             </div>
             <div className={`${styles.myChat} pc `}>

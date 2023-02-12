@@ -13,8 +13,8 @@ import Header from '@/components/organisms/Header';
 import Message from '@/components/organisms/MessageForm';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { useUser } from '@/features';
-import { useHome } from '@/hooks';
+import { useHome } from '@/features';
+import { useUser } from '@/hooks';
 import { auth } from '@/main';
 import { authUserAtom } from '@/store';
 
@@ -28,36 +28,9 @@ const ProfileOverview = () => {
 
   const { getUser, saveUser } = useUser();
   const { fetchfriendsData } = useUser();
+  const { getGroupIdList, getFriendIdList } = useHome();
 
   const userId = authUser?.uid || '';
-
-  const getFriendIdList = async (userId: string) => {
-    const querySnapshot = await fetchfriendsData(userId);
-    const friendIdList: string[] = [];
-
-    querySnapshot.forEach(async (doc) => {
-      const friendId = doc.id;
-      friendIdList.push(friendId);
-
-      let friendUserData = await getUser(friendId);
-      // let friendUserData = userData;
-
-      if (!friendUserData) {
-        const now = new Date();
-        const deletedUserData = {
-          name: '退会済みユーザー',
-          iconUrl: INITIAL_ICON_URL,
-          createdAt: now,
-          updatedAt: now,
-        };
-
-        friendUserData = deletedUserData;
-      }
-      saveUser(friendId, friendUserData);
-    });
-
-    return friendIdList;
-  };
 
   useEffect(() => {
     if (!userId) return;

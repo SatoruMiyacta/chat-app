@@ -40,8 +40,8 @@ import BottomNavigation from '@/components/organisms/BottomNavigation';
 import Header from '@/components/organisms/Header';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { useUser, useGroup } from '@/features';
-import { useHome } from '@/hooks';
+import { useHome } from '@/features';
+import { useUser, useGroup } from '@/hooks';
 import { db } from '@/main';
 import { usersAtom, authUserAtom, UserData, groupsAtom } from '@/store';
 import {
