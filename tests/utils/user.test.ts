@@ -1,13 +1,59 @@
+import { doc, serverTimestamp, getDoc } from 'firebase/firestore';
+import firebase from 'firebase/firestore';
 import { describe, expect, it, vi } from 'vitest';
+import { db } from '../../src/main';
 import { fetchUserData, isCacheActive } from '../../src/utils';
 
 describe('fetchUserData,isCacheActive', () => {
   describe('fetchUserData', () => {
-    it('ランダムなID を渡したらundefined が返ってくる', async () => {
+    it('createdAtがdate型なら、trueを返す', async () => {
+      vi.mock('firebase/firestore');
+      const date = new Date();
+      const res = {
+        data: () => {
+          return {
+            createdAt: {
+              toDate: () => date,
+            },
+            updatedAt: {
+              toDate: () => date,
+            },
+          };
+        },
+      };
+
+      // @ts-ignore getDocをmockするため型推論は必要ない
+      firebase.getDoc.mockResolvedValue(res);
+
       const userId = 'test123456test';
       const userData = await fetchUserData(userId);
 
-      expect(userData).toBeUndefined();
+      expect(userData.createdAt instanceof Date).toBe(true);
+    });
+
+    it('updatedAtがdate型なら、trueを返す', async () => {
+      vi.mock('firebase/firestore');
+      const date = new Date();
+      const res = {
+        data: () => {
+          return {
+            createdAt: {
+              toDate: () => date,
+            },
+            updatedAt: {
+              toDate: () => date,
+            },
+          };
+        },
+      };
+
+      // @ts-ignore getDocをmockするため型推論は必要ない
+      firebase.getDoc.mockResolvedValue(res);
+
+      const userId = 'test123456test';
+      const userData = await fetchUserData(userId);
+
+      expect(userData.updatedAt instanceof Date).toBe(true);
     });
   });
 
