@@ -36,6 +36,10 @@ flex-direction: column;
   width: 100%;
 }
 
+.viewHeight {
+  height: 100vh;
+}
+
 @media screen and (min-width:1024px) {
   .sp {
     display: none !important;
