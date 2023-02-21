@@ -2,16 +2,17 @@ import { Outlet } from 'react-router-dom';
 
 import BottomNavigation from '@/components/organisms/BottomNavigation';
 
-const RoomLayout = () => {
+interface RoomLayoutProps {
+  children?: React.ReactNode;
+}
+const RoomLayout = ({ children }: RoomLayoutProps) => {
   return (
     <>
       <div className="sp">
-        <Outlet />
+        {children}
         <BottomNavigation />
       </div>
-      <div className="pc flex fullWidth">
-        <Outlet />
-      </div>
+      <div className="pc flex fullWidth">{children}</div>
     </>
   );
 };

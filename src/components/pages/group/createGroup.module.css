@@ -1,0 +1,78 @@
+.groupProfile {
+  position: sticky;
+  top: 56px;
+  z-index: 90;
+  padding-top: 8px;
+  background-color: #fff;
+}
+
+.groupProfile > div:first-child {
+  flex: 1;
+}
+
+.groupProfile > div + div {
+  flex: 4;
+}
+
+.searchForm {
+  position: sticky;
+  top: 56px;
+  z-index: 90;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  background-color: #fff;
+}
+
+.buttonArea {
+  position: fixed;
+  bottom: 0;
+  /* padding-top: 16px; */
+  z-index: 90;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 96px;
+  background-color: #fff;
+}
+
+.buttonArea > button {
+  vertical-align: middle;
+}
+
+.controler {
+  display: flex;
+  margin-top: 48px;
+}
+
+.controler > button a {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #afafaf;
+  text-decoration: none;
+  background-color: #fff;
+}
+@media screen and (min-width: 1024px) {
+  .container {
+    position: relative;
+    width: 350px;
+    height: 100%;
+    border-right: 1px solid rgb(227, 227, 227);
+  }
+
+  .fab {
+    position: absolute;
+    right: 16px;
+    bottom: 72px;
+  }
+  .searchForm {
+    top: 0;
+  }
+  .buttonArea {
+    width: 349px;
+  }
+
+  .myChat {
+    flex: 1;
+    border-left: 1px solid rgb(227, 227, 227);
+  }
+}

@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import {
+  BrowserRouter,
+  createBrowserRouter,
+  RouterProvider,
+} from 'react-router-dom';
 
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -8,11 +12,33 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 import App from './App';
+import BottomNavigation from './components/organisms/BottomNavigation';
+import RoomLayout from './components/pages/rooms/roomLayout';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+
+import Contact from '@/components/pages/accounts/contact';
+import CreateAcconunts from '@/components/pages/accounts/create';
+import Login from '@/components/pages/accounts/login';
+import ResetPassword from '@/components/pages/accounts/resetPassword';
+import CreateGroup from '@/components/pages/group/createGroup';
+import Edit from '@/components/pages/group/editGroup';
+import GroupLayout from '@/components/pages/group/groupLayout';
+import HomeLayout from '@/components/pages/home/homeLayout';
+import Home from '@/components/pages/home/index';
+import Search from '@/components/pages/home/search';
+import NotFound from '@/components/pages/not-found';
+import DeleteAccount from '@/components/pages/profile/deleteAccount';
+import EditProfile from '@/components/pages/profile/editProfile';
+import Profile from '@/components/pages/profile/index';
+import ProfileLayout from '@/components/pages/profile/profileLayout';
+import Rooms from '@/components/pages/rooms/index';
+import Message from '@/components/pages/rooms/message';
+
+import AuthProvider from '@/provider/AuthenticatedPageLayout';
 
 // Import the functions you need from the SDKs you need
 
@@ -41,12 +67,130 @@ export const db = getFirestore(app);
 
 export const auth = getAuth(app);
 
+const router = createBrowserRouter([
+  {
+    path: 'accounts',
+    errorElement: <NotFound />,
+    children: [
+      {
+        path: 'login',
+        element: <Login />,
+      },
+      {
+        path: 'create',
+        element: <CreateAcconunts />,
+      },
+      {
+        path: 'reset-password',
+        element: <ResetPassword />,
+      },
+      {
+        path: 'contact',
+        element: <Contact />,
+      },
+    ],
+  },
+  {
+    path: '/',
+    element: (
+      <AuthProvider>
+        <HomeLayout>
+          <Home />
+        </HomeLayout>
+      </AuthProvider>
+    ),
+  },
+  {
+    path: '/search',
+    element: (
+      <AuthProvider>
+        <HomeLayout>
+          <Search />
+        </HomeLayout>
+      </AuthProvider>
+    ),
+  },
+
+  {
+    path: 'rooms',
+    element: (
+      <AuthProvider>
+        <RoomLayout>
+          <Rooms />
+        </RoomLayout>
+      </AuthProvider>
+    ),
+  },
+  {
+    path: 'rooms/message',
+    element: (
+      <AuthProvider>
+        <RoomLayout>
+          <Message />
+        </RoomLayout>
+      </AuthProvider>
+    ),
+  },
+  {
+    path: 'profile',
+    element: (
+      <AuthProvider>
+        <ProfileLayout>
+          <Profile />
+        </ProfileLayout>
+      </AuthProvider>
+    ),
+  },
+  {
+    path: 'profile/edit',
+    element: (
+      <AuthProvider>
+        <ProfileLayout>
+          <EditProfile />
+        </ProfileLayout>
+      </AuthProvider>
+    ),
+  },
+  {
+    path: 'profile/delete-account',
+    element: (
+      <AuthProvider>
+        <ProfileLayout>
+          <DeleteAccount />
+        </ProfileLayout>
+      </AuthProvider>
+    ),
+  },
+  {
+    path: 'group/create',
+    element: (
+      <AuthProvider>
+        <GroupLayout>
+          <CreateGroup />
+        </GroupLayout>
+      </AuthProvider>
+    ),
+  },
+  {
+    path: 'group/edit',
+    element: (
+      <AuthProvider>
+        <GroupLayout>
+          <Edit />
+        </GroupLayout>
+      </AuthProvider>
+    ),
+  },
+  {
+    path: '*',
+    element: <NotFound />,
+  },
+]);
+
 if (import.meta.env.MODE !== 'test') {
   ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </React.StrictMode>
   );
 }

@@ -1,19 +1,16 @@
 import { Outlet } from 'react-router-dom';
 
-import BottomNavigation from '@/components/organisms/BottomNavigation';
 import Header from '@/components/organisms/Header';
 import SideMenu from '@/components/organisms/SideMenu';
 
-const HomeLayout = () => {
+interface HomeLayoutProps {
+  children?: React.ReactNode;
+}
+const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
     <>
-      <div className="sp">
-        <Outlet />
-        <BottomNavigation />
-      </div>
-      <div className="pc">
-        <Outlet />
-      </div>
+      <div className="sp">{children}</div>
+      <div className="pc">{children}</div>
     </>
   );
 };

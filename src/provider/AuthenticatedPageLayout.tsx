@@ -4,10 +4,15 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useAtom } from 'jotai';
 
 import SideMenu from '@/components/organisms/SideMenu';
+import CreateGroup from '@/components/pages/group/createGroup';
 
 import { authUserAtom } from '@/store/user';
 
-const AuthProvider = () => {
+interface AuthProviderProps {
+  children?: React.ReactNode;
+}
+
+const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authUser, setAuthUser] = useAtom(authUserAtom);
   const auth = getAuth();
   const navigate = useNavigate();
@@ -22,12 +27,10 @@ const AuthProvider = () => {
   });
   return (
     <>
-      <div className="sp">
-        <Outlet />
-      </div>
+      <div className="sp">{children}</div>
       <div className="pc flex">
         <SideMenu />
-        <Outlet />
+        {children}
       </div>
     </>
   );

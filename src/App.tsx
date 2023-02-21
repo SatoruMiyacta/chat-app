@@ -11,9 +11,9 @@ import Contact from '@/components/pages/accounts/contact';
 import CreateAcconunts from '@/components/pages/accounts/create';
 import Login from '@/components/pages/accounts/login';
 import ResetPassword from '@/components/pages/accounts/resetPassword';
-import CreateMember from '@/components/pages/group/createMember';
-import CreateName from '@/components/pages/group/createName';
+import CreateGroup from '@/components/pages/group/createGroup';
 import Edit from '@/components/pages/group/editGroup';
+import GroupLayout from '@/components/pages/group/groupLayout';
 import HomeLayout from '@/components/pages/home/homeLayout';
 import Home from '@/components/pages/home/index';
 import Search from '@/components/pages/home/search';
@@ -35,7 +35,7 @@ import './App.css';
 const App = () => {
   return (
     <>
-      <Routes>
+      {/* <Routes>
         <Route path="/accounts">
           <Route index element={<NotFound />} />
           <Route path="login" element={<Login />} />
@@ -43,8 +43,6 @@ const App = () => {
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="contact" element={<Contact />} />
         </Route>
-
-        {/* ここ見ただけでログインが必要なpageがわかる */}
         <Route path="/" element={<AuthProvider />}>
           <Route element={<HomeLayout />}>
             <Route index element={<Home />} />
@@ -54,22 +52,20 @@ const App = () => {
             <Route index element={<Rooms />} />
             <Route path="message" element={<Message />} />
           </Route>
-          {/* notfoundじゃない共通するコンポーネント */}
           <Route path="profile" element={<ProfileLayout />}>
             <Route index element={<Profile />} />
             <Route path="edit" element={<EditProfile />} />
             <Route path="delete-account" element={<DeleteAccount />} />
           </Route>
-          <Route path="group" element={<NotFound />}>
+          <Route path="group" element={<GroupLayout />}>
             <Route index element={<NotFound />} />
-            <Route path="create" element={<CreateMember />} />
-            <Route path="create" element={<CreateName />} />
+            <Route path="create" element={<CreateGroup />} />
             <Route path="edit" element={<Edit />} />
           </Route>
         </Route>
 
         <Route path="*" element={<NotFound />} />
-      </Routes>
+      </Routes> */}
     </>
   );
 };

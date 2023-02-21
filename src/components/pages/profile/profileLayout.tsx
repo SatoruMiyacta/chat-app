@@ -3,16 +3,16 @@ import { Outlet } from 'react-router-dom';
 import BottomNavigation from '@/components/organisms/BottomNavigation';
 import ProfileOverview from '@/components/organisms/ProfileOverview';
 
-const ProfileLayout = () => {
+interface ProfileLayoutProps {
+  children: React.ReactNode;
+}
+const ProfileLayout = ({ children }: ProfileLayoutProps) => {
   return (
     <>
-      <div className="sp">
-        <Outlet />
-        <BottomNavigation />
-      </div>
-      <div className="pc flex fullWidth">
+      <div className="sp">{children}</div>
+      <div className="pc flex">
         <ProfileOverview />
-        <Outlet />
+        {children}
       </div>
     </>
   );

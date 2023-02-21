@@ -3,7 +3,7 @@ import styles from './Checkbox.module.css';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export interface checkoboxItem {
+export interface checkboxItem {
   id: string;
   isChecked: boolean;
   label?: string;
@@ -16,7 +16,7 @@ export interface CheckboxProps {
     event: React.ChangeEvent<HTMLInputElement>,
     index?: number
   ) => void;
-  items?: checkoboxItem[];
+  items?: checkboxItem[];
   isDisabled?: boolean;
   size?: 'small' | 'medium';
   label?: string;
