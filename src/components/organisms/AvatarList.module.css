@@ -1,0 +1,71 @@
+.list {
+  overflow: auto;
+  border-top: 1px solid rgb(227, 227, 227);
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.oneLine {
+  position: relative;
+  width: 100%;
+  height: 48px;
+  border-bottom: 1px solid rgb(227, 227, 227);
+}
+
+.oneLine.lastMessage {
+  height: 64px;
+}
+
+.oneLine > button {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  object-fit: cover;
+}
+
+.oneLine > div {
+  min-width: fit-content;
+  color: #afafaf;
+}
+
+.oneLine > button > h1 {
+  margin-left: 16px;
+}
+
+.modal > div > div {
+  width: 320px;
+  height: 240px;
+}
+
+.avatarArea > div {
+  display: flex;
+  margin: 24px auto 0;
+}
+
+.avatarArea > h1 {
+  margin-top: 8px;
+}
+.controler {
+  display: flex;
+  margin-top: 48px;
+}
+
+.controler > button {
+  flex: 1;
+}
+
+.controler > button a {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #afafaf;
+  text-decoration: none;
+  background-color: #fff;
+}
+
+.filterArea > button {
+  color: #afafaf;
+  background-color: #fff;
+}
