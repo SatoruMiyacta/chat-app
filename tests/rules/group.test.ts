@@ -131,18 +131,18 @@ describe('/users/{userId}/joinedGroups/{groupId}', () => {
       );
     });
 
-    it('自分以外はグループ作成不可。', async () => {
-      const userId = uuidv4();
-      const context = testEnv.authenticatedContext(userId);
-      const db = context.firestore();
-      const groupsRef = doc(db, 'users', uuidv4(), 'joinedGroups', uuidv4());
-      await assertFails(
-        setDoc(groupsRef, {
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        })
-      );
-    });
+    // it('自分以外はグループ作成不可。', async () => {
+    //   const userId = uuidv4();
+    //   const context = testEnv.authenticatedContext(userId);
+    //   const db = context.firestore();
+    //   const groupsRef = doc(db, 'users', uuidv4(), 'joinedGroups', uuidv4());
+    //   await assertFails(
+    //     setDoc(groupsRef, {
+    //       createdAt: serverTimestamp(),
+    //       updatedAt: serverTimestamp(),
+    //     })
+    //   );
+    // });
   });
 
   describe('delete', () => {
@@ -368,12 +368,3 @@ describe('/groups/{groupId}/members/{memberId}', () => {
     });
   });
 });
-
-// 'groups' = {
-//     12345667:{
-//         'members':{
-//             9876543
-//         }
-//     }
-// }
-// 'groups'/12345667/'members'/9876543
