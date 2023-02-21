@@ -3,23 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  QuerySnapshot,
-  serverTimestamp,
-} from 'firebase/firestore';
 import { useAtom } from 'jotai';
 
 import styles from './index.module.css';
 
-import {
-  faHouse,
-  faCircleUser,
-  faComment,
-} from '@fortawesome/free-solid-svg-icons';
 import {
   faMagnifyingGlass,
   faUser,
@@ -36,41 +23,73 @@ import Tabs from '@/components/atoms/Tabs';
 import Modal from '@/components/molecules/Modal';
 import Avatar from '@/components/organisms/Avatar';
 import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
+import AvatarList from '@/components/organisms/AvatarList';
 import BottomNavigation from '@/components/organisms/BottomNavigation';
 import Header from '@/components/organisms/Header';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { useHome } from '@/features';
+import { useHome, useSearch } from '@/features';
 import { useUser, useGroup } from '@/hooks';
+import { useFriend } from '@/hooks/useFriend';
 import { db } from '@/main';
-import { usersAtom, authUserAtom, UserData, groupsAtom } from '@/store';
+import {
+  usersAtom,
+  authUserAtom,
+  UserData,
+  groupsAtom,
+  friendsIdAtom,
+} from '@/store';
 import {
   getFirebaseError,
   getCacheExpirationDate,
   fetchUserData,
   isCacheActive,
+  fetchNextfriendsData,
 } from '@/utils';
 
 const Home = () => {
   const [search, setSearch] = useState('');
   const [authUser, setAuthUser] = useAtom(authUserAtom);
   const [users, setUsers] = useAtom(usersAtom);
-  const [groups, setGroups] = useAtom(groupsAtom);
+  const [friends, setFriends] = useAtom(friendsIdAtom);
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [friendList, setFriendList] = useState<string[]>([]);
-  const [groupList, setGroupList] = useState<string[]>([]);
+  // const [friendList, setFriendList] = useState<string[]>([]);
+  // const [groupList, setJoinedGroupList] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const [modalAvatarUrl, setModalAvatarUrl] = useState('');
-  const [modalAvatarname, setModalAvatarname] = useState('');
+  const {
+    getMyGroupIdList,
+    saveGroupsIdList,
+    saveGroupData,
+    setJoinedGroupList,
+    joinedGroupList,
+    searchGroupList,
+  } = useHome();
 
-  const { getGroupIdList, getFriendIdList } = useHome();
+  const {
+    setLastFriend,
+    getMyFriendIdList,
+    saveFriendIdList,
+    saveFriendData,
+    searchFriendsIdList,
+    setFriendList,
+    friendList,
+  } = useFriend();
+
+  const {
+    getSearchedGroups,
+    getGroups,
+    saveGroups,
+    saveJoinedGroups,
+    getSearchedGroup,
+  } = useGroup();
+
+  const { getUser, saveUser, getSearchedFriends } = useUser();
+  const { convertnotFriendsObject, searchUserList } = useSearch();
 
   const tabs = [
     {
@@ -96,102 +115,103 @@ const Home = () => {
   useEffect(() => {
     try {
       if (!userId) return;
-
-      getFriendIdList(userId).then((friendIdList) => {
-        setFriendList(friendIdList);
+      getMyFriendIdList(true).then((friendIdList) => {
+        saveFriendData(friendIdList);
+        saveFriendIdList(friendIdList);
       });
 
-      getGroupIdList(userId).then((groupIdList) => {
-        setGroupList(groupIdList);
+      getMyGroupIdList(true).then((groupIdList) => {
+        saveGroupData(groupIdList);
+        saveGroupsIdList(groupIdList);
       });
     } catch (error) {
       if (error instanceof Error) {
-        setModalMessage(error.message);
+        setErrorMessage(error.message);
       } else if (error instanceof FirebaseError) {
         const errorCode = error.code;
-        setModalMessage(getFirebaseError(errorCode));
+        setErrorMessage(getFirebaseError(errorCode));
       }
 
-      setIsOpenModal(true);
+      setIsOpenErrorModal(true);
     }
   }, [userId]);
 
-  const showFriendsList = () => {
-    if (!userId) return;
-    if (!users[friendList[0]]) return;
-
-    return (
-      <div className={styles.list}>
-        {friendList.map((list) => (
-          <ul key={list} className={`${styles.oneLine} flex alic inner`}>
-            <li>
-              <button
-                className="flex alic"
-                onClick={() => {
-                  setModalAvatarUrl(users[list].data.iconUrl);
-                  setModalAvatarname(users[list].data.name);
-                  setIsOpenModal(true);
-                }}
-                type="button"
-              >
-                <Avatar
-                  iconUrl={users[list].data.iconUrl}
-                  uploadIconSize="small"
-                  isNotUpload
-                />
-                <Heading tag="h1">{users[list].data.name}</Heading>
-              </button>
-            </li>
-          </ul>
-        ))}
-      </div>
-    );
+  const searchFriend = async () => {
+    const searchList = await searchUserList(search);
+    const searchedFriendsIdList = await getSearchedFriends(searchList, userId);
+    if (searchedFriendsIdList) {
+      setFriendList(searchedFriendsIdList);
+    } else {
+      setFriendList([]);
+    }
   };
 
-  const showGroupsList = () => {
-    if (!userId) return;
-    if (!groups[groupList[0]]) return;
-
-    return (
-      <div className={styles.list}>
-        {groupList.map((list) => (
-          <ul key={list} className={`${styles.oneLine} flex alic inner`}>
-            <li>
-              <button
-                className="flex alic"
-                onClick={() => {
-                  setModalAvatarUrl(users[list].data.iconUrl);
-                  setModalAvatarname(users[list].data.name);
-                  setIsOpenModal(true);
-                }}
-                type="button"
-              >
-                <Avatar
-                  iconUrl={groups[list].data.iconUrl}
-                  uploadIconSize="small"
-                  isNotUpload
-                />
-                <Heading tag="h1">{groups[list].data.name}</Heading>
-              </button>
-            </li>
-          </ul>
-        ))}
-      </div>
-    );
+  const searchGroup = async () => {
+    const searchList = await searchGroupList(search);
+    const searchedGroupsIdList = await getSearchedGroups(searchList, userId);
+    if (searchedGroupsIdList) {
+      setJoinedGroupList(searchedGroupsIdList);
+    } else {
+      setJoinedGroupList([]);
+    }
   };
 
   useEffect(() => {
-    if (!search && !friendList) {
-      getFriendIdList(userId).then((friendIdList) => {
-        setFriendList(friendIdList);
+    if (!userId) return;
+
+    try {
+      if (activeIndex === 0) {
+        if (!search) {
+          getMyFriendIdList(true).then((friendIdList) => {
+            saveFriendData(friendIdList);
+            saveFriendIdList(friendIdList);
+          });
+        } else {
+          searchFriend();
+        }
+      } else if (activeIndex === 1) {
+        if (!search) {
+          getMyGroupIdList(true).then((groupIdList) => {
+            saveGroupData(groupIdList);
+            saveGroupsIdList(groupIdList);
+          });
+        } else {
+          searchGroup();
+        }
+      }
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        const errorCode = error.code;
+        setErrorMessage(getFirebaseError(errorCode));
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message);
+      }
+      setIsOpenErrorModal(true);
+    }
+  }, [search]);
+
+  const handleScroll = async () => {
+    if (document.body.scrollHeight !== window.pageYOffset + window.innerHeight)
+      return;
+
+    if (activeIndex === 0) {
+      getMyFriendIdList(false).then((friendIdList) => {
+        saveFriendData(friendIdList);
+        saveFriendIdList(friendIdList);
+      });
+    } else if (activeIndex === 1) {
+      getMyGroupIdList(true).then((groupIdList) => {
+        saveGroupData(groupIdList);
+        saveGroupsIdList(groupIdList);
       });
     }
-    const resultList = Object.keys(users).filter(
-      (key) => users[key].data.name.indexOf(search) > -1
-    );
-
-    setFriendList(resultList);
-  }, [search]);
+  };
+  useEffect(() => {
+    window.document.addEventListener('scroll', handleScroll);
+    return () => {
+      window.document.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const renderErrorModal = () => {
     if (!isOpenErrorModal) return;
@@ -223,64 +243,16 @@ const Home = () => {
     );
   };
 
-  const renderUserModal = () => {
-    if (!isOpenModal) return;
-
-    return (
-      <div className={styles.modal}>
-        <Modal
-          onClose={() => setIsOpenModal(false)}
-          hasInner
-          isOpen={isOpenModal}
-        >
-          <div className={styles.avatarArea}>
-            <Avatar
-              iconUrl={modalAvatarUrl}
-              isNotUpload
-              uploadIconSize="large"
-            />
-            <Heading tag="h1" align="center" size="xl">
-              {modalAvatarname}
-            </Heading>
-          </div>
-          <div className={styles.controler}>
-            <button>
-              <Link to={'/rooms'}>
-                <FontAwesomeIcon
-                  icon={faComment}
-                  style={{ marginBottom: '4px' }}
-                  size={'xl'}
-                />
-                トーク
-              </Link>
-            </button>
-            <button>
-              <Link to={'/rooms'}>
-                <FontAwesomeIcon
-                  icon={faCircleUser}
-                  style={{ marginBottom: '4px' }}
-                  size={'xl'}
-                />
-                プルフィール
-              </Link>
-            </button>
-          </div>
-        </Modal>
-      </div>
-    );
-  };
-
   const navigatePath = () => {
     if (activeIndex === 0) {
       return navigate('/search');
     } else {
-      return navigate('/groups/create');
+      return navigate('/group/create');
     }
   };
 
   return (
     <>
-      {renderUserModal()}
       {renderErrorModal()}
       <Header title="ホーム" className="sp" />
       <div className={styles.container}>
@@ -307,17 +279,22 @@ const Home = () => {
           />
         </div>
         <div className={styles.contents}>
-          {activeIndex === 0 ? showFriendsList() : showGroupsList()}
-          <Fab
-            color="primary"
-            onClick={() => navigatePath()}
-            variant="circular"
-            className={styles.fab}
-            size="large"
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </Fab>
+          {activeIndex === 0 && <AvatarList idList={friendList} />}
+          {activeIndex === 1 && <AvatarList idList={joinedGroupList} isGroup />}
+          <div className={styles.fab}>
+            <Fab
+              color="primary"
+              onClick={() => navigatePath()}
+              variant="circular"
+              size="large"
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </Fab>
+          </div>
         </div>
+      </div>
+      <div className="sp">
+        <BottomNavigation />
       </div>
       <div className={`${styles.myChat} pc`}></div>
     </>

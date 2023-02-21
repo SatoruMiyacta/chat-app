@@ -1,3 +1,5 @@
+import { CacheObject } from '@/store';
+
 /**
  * 引数の時間（分）を現在時刻に足したものを返す
  */
@@ -14,4 +16,14 @@ export const getCacheExpirationDate = (cacheExpirationMinutes = 5) => {
   );
 
   return cacheExpirationDate;
+};
+
+/**
+ * 引数で渡されたデータのキャッシュ（expiresIn）が有効期限内であればtrueを返す
+ */
+export const isCacheActive = (object: CacheObject) => {
+  const now = new Date();
+  const isCacheActive = object?.expiresIn > now;
+
+  return isCacheActive;
 };

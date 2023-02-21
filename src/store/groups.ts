@@ -1,5 +1,7 @@
 import { atom } from 'jotai';
 
+import { CacheObject } from '@/store';
+
 export interface GroupData {
   authorId: string;
   name: string;
@@ -18,3 +20,4 @@ export interface Groups {
 }
 
 export const groupsAtom = atom<Groups>({});
+export const joinedGroupsAtom = atom<CacheObject | null>(null);

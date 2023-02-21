@@ -5,6 +5,9 @@ import { useAtom } from 'jotai';
 
 import styles from './ProfileOverview.module.css';
 
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import IconImage from '@/components/organisms/Avatar';
@@ -15,6 +18,7 @@ import Message from '@/components/organisms/MessageForm';
 import { INITIAL_ICON_URL } from '@/constants';
 import { useHome } from '@/features';
 import { useUser } from '@/hooks';
+import { useFriend } from '@/hooks/useFriend';
 import { auth } from '@/main';
 import { authUserAtom } from '@/store';
 
@@ -27,8 +31,8 @@ const ProfileOverview = () => {
   const location = useLocation();
 
   const { getUser, saveUser } = useUser();
-  const { fetchfriendsData } = useUser();
-  const { getGroupIdList, getFriendIdList } = useHome();
+  // const { getGroupIdList } = useHome();
+  const { getMyFriendIdList } = useFriend();
 
   const userId = authUser?.uid || '';
 
@@ -45,7 +49,7 @@ const ProfileOverview = () => {
         setMyIconUrl(userData.iconUrl);
       });
 
-      getFriendIdList(userId).then((friendIdList) => {
+      getMyFriendIdList(false).then((friendIdList) => {
         setFriendList(friendIdList);
       });
     } catch (error) {
@@ -81,9 +85,7 @@ const ProfileOverview = () => {
               <Heading tag="h1" align="start" isBold size="xl">
                 {userName}
               </Heading>
-              <Heading tag="h3" align="start" size="s">
-                {`友達 ${friendList.length}`}
-              </Heading>
+              <span>{`友達 ${friendList.length}`}</span>
             </section>
             {showEditButton()}
           </div>
