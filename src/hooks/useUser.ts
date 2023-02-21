@@ -1,9 +1,9 @@
 import {
   collection,
-  doc,
-  getDoc,
+  documentId,
   getDocs,
-  serverTimestamp,
+  query,
+  where,
 } from 'firebase/firestore';
 import { useAtom } from 'jotai';
 
@@ -40,25 +40,42 @@ export const useUser = () => {
   };
 
   /**
-   * ユーザーのfriendデータをfirestoreから取得
+   * ユーザーを名前検索し、該当userIDを返す
    */
-  const fetchfriendsData = async (userId: string) => {
-    const querySnapshot = await getDocs(
-      collection(db, 'users', userId, 'friends')
+  const getSearchedUser = async (search: string) => {
+    const searchList: string[] = [];
+    const usersRef = collection(db, 'users');
+    const snapshot = await getDocs(
+      query(usersRef, where('name', '==', search))
     );
-    return querySnapshot;
+
+    for (const doc of snapshot.docs) {
+      const searchId = doc.id;
+      searchList.push(searchId);
+    }
+
+    return searchList;
   };
 
   /**
-   * ユーザーのgroupデータをfirestoreから取得
+   * 名前検索したユーザーリストを受け取り、追加済みフレンドを返す
    */
-  const fetchGroupsData = async (userId: string) => {
-    const querySnapshot = await getDocs(
-      collection(db, 'users', userId, 'groups')
+  const getSearchedFriends = async (searchList: string[], userId: string) => {
+    const searchedFriendsIdList: string[] = [];
+    if (searchList.length === 0) return;
+
+    const usersRef = collection(db, 'users', userId, 'friends');
+    const snapshot = await getDocs(
+      query(usersRef, where(documentId(), 'in', searchList))
     );
 
-    return querySnapshot;
+    for (const doc of snapshot.docs) {
+      const searchId = doc.id;
+      searchedFriendsIdList.push(searchId);
+    }
+
+    return searchedFriendsIdList;
   };
 
-  return { getUser, saveUser, fetchfriendsData, fetchGroupsData };
+  return { getSearchedFriends, getUser, saveUser, getSearchedUser };
 };

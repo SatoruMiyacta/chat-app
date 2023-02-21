@@ -14,11 +14,13 @@ import Heading from '@/components/atoms/Heading';
 import Skeleton from '@/components/atoms/Skeleton';
 import Modal from '@/components/molecules/Modal';
 import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
+import BottomNavigation from '@/components/organisms/BottomNavigation';
 import Header from '@/components/organisms/Header';
 import Message from '@/components/organisms/MessageForm';
 
 import { useHome } from '@/features';
 import { useUser } from '@/hooks';
+import { useFriend } from '@/hooks/useFriend';
 import { authUserAtom } from '@/store';
 import { getFirebaseError } from '@/utils';
 
@@ -35,7 +37,8 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const { getUser, saveUser } = useUser();
-  const { getGroupIdList, getFriendIdList } = useHome();
+  // const { getGroupIdList } = useHome();
+  const { getMyFriendIdList } = useFriend();
 
   const actionItems = [
     {
@@ -57,13 +60,13 @@ const Profile = () => {
 
         setUserName(userData.name);
         setMyIconUrl(userData.iconUrl);
-
-        setIsLoading(false);
       });
 
-      getFriendIdList(userId).then((friendIdList) => {
+      getMyFriendIdList(false).then((friendIdList) => {
         setFriendList(friendIdList);
       });
+
+      setIsLoading(false);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -136,14 +139,7 @@ const Profile = () => {
                 <Heading tag="h1" align="start" isBold size="xxl">
                   {userName}
                 </Heading>
-                <span>
-                  <FontAwesomeIcon
-                    icon={faUser}
-                    size="lg"
-                    style={{ marginRight: '8px', opacity: 0.3 }}
-                  />
-                  {friendList.length}
-                </span>
+                <span>{`友達 ${friendList.length}`}</span>
               </section>
             </div>
             <div className={`${styles.myChat} pc `}>
@@ -152,6 +148,9 @@ const Profile = () => {
           </>
         )}
       </main>
+      <div className="sp">
+        <BottomNavigation />
+      </div>
     </>
   );
 };
