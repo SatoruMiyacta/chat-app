@@ -25,7 +25,10 @@ const SideMenu = () => {
     <div className={`${styles.sideMenu}`}>
       <ul className={styles.navigationItems}>
         <li>
-          <Link className={getActiveClass('/')} to={'/'}>
+          <Link
+            className={`${getActiveClass('/')} ${getActiveClass('/search')}`}
+            to={'/'}
+          >
             <FontAwesomeIcon
               icon={faHouse}
               style={{ marginRight: '8px', marginLeft: '16px' }}
@@ -45,7 +48,10 @@ const SideMenu = () => {
           </Link>
         </li>
         <li>
-          <Link className={getActiveClass('/group')} to={'/group'}>
+          <Link
+            className={getActiveClass('/group/create')}
+            to={'/group/create'}
+          >
             <FontAwesomeIcon
               icon={faPlus}
               style={{ marginRight: '8px', marginLeft: '16px' }}

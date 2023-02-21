@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
+import { useAtom } from 'jotai';
 
 import styles from './create.module.css';
 
@@ -23,7 +24,8 @@ import Header from '@/components/organisms/Header';
 
 import { INITIAL_ICON_URL } from '@/constants';
 import { InitialUserData, useCreateAccount } from '@/features';
-import { useUser } from '@/hooks';
+import { useMessage, useUser } from '@/hooks';
+import { authUserAtom, usersAtom, UserData, RoomData } from '@/store';
 import {
   resizeFile,
   validateBlobSize,
@@ -31,6 +33,8 @@ import {
   isValidPassword,
   fetchUserData,
   convertCanvasToBlob,
+  fetchRoom,
+  setMyRoom,
 } from '@/utils';
 
 const CreateAcconunt = () => {
@@ -56,6 +60,7 @@ const CreateAcconunt = () => {
     isComplete,
     uploadIcon,
     registerUserDate,
+    createMyRoom,
   } = useCreateAccount();
 
   const { saveUser } = useUser();
@@ -80,6 +85,9 @@ const CreateAcconunt = () => {
 
       if (!userData) throw new Error('ユーザー情報がありません。');
       saveUser(userId, userData);
+
+      const roomId = await createMyRoom(userId);
+      // await fetchRoom(roomId);
 
       navigate('/');
     } catch (error) {
