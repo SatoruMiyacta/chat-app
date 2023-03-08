@@ -7,3 +7,7 @@ export * from './useEditProfile';
 export * from './useHome';
 export * from './useSearch';
 export * from './useCreateGroup';
+export * from './useRoom';
+export * from './useGroupProfile';
+export * from './useMessage';
+export * from './useBlock';

@@ -1,32 +1,72 @@
-import { useState } from 'react';
-
 import {
   collection,
-  doc,
-  getDoc,
   getDocs,
-  serverTimestamp,
   query,
-  orderBy,
-  limit,
   where,
   documentId,
 } from 'firebase/firestore';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 
+import { INITIAL_ICON_URL } from '@/constants';
 import { db } from '@/main';
-import { groupsAtom, usersAtom, GroupData, joinedGroupsAtom } from '@/store';
+import {
+  groupsAtom,
+  GroupData,
+  joinedGroupsAtom,
+  groupsMemberAtom,
+} from '@/store';
 import {
   getCacheExpirationDate,
   fetchGroupsData,
   isCacheActive,
+  fetchGroupsMember,
 } from '@/utils';
-
+export interface UserAndGroupId {
+  userId?: string;
+  groupId: string;
+}
 export const useGroup = () => {
   const [groups, setGroups] = useAtom(groupsAtom);
-  const [groupList, setGroupList] = useState<string[]>([]);
-  const [joinedGroups, setJoinedGroups] = useAtom(joinedGroupsAtom);
+  const [groupMember, setGroupMember] = useAtom(groupsMemberAtom);
+  const setJoinedGroups = useSetAtom(joinedGroupsAtom);
 
+  /**
+   * 取得したgroupIDリストでグループデータを保存
+   */
+  const saveGroupData = async (groupIdList: string[]) => {
+    if (groupIdList.length === 0) return;
+
+    const userRef = collection(db, 'groups');
+    const querySnapshots = await getDocs(
+      query(userRef, where(documentId(), 'in', groupIdList))
+    );
+    for (const doc of querySnapshots.docs) {
+      const data = doc.data();
+      const id = doc.id;
+
+      let groupData;
+      if (!data) {
+        const now = new Date();
+        groupData = {
+          authorId: '',
+          name: '削除済みグループ',
+          iconUrl: INITIAL_ICON_URL,
+          createdAt: now,
+          updatedAt: now,
+        };
+      } else {
+        groupData = {
+          authorId: data.authorId,
+          name: data.name,
+          iconUrl: data.iconUrl,
+          createdAt: data.createdAt.toDate(),
+          updatedAt: data.updatedAt.toDate(),
+        };
+      }
+
+      saveGroups(id, groupData);
+    }
+  };
   /**
    * グループを名前検索し、該当groupIDを返す
    */
@@ -46,9 +86,12 @@ export const useGroup = () => {
   };
 
   /**
-   * 名前検索したグループリストを受け取り、追加済みグループを返す
+   * 検索したリストを受け取り、追加済みグループを返す
    */
-  const getSearchedGroups = async (searchList: string[], userId: string) => {
+  const getSearchedJoinedGroups = async (
+    searchList: string[],
+    userId: string
+  ) => {
     const searchedGroupsIdList: string[] = [];
     if (searchList.length === 0) return;
 
@@ -73,10 +116,37 @@ export const useGroup = () => {
   const getGroups = async (groupId: string) => {
     if (isCacheActive(groups[groupId])) return groups[groupId].data;
 
-    const groupsData = await fetchGroupsData(groupId);
-    if (!groupsData) return;
+    const data = await fetchGroupsData(groupId);
+    if (!data) return;
 
-    return groupsData;
+    const groupData = {
+      authorId: data.authorId,
+      name: data.name,
+      iconUrl: data.iconUrl,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    };
+
+    return groupData;
+  };
+
+  /**
+   * グループメンバーデータのキャッシュが古くないか
+   * キャッシュが新しければグローバルstateからデータ取得。
+   * 古ければfirestoreから取得
+   */
+  const getGroupsMember = async (groupId: string) => {
+    if (groupMember && isCacheActive(groupMember.data))
+      return groupMember.data.data as string[];
+
+    const querySnapshot = await fetchGroupsMember(groupId);
+    const memberIdList = [];
+    for (const doc of querySnapshot.docs) {
+      const memberId = doc.id;
+      memberIdList.push(memberId);
+    }
+
+    return memberIdList;
   };
 
   /**
@@ -99,11 +169,30 @@ export const useGroup = () => {
     });
   };
 
+  /**
+   * グローバルstateの情報を更新
+   */
+  const saveGroupsMemberIdList = (
+    groupId: string,
+    groupMemberIdList: string[]
+  ) => {
+    setGroupMember((prev) => ({
+      ...prev,
+      [groupId]: {
+        data: groupMemberIdList,
+        expiresIn: getCacheExpirationDate(),
+      },
+    }));
+  };
+
   return {
-    getSearchedGroups,
+    getSearchedJoinedGroups,
     getGroups,
     saveGroups,
     saveJoinedGroups,
     getSearchedGroup,
+    saveGroupData,
+    saveGroupsMemberIdList,
+    getGroupsMember,
   };
 };
