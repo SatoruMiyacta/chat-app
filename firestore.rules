@@ -61,11 +61,19 @@ service cloud.firestore {
       allow read, create, delete: if isUserAuthenticated(userId);
     }
       match /joinedGroups/{groupId} {
-      allow read, create, delete: if isUserAuthenticated(userId);
+      allow read, create, update, delete: if isUserAuthenticated(userId);
     }
       match /joinedRooms/{roomId} {
       allow read, delete: if isUserAuthenticated(userId);
+      allow create, update: if isAuthenticated();
+    }
+      match /blockUser/{blockUserId} {
+      allow read, delete, update: if isUserAuthenticated(userId);
       allow create: if isAuthenticated();
+    }
+      match /unAuthRoom/{roomId} {
+      allow delete, update: if isUserAuthenticated(userId);
+      allow read, create: if isAuthenticated();
     }
     }
 
@@ -78,7 +86,8 @@ service cloud.firestore {
       allow delete: if isUserAuthenticated(resource.data.authorId);
 
       match /messages/{messageId} {
-        allow create, read: if isAuthenticated()
+        allow read: if isAuthenticated()
+        allow create: if isAuthenticated()
           && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedRooms/$(roomId)) 
         allow delete: if isUserAuthenticated(resource.data.postUserId);
         allow update: if isUserAuthenticated(resource.data.postUserId)
@@ -89,7 +98,6 @@ service cloud.firestore {
 
     match /groups/{groupId} {
       allow read: if isAuthenticated() 
-        && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedGroups/$(groupId))
       allow update: if isAuthenticated() 
         && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedGroups/$(groupId));
       allow create: if isAuthenticated();
@@ -97,6 +105,7 @@ service cloud.firestore {
 
       match /members/{memberId} {
         allow create: if isAuthenticated();
+        allow update: if isAuthenticated();
         allow read: if isAuthenticated()
           && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedGroups/$(groupId))
         allow delete: if isUserAuthenticated(memberId)
