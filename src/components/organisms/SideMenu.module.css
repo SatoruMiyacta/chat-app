@@ -11,7 +11,14 @@
   height: 50px;
 }
 
-.navigationItems > li a {
+.navigationItems > li:last-child {
+  position: absolute;
+  bottom: 0;
+  width: 159px;
+}
+
+.navigationItems > li a,
+.navigationItems > li button {
   display: flex;
   align-items: center;
   width: 100%;
@@ -23,11 +30,27 @@
   transition: 0.2s;
 }
 
-.navigationItems > li a:hover {
+.navigationItems > li a:hover,
+.navigationItems > li button:hover {
   background-color: rgba(196, 196, 196, 0.2);
 }
 
-.navigationItems > li a.active {
+.navigationItems > li a.active,
+.navigationItems > li button.active {
   color: #fff;
   background-color: #ff971d;
+}
+
+.buttonArea {
+  position: fixed;
+  bottom: 80px;
+  width: 100%;
+}
+
+.controler {
+  margin-top: 24px;
+}
+
+.controler > button + button {
+  margin-top: 16px;
 }
