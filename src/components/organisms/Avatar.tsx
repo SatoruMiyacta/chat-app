@@ -13,7 +13,7 @@ export interface AvatarProps {
   hasCameraIcon?: boolean;
   isUploadButton?: boolean;
   isNotUpload?: boolean;
-  uploadIconSize?: 'small' | 'medium' | 'large';
+  uploadIconSize?: 'xs' | 's' | 'm' | 'l';
   className?: string;
 }
 
@@ -23,7 +23,7 @@ const Avatar = ({
   hasCameraIcon = false,
   isUploadButton = false,
   isNotUpload = false,
-  uploadIconSize = 'medium',
+  uploadIconSize = 'm',
   className,
 }: AvatarProps) => {
   const inputFileRef = useRef<HTMLInputElement>(null);

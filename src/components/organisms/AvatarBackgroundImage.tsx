@@ -17,7 +17,7 @@ const AvatarBackgroundImage = ({
   onChange,
   hasCameraIcon = false,
   isNotUpload = false,
-  uploadIconSize = 'medium',
+  uploadIconSize = 'm',
   className,
 }: AvatarBackgroundImageProps) => {
   const backgroundImageClassList = [
