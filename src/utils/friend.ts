@@ -2,7 +2,6 @@ import {
   getDocs,
   collection,
   doc,
-  getDoc,
   setDoc,
   serverTimestamp,
   query,
@@ -10,7 +9,7 @@ import {
   limit,
   startAfter,
   QuerySnapshot,
-  where,
+  deleteDoc,
   DocumentData,
 } from 'firebase/firestore';
 
@@ -75,4 +74,13 @@ export const searchfriends = async (searchIdList: string[], userId: string) => {
   }
 
   return searchedfriendIdList;
+};
+
+/**
+ * 友達から削除する
+ */
+export const deletefriends = async (userId: string, blockUserId: string) => {
+  const friendsRef = doc(db, 'users', userId, 'friends', blockUserId);
+
+  await deleteDoc(friendsRef);
 };
