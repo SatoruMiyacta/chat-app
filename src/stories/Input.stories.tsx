@@ -1,7 +1,6 @@
 import {
   faMagnifyingGlass,
   faEnvelope,
-  faLock,
   faCircleUser,
   faHouse,
 } from '@fortawesome/free-solid-svg-icons';
