@@ -3,33 +3,22 @@ import { useState, useRef } from 'react';
 import { User } from 'firebase/auth';
 import {
   collection,
-  doc,
-  getDoc,
   getDocs,
-  serverTimestamp,
   query,
   orderBy,
   limit,
   startAfter,
-  QuerySnapshot,
   DocumentData,
   QueryDocumentSnapshot,
   QueryConstraint,
-  Query,
 } from 'firebase/firestore';
 import { useAtom } from 'jotai';
 
 import { INITIAL_ICON_URL } from '@/constants';
 import { useUser } from '@/hooks';
 import { db } from '@/main';
-import { authUserAtom, usersAtom, friendsIdAtom } from '@/store';
-import {
-  getCacheExpirationDate,
-  fetchfriendsFirstData,
-  isCacheActive,
-  fetchNextfriendsData,
-  searchfriends,
-} from '@/utils';
+import { authUserAtom, friendsIdAtom } from '@/store';
+import { getCacheExpirationDate, isCacheActive, searchfriends } from '@/utils';
 
 /**
  * フレンドデータ一覧のキャッシュが古くないか
@@ -39,8 +28,7 @@ import {
 export const useFriend = () => {
   const [lastFriend, setLastFriend] =
     useState<QueryDocumentSnapshot<DocumentData>>();
-  const [users, setUsers] = useAtom(usersAtom);
-  const [authUser, setAuthUser] = useAtom(authUserAtom);
+  const [authUser] = useAtom(authUserAtom);
   const [friends, setFriends] = useAtom(friendsIdAtom);
   const [friendList, setFriendList] = useState<string[]>([]);
   const { getUser, saveUser, getSearchedUser } = useUser();
@@ -74,7 +62,7 @@ export const useFriend = () => {
     const friendsRef = collection(db, 'users', userId, 'friends');
     const queryArray: QueryConstraint[] = [
       orderBy('updatedAt', 'desc'),
-      limit(15),
+      limit(20),
     ];
 
     if (lastUnderFriend) queryArray.push(startAfter(lastUnderFriend));
@@ -138,10 +126,10 @@ export const useFriend = () => {
    * グローバルstateの情報を更新
    */
   const saveFriendIdList = (friendIdList: string[]) => {
-    setFriends((prev) => ({
+    setFriends({
       data: friendIdList,
       expiresIn: getCacheExpirationDate(),
-    }));
+    });
   };
 
   return {

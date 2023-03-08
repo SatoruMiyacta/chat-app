@@ -3,44 +3,28 @@ import { useState, useRef } from 'react';
 import { User } from 'firebase/auth';
 import {
   collection,
-  doc,
-  getDoc,
   getDocs,
-  serverTimestamp,
   query,
   orderBy,
   limit,
   startAfter,
-  QuerySnapshot,
   DocumentData,
   QueryDocumentSnapshot,
   QueryConstraint,
-  Query,
 } from 'firebase/firestore';
 import { useAtom } from 'jotai';
 
-import { INITIAL_ICON_URL } from '@/constants';
-import { useUser, useGroup, useFriend } from '@/hooks';
+import { useGroup } from '@/hooks';
 import { db } from '@/main';
-import { authUserAtom, usersAtom, groupsAtom, joinedGroupsAtom } from '@/store';
-import {
-  getCacheExpirationDate,
-  fetchUserData,
-  isCacheActive,
-  fetchfriendsFirstData,
-  fetchUserGroupsData,
-  fetchGroupsData,
-} from '@/utils';
+import { authUserAtom, joinedGroupsAtom } from '@/store';
+import { getCacheExpirationDate, isCacheActive } from '@/utils';
 
 export const useHome = () => {
-  const [authUser, setAuthUser] = useAtom(authUserAtom);
-  const [users, setUsers] = useAtom(usersAtom);
+  const [authUser] = useAtom(authUserAtom);
   const [joinedGroups, setJoinedGroups] = useAtom(joinedGroupsAtom);
   const [joinedGroupList, setJoinedGroupList] = useState<string[]>([]);
-  const [groupsId, setGroupsId] = useAtom(joinedGroupsAtom);
   const [lastGroup, setLastGroup] =
     useState<QueryDocumentSnapshot<DocumentData>>();
-  const { getUser, saveUser } = useUser();
   const { getGroups, saveGroups, getSearchedGroup } = useGroup();
 
   const userRef = useRef<User>();
@@ -70,7 +54,7 @@ export const useHome = () => {
     const groupRef = collection(db, 'users', userId, 'joinedGroups');
     const queryArray: QueryConstraint[] = [
       orderBy('updatedAt', 'desc'),
-      limit(15),
+      limit(20),
     ];
 
     if (lastUnderGroup) queryArray.push(startAfter(lastUnderGroup));
@@ -97,29 +81,6 @@ export const useHome = () => {
     return newList;
   };
 
-  /**
-   * 取得したgroupIDリストでグループデータを保存
-   */
-  const saveGroupData = async (groupIdList: string[]) => {
-    for (const groupId of groupIdList) {
-      let groupsData = await getGroups(groupId);
-
-      if (!groupsData) {
-        const now = new Date();
-        const deletedGroupsData = {
-          authorId: '',
-          name: '削除済みグループ',
-          iconUrl: INITIAL_ICON_URL,
-          createdAt: now,
-          updatedAt: now,
-        };
-
-        groupsData = deletedGroupsData;
-      }
-      saveGroups(groupId, groupsData);
-    }
-  };
-
   // 検索したグループ一覧をグローバルステートに保存して、一覧を返す
   const searchGroupList = async (search: string) => {
     const searchList = await getSearchedGroup(search);
@@ -137,7 +98,7 @@ export const useHome = () => {
    * グローバルstateの情報を更新
    */
   const saveGroupsIdList = (groupIdList: string[]) => {
-    setGroupsId({
+    setJoinedGroups({
       data: groupIdList,
       expiresIn: getCacheExpirationDate(),
     });
@@ -146,7 +107,6 @@ export const useHome = () => {
   return {
     getMyGroupIdList,
     saveGroupsIdList,
-    saveGroupData,
     setJoinedGroupList,
     joinedGroupList,
     searchGroupList,
