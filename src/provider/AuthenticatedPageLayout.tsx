@@ -1,10 +1,9 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 
 import SideMenu from '@/components/organisms/SideMenu';
-import CreateGroup from '@/components/pages/group/createGroup';
 
 import { authUserAtom } from '@/store/user';
 
@@ -13,7 +12,7 @@ interface AuthProviderProps {
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [authUser, setAuthUser] = useAtom(authUserAtom);
+  const setAuthUser = useSetAtom(authUserAtom);
   const auth = getAuth();
   const navigate = useNavigate();
   onAuthStateChanged(auth, (user) => {
@@ -25,13 +24,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       navigate('/accounts/login');
     }
   });
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
-      <div className="sp">{children}</div>
-      <div className="pc flex">
-        <SideMenu />
-        {children}
-      </div>
+      {!isPcWindow && <div>{children}</div>}
+      {isPcWindow && (
+        <div className="flex">
+          <SideMenu />
+          <div>{children}</div>
+        </div>
+      )}
     </>
   );
 };
