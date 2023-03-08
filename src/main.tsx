@@ -7,9 +7,6 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
-import RoomLayout from './components/pages/rooms/roomLayout';
-import Users from './components/pages/users';
-
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
@@ -34,6 +31,8 @@ import Profile from '@/components/pages/profile/index';
 import ProfileLayout from '@/components/pages/profile/profileLayout';
 import Rooms from '@/components/pages/rooms/index';
 import Message from '@/components/pages/rooms/message';
+import RoomLayout from '@/components/pages/rooms/roomLayout';
+import Users from '@/components/pages/users';
 
 import AuthProvider from '@/provider/AuthenticatedPageLayout';
 
