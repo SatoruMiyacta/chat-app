@@ -7,13 +7,17 @@ import {
 } from 'firebase/firestore';
 import { useAtom } from 'jotai';
 
+import { INITIAL_ICON_URL } from '@/constants';
 import { db } from '@/main';
-import { authUserAtom, usersAtom, UserData } from '@/store';
+import { usersAtom, UserData } from '@/store';
 import { getCacheExpirationDate, fetchUserData, isCacheActive } from '@/utils';
+
+export interface UserDataObject {
+  [roomId: string]: UserData;
+}
 
 export const useUser = () => {
   const [users, setUsers] = useAtom(usersAtom);
-  const [authUser] = useAtom(authUserAtom);
 
   /**
    * ユーザーデータのキャッシュが古くないか
@@ -77,5 +81,52 @@ export const useUser = () => {
     return searchedFriendsIdList;
   };
 
-  return { getSearchedFriends, getUser, saveUser, getSearchedUser };
+  /**
+   * 取得したIDリストでユーザーデータを保存
+   */
+  const saveUserData = async (useIdList: string[]) => {
+    if (useIdList.length === 0) return;
+
+    const userRef = collection(db, 'users');
+    const querySnapshots = await getDocs(
+      query(userRef, where(documentId(), 'in', useIdList))
+    );
+
+    const userDataObject: UserDataObject = {};
+    for (const doc of querySnapshots.docs) {
+      const data = doc.data();
+      const id = doc.id;
+
+      let userData;
+      if (!data) {
+        const now = new Date();
+        userData = {
+          name: '削除済みユーザー',
+          iconUrl: INITIAL_ICON_URL,
+          createdAt: now,
+          updatedAt: now,
+        };
+      } else {
+        userData = {
+          name: data.name,
+          iconUrl: data.iconUrl,
+          createdAt: data.createdAt.toDate(),
+          updatedAt: data.updatedAt.toDate(),
+        };
+      }
+
+      userDataObject[id] = userData;
+      saveUser(id, userData);
+    }
+
+    return userDataObject;
+  };
+
+  return {
+    getSearchedFriends,
+    saveUserData,
+    getUser,
+    saveUser,
+    getSearchedUser,
+  };
 };
