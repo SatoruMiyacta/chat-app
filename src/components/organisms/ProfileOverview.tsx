@@ -1,37 +1,35 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import { FirebaseError } from 'firebase/app';
 import { useAtom } from 'jotai';
 
 import styles from './ProfileOverview.module.css';
 
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
-import IconImage from '@/components/organisms/Avatar';
+import Modal from '@/components/molecules/Modal';
 import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
-import Header from '@/components/organisms/Header';
-import Message from '@/components/organisms/MessageForm';
 
-import { INITIAL_ICON_URL } from '@/constants';
-import { useHome } from '@/features';
 import { useUser } from '@/hooks';
 import { useFriend } from '@/hooks/useFriend';
-import { auth } from '@/main';
-import { authUserAtom } from '@/store';
+import { authUserAtom, usersAtom } from '@/store';
+import { getFirebaseError } from '@/utils';
 
 const ProfileOverview = () => {
   const [userName, setUserName] = useState('');
   const [authUser] = useAtom(authUserAtom);
+  const [users] = useAtom(usersAtom);
   const [friendList, setFriendList] = useState<string[]>([]);
   const [myIconUrl, setMyIconUrl] = useState('');
+  const [errorMessage, setErrorMessage] = useState(
+    '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
+  );
+  const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const { getUser, saveUser } = useUser();
-  // const { getGroupIdList } = useHome();
   const { getMyFriendIdList } = useFriend();
 
   const userId = authUser?.uid || '';
@@ -53,9 +51,46 @@ const ProfileOverview = () => {
         setFriendList(friendIdList);
       });
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else if (error instanceof FirebaseError) {
+        const errorCode = error.code;
+        setErrorMessage(getFirebaseError(errorCode));
+      }
+
+      setIsOpenErrorModal(true);
     }
-  }, [userId]);
+  }, [userId, JSON.stringify(users[userId]?.data)]);
+
+  const renderErrorModal = () => {
+    if (!isOpenErrorModal) return;
+
+    return (
+      <Modal
+        onClose={() => setIsOpenErrorModal(false)}
+        title="エラー"
+        titleAlign="center"
+        hasInner
+        isOpen={isOpenErrorModal}
+        isBoldTitle
+      >
+        <div>
+          <p>{errorMessage}</p>
+        </div>
+        <div className={styles.controler}>
+          <Button
+            color="primary"
+            onClick={() => setIsOpenErrorModal(false)}
+            variant="contained"
+            isFullWidth
+            size="small"
+          >
+            OK
+          </Button>
+        </div>
+      </Modal>
+    );
+  };
 
   const showEditButton = () => {
     if (location.pathname !== '/profile') return;
@@ -72,13 +107,14 @@ const ProfileOverview = () => {
 
   return (
     <>
+      {renderErrorModal()}
       <main className={styles.container}>
         <div className={styles.contents}>
           <AvatarBackgroundImage
             imageUrl={myIconUrl}
             avatarIconPosition="left"
             isNotUpload
-            uploadIconSize="large"
+            uploadIconSize="l"
           />
           <div className="flex inner">
             <section>

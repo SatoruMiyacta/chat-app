@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 import { deleteUser } from 'firebase/auth';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 
 import styles from './deleteAccount.module.css';
 
@@ -22,19 +21,18 @@ import Modal from '@/components/molecules/Modal';
 import Header from '@/components/organisms/Header';
 
 import { useDeleteAccount } from '@/features';
+import { useUser } from '@/hooks';
 import { auth, db, storage } from '@/main';
 import { authUserAtom } from '@/store';
 import { getFirebaseError, isValidPassword } from '@/utils';
 
 const DeleteAccount = () => {
-  const [isModal, setIsModal] = useState(false);
+  const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [modalMessage, setModalMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度実行してください。'
   );
   const [modalTitle, setModalTitle] = useState('');
-  const userData = useAtomValue(authUserAtom);
-
-  const navigate = useNavigate();
+  const [authUser] = useAtom(authUserAtom);
 
   const {
     setPasswordErrorMessage,
@@ -42,46 +40,54 @@ const DeleteAccount = () => {
     setPassword,
     password,
     isComplete,
+    reAuthenticate,
   } = useDeleteAccount();
+
+  const { getUser } = useUser();
 
   const deleteAccount = async () => {
     if (!isComplete()) return;
 
     try {
-      if (!userData) return;
+      if (!authUser) return;
 
       if (!auth.currentUser) return;
+
       const uid = auth.currentUser.uid;
+      const userData = await getUser(uid);
+
+      if (userData?.iconUrl !== '/images/user-solid.svg') {
+        const desertRef = ref(storage, `iconImage/users/${uid}/userIcon`);
+        if (desertRef) await deleteObject(desertRef);
+      }
+
       await deleteDoc(doc(db, 'users', uid));
 
-      const desertRef = ref(storage, `iconImage/${uid}/userIcon`);
-      await deleteObject(desertRef);
+      await reAuthenticate();
 
-      await deleteUser(userData);
+      await deleteUser(authUser);
 
-      // setModalMessage('アカウントが削除されました。');
-      // setModalTitle('削除完了');
-      // setIsModal(true);
+      alert('アカウント削除完了しました');
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
         setModalMessage(getFirebaseError(errorCode));
       }
       setModalTitle('エラー');
-      setIsModal(true);
+      setIsOpenErrorModal(true);
     }
   };
 
   const renderErrorModal = () => {
-    if (!isModal) return;
+    if (!isOpenErrorModal) return;
     return (
       <Modal
-        onClose={() => setIsModal(false)}
+        onClose={() => setIsOpenErrorModal(false)}
         title={modalTitle}
         titleAlign="center"
         hasInner
         isBoldTitle
-        isOpen={isModal}
+        isOpen={isOpenErrorModal}
       >
         <div>
           <p>{modalMessage}</p>
@@ -89,8 +95,9 @@ const DeleteAccount = () => {
         <div className={styles.controler}>
           <Button
             color="primary"
-            onClick={() => navigate('/')}
+            onClick={() => setIsOpenErrorModal(false)}
             variant="contained"
+            isFullWidth
           >
             OK
           </Button>

@@ -11,15 +11,29 @@
 
 .contents span + span {
   display: flex;
-  margin: 0 auto;
+  margin-right: auto;
+  margin-left: 0;
   transform: translateY(-60%);
+}
+
+.buttonArea {
+  position: fixed;
+  bottom: 80px;
+  width: 100%;
+}
+
+.controler {
+  margin-top: 24px;
+}
+
+.controler > button + button {
+  margin-top: 16px;
 }
 
 @media screen and (min-width: 1024px) {
   .myChat {
     position: relative;
     z-index: 10;
-    width: 100%;
     background-color: #fff;
   }
 }
