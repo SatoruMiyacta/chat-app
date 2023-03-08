@@ -1,17 +1,31 @@
 import { useState } from 'react';
 
+import { deleteUser } from 'firebase/auth';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, serverTimestamp, setDoc, getDoc } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { useAtom, useSetAtom } from 'jotai';
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
+import {
+  getDownloadURL,
+  deleteObject,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 
+import { JoinedRoomsDataObject } from '@/features';
 import { auth, db, storage } from '@/main';
-import { usersAtom } from '@/store';
 import {
   isValidPassword,
   isValidEmail,
-  getCacheExpirationDate,
-  fetchUserData,
+  setMyRoom,
+  setUsersJoinedRooms,
 } from '@/utils';
 
 export interface InitialUserData {
@@ -19,7 +33,6 @@ export interface InitialUserData {
   userIconUrl: string;
 }
 export const useCreateAccount = () => {
-  const setUsers = useSetAtom(usersAtom);
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -49,7 +62,7 @@ export const useCreateAccount = () => {
   const uploadIcon = async (userIconFile: Blob, userId: string) => {
     if (!userIconFile) throw new Error('画像をアップロードしてください。');
 
-    const storageRef = ref(storage, `iconImage/${userId}/userIcon`);
+    const storageRef = ref(storage, `iconImage/users/${userId}/userIcon`);
     await uploadBytes(storageRef, userIconFile);
     const url = await getDownloadURL(storageRef);
 
@@ -72,6 +85,50 @@ export const useCreateAccount = () => {
     });
   };
 
+  /**
+   * 処理が失敗したときに途中まで保存したデータを消す
+   */
+  const deleteUserDate = async (userName: string, userIconBlob?: Blob) => {
+    if (!auth.currentUser) return;
+
+    const uid = auth.currentUser.uid;
+
+    if (userIconBlob) {
+      const desertRef = ref(storage, `iconImage/users/${uid}/userIcon`);
+
+      if (desertRef) await deleteObject(desertRef);
+    }
+
+    const usersRef = collection(db, 'users');
+    const snapshot = await getDocs(
+      query(usersRef, where('name', '==', userName))
+    );
+
+    if (snapshot.docs.length !== 0) await deleteDoc(doc(db, 'users', uid));
+
+    await deleteUser(auth.currentUser);
+  };
+
+  /**
+   * firestoreにマイチャットを作成する
+   */
+  const createMyRoom = async (userId: string) => {
+    const type = 'user';
+    const roomId = await setMyRoom(userId);
+
+    const anotherId = userId;
+    const isVisible = true;
+    const joinedRoomsDataObject: JoinedRoomsDataObject = {
+      anotherId,
+      type,
+      isVisible,
+    };
+
+    await setUsersJoinedRooms(userId, roomId, joinedRoomsDataObject);
+
+    return roomId;
+  };
+
   return {
     registerUserDate,
     signUp,
@@ -85,5 +142,7 @@ export const useCreateAccount = () => {
     setPasswordErrorMessage,
     isComplete,
     uploadIcon,
+    createMyRoom,
+    deleteUserDate,
   };
 };

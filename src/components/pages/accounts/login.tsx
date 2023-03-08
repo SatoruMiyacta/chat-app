@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { readFileSync } from 'fs';
-
 import { FirebaseError } from 'firebase/app';
 
 import styles from './login.module.css';
