@@ -2,25 +2,37 @@
   position: sticky;
   top: 56px;
   z-index: 90;
-  padding-top: 8px;
+  justify-content: space-between;
+  padding: 13px;
   background-color: #fff;
 }
 
-.groupProfile > div:first-child {
-  flex: 1;
-}
-
 .groupProfile > div + div {
-  flex: 4;
+  width: calc(100% - 64px);
 }
 
 .searchForm {
   position: sticky;
   top: 56px;
   z-index: 90;
+  justify-content: space-between;
   padding-top: 16px;
   padding-bottom: 16px;
   background-color: #fff;
+}
+
+.searchForm > div {
+  width: calc(100% - 48px);
+}
+
+.searchForm > button {
+  width: 48px;
+  height: 48px;
+}
+
+.contents {
+  height: calc(100vh - 232px);
+  overflow: auto;
 }
 
 .buttonArea {
@@ -51,24 +63,38 @@
   text-decoration: none;
   background-color: #fff;
 }
+
 @media screen and (min-width: 1024px) {
   .container {
     position: relative;
-    width: 350px;
-    height: 100%;
+    width: calc(100vw - 160px);
     border-right: 1px solid rgb(227, 227, 227);
   }
 
-  .fab {
-    position: absolute;
-    right: 16px;
-    bottom: 72px;
+  .contents {
+    height: fit-content;
+    overflow: auto;
   }
+
+  .filterMember {
+    height: 100vh;
+    border-right: 1px solid rgb(227, 227, 227);
+  }
+
   .searchForm {
     top: 0;
   }
+  .groupProfile {
+    top: 0;
+  }
+
+  .groupOverView,
+  .filterMember {
+    width: calc((100vw - 160px) / 2);
+  }
+
   .buttonArea {
-    width: 349px;
+    width: calc((100vw - 160px) / 2);
   }
 
   .myChat {
