@@ -1,7 +1,5 @@
-import { doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import firebase from 'firebase/firestore';
 import { describe, expect, it, vi } from 'vitest';
-import { db } from '../../src/main';
 import { fetchUserData, isCacheActive } from '../../src/utils';
 
 describe('fetchUserData,isCacheActive', () => {
@@ -93,9 +91,7 @@ describe('fetchUserData,isCacheActive', () => {
 
     it('現在時刻から1分前のデータ を渡したらfalse が返ってくる', () => {
       const now = new Date();
-      console.log(now);
       now.setMinutes(now.getMinutes() - 1);
-      console.log(now);
       const userData = {
         name: 'test',
         iconUrl: 'test',

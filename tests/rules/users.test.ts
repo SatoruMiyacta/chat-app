@@ -8,27 +8,15 @@ import {
 import {
   setDoc,
   getDoc,
-  getDocs,
   updateDoc,
   deleteDoc,
   doc,
   serverTimestamp,
-  collection,
-  addDoc,
   setLogLevel,
 } from '@firebase/firestore';
 
 import { readFileSync } from 'fs';
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  it,
-  test,
-  expect,
-} from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, it } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 
 let testEnv: RulesTestEnvironment;
@@ -58,7 +46,7 @@ const setUser = async (userId: string) => {
     const usersRef = doc(db, 'users', userId);
     await setDoc(usersRef, {
       name: 'nameTest',
-      iconUrl: '/public/images/user-solid.svg',
+      iconUrl: '/images/user-solid.svg',
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
@@ -75,7 +63,7 @@ describe('/users/{userId}', () => {
       await assertSucceeds(
         setDoc(usersRef, {
           name: 'test',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
@@ -90,7 +78,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         setDoc(usersRef, {
           name: 'test',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
@@ -105,7 +93,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         setDoc(usersRef, {
           name: 'test',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
@@ -122,7 +110,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         setDoc(usersRef, {
           name: 'test',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: date,
           updatedAt: serverTimestamp(),
         })
@@ -139,7 +127,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         setDoc(usersRef, {
           name: 'test',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: date,
         })
@@ -154,7 +142,7 @@ describe('/users/{userId}', () => {
       await assertSucceeds(
         setDoc(usersRef, {
           name: 't',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
@@ -175,7 +163,7 @@ describe('/users/{userId}', () => {
       await assertSucceeds(
         setDoc(usersRef, {
           name: str,
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
@@ -196,7 +184,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         setDoc(usersRef, {
           name: str,
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
@@ -215,7 +203,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         setDoc(usersRef, {
           name: name,
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
@@ -305,7 +293,7 @@ describe('/users/{userId}', () => {
 
     it.each([
       {
-        iconUrl: '/public/images/user-solid.svg',
+        iconUrl: '/images/user-solid.svg',
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       },
@@ -316,12 +304,12 @@ describe('/users/{userId}', () => {
       },
       {
         name: 'test',
-        iconUrl: '/public/images/user-solid.svg',
+        iconUrl: '/images/user-solid.svg',
         updatedAt: serverTimestamp(),
       },
       {
         name: 'test',
-        iconUrl: '/public/images/user-solid.svg',
+        iconUrl: '/images/user-solid.svg',
         createdAt: serverTimestamp(),
       },
     ])('プロパティが１つでもない場合は作成不可。', async (objectData) => {
@@ -370,7 +358,7 @@ describe('/users/{userId}', () => {
       await assertSucceeds(
         updateDoc(usersRef, {
           name: 'test',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           updatedAt: serverTimestamp(),
         })
       );
@@ -386,7 +374,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         updateDoc(usersRef, {
           name: 'test',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           updatedAt: serverTimestamp(),
         })
       );
@@ -400,7 +388,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         updateDoc(usersRef, {
           name: 'test',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/user-solid.svg',
           updatedAt: serverTimestamp(),
         })
       );
@@ -414,7 +402,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         updateDoc(usersRef, {
           name: 'test',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
@@ -430,7 +418,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         updateDoc(usersRef, {
           name: 'test',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           updatedAt: date,
         })
       );
@@ -446,7 +434,7 @@ describe('/users/{userId}', () => {
       await assertSucceeds(
         updateDoc(usersRef, {
           name: 't',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           updatedAt: serverTimestamp(),
         })
       );
@@ -468,7 +456,7 @@ describe('/users/{userId}', () => {
       await assertSucceeds(
         updateDoc(usersRef, {
           name: str,
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/user-solid.svg',
           updatedAt: serverTimestamp(),
         })
       );
@@ -488,7 +476,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         updateDoc(usersRef, {
           name: str,
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           updatedAt: serverTimestamp(),
         })
       );
@@ -508,7 +496,7 @@ describe('/users/{userId}', () => {
       await assertFails(
         updateDoc(usersRef, {
           name: name,
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           updatedAt: serverTimestamp(),
         })
       );
@@ -632,7 +620,7 @@ describe('/users/{userId}', () => {
       const usersRef = doc(db, 'users', userId);
       await assertSucceeds(
         updateDoc(usersRef, {
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           updatedAt: serverTimestamp(),
         })
       );

@@ -9,7 +9,6 @@ import {
   setDoc,
   getDoc,
   getDocs,
-  updateDoc,
   deleteDoc,
   doc,
   serverTimestamp,
@@ -19,14 +18,7 @@ import {
 } from '@firebase/firestore';
 
 import { readFileSync } from 'fs';
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  it,
-} from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, it } from 'vitest';
 
 import { v4 as uuidv4 } from 'uuid';
 let testEnv: RulesTestEnvironment;
@@ -71,7 +63,7 @@ const setDataInGroupsCollection = async (userId: string, groupId: string) => {
     await setDoc(groupsRef, {
       authorId: userId,
       name: 'testGroup',
-      iconUrl: '/public/images/user-solid.svg',
+      iconUrl: '/images/user-solid.svg',
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
@@ -130,19 +122,6 @@ describe('/users/{userId}/joinedGroups/{groupId}', () => {
         })
       );
     });
-
-    // it('自分以外はグループ作成不可。', async () => {
-    //   const userId = uuidv4();
-    //   const context = testEnv.authenticatedContext(userId);
-    //   const db = context.firestore();
-    //   const groupsRef = doc(db, 'users', uuidv4(), 'joinedGroups', uuidv4());
-    //   await assertFails(
-    //     setDoc(groupsRef, {
-    //       createdAt: serverTimestamp(),
-    //       updatedAt: serverTimestamp(),
-    //     })
-    //   );
-    // });
   });
 
   describe('delete', () => {
@@ -208,7 +187,7 @@ describe('groups/{groupId}', () => {
         addDoc(groupsRef, {
           authorId: userId,
           name: 'testGroup',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
@@ -225,7 +204,7 @@ describe('groups/{groupId}', () => {
         addDoc(groupsRef, {
           authorId: userId,
           name: 'testGroup',
-          iconUrl: '/public/images/user-solid.svg',
+          iconUrl: '/images/user-solid.svg',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
@@ -348,6 +327,7 @@ describe('/groups/{groupId}/members/{memberId}', () => {
     it('自分は削除可', async () => {
       const userId = uuidv4();
       const groupId = uuidv4();
+      await setDataInGroupsCollection(userId, groupId);
       await setDataInGroupsMemberCollection(userId, groupId);
 
       const context = testEnv.authenticatedContext(userId);
