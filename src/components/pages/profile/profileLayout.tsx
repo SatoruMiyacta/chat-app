@@ -1,6 +1,3 @@
-import { Outlet } from 'react-router-dom';
-
-import BottomNavigation from '@/components/organisms/BottomNavigation';
 import ProfileOverview from '@/components/organisms/ProfileOverview';
 
 interface ProfileLayoutProps {
