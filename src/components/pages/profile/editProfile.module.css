@@ -21,12 +21,13 @@
   .container {
     position: relative;
     z-index: 10;
+    width: calc(100vw - 550px);
     height: 100vh;
     background-color: #fff;
   }
 
   .container > section {
-    margin-top: 96px;
+    margin-top: 48px;
   }
 
   .container > section > h1 {

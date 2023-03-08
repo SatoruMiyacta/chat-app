@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
+import Skeleton from '@/components/atoms/Skeleton';
 import Modal from '@/components/molecules/Modal';
 import Avatar from '@/components/organisms/Avatar';
 import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
@@ -36,6 +37,7 @@ import {
 } from '@/utils';
 
 const EditProfile = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [authUser] = useAtom(authUserAtom);
   const [isModal, setIsModal] = useState(false);
   const [isPasswordAuthModal, setIsPasswordAuthModal] = useState(false);
@@ -89,7 +91,10 @@ const EditProfile = () => {
         setMyIconUrl(userData.iconUrl);
 
         saveUser(userId, userData);
+
+        setIsLoading(false);
       })
+
       .catch((error) => {
         console.error(error);
       });
@@ -276,77 +281,108 @@ const EditProfile = () => {
         showBackButton
       />
       <main className={`${styles.container} ${isPcWindow ? 'inner' : ''} grow`}>
-        <section>
-          <Heading
-            tag="h1"
-            align="start"
-            color="inherit"
-            className="pc"
-            size="xxl"
-          >
-            プロフィール編集
-          </Heading>
-          <div className={isPcWindow ? 'flex alic' : ''}>
-            <AvatarBackgroundImage
-              imageUrl={myIconUrl}
-              className="sp"
-              hasCameraIcon
-              onChange={onFileChange}
-            />
-            <Avatar
-              iconUrl={myIconUrl}
+        {isLoading && (
+          <section>
+            <Skeleton
+              variant="rectangular"
+              width={320}
+              height={32}
               className="pc"
-              hasCameraIcon
-              isUploadButton={isPcWindow}
-              onChange={onFileChange}
-              uploadIconSize="large"
             />
-            <Button
-              color="primary"
-              variant="contained"
-              className="pc"
-              onClick={onSave}
-            >
-              保存
-            </Button>
-          </div>
-          <div className={`${styles.contents} ${isPcWindow ? '' : 'inner'}`}>
-            <div className={styles.form}>
-              <Input
-                color="primary"
-                id="nameEditProfile"
-                onChange={(event) => setUserName(event.target.value)}
-                type="text"
-                value={userName}
-                variant={isPcWindow ? 'outlined' : 'standard'}
-                isFullWidth
-                label="ユーザーネーム"
-                startIcon={<FontAwesomeIcon icon={faIdCard} />}
-              />
-              <Input
-                color="primary"
-                id="email"
-                onChange={(event) => setEmail(event.target.value)}
-                type="email"
-                value={email}
-                variant={isPcWindow ? 'outlined' : 'standard'}
-                isFullWidth
-                label="メールアドレス"
-                startIcon={<FontAwesomeIcon icon={faEnvelope} />}
+            <div className={isPcWindow ? 'flex alic' : ''}>
+              <Skeleton variant="rectangular" height={160} />
+              <Skeleton
+                variant="rectangular"
+                height={32}
+                width={96}
+                className="pc"
+                radius={32}
               />
             </div>
-            <div className={styles.buttonArea}>
+            <div className={`${styles.contents} ${isPcWindow ? '' : 'inner'}`}>
+              <div className={styles.form}>
+                <Skeleton variant="rectangular" height={32} />
+                <Skeleton variant="rectangular" height={32} />
+              </div>
+              <div className={styles.buttonArea}>
+                <Skeleton variant="rectangular" height={32} radius={32} />
+              </div>
+            </div>
+          </section>
+        )}
+        {!isLoading && (
+          <section>
+            <Heading
+              tag="h1"
+              align="start"
+              color="inherit"
+              className="pc"
+              size="xxl"
+            >
+              プロフィール編集
+            </Heading>
+            <div className={isPcWindow ? 'flex alic' : ''}>
+              <AvatarBackgroundImage
+                imageUrl={myIconUrl}
+                className="sp"
+                hasCameraIcon
+                onChange={onFileChange}
+              />
+              <Avatar
+                iconUrl={myIconUrl}
+                className="pc"
+                isUploadButton={isPcWindow}
+                onChange={onFileChange}
+                uploadIconSize="l"
+                isNotUpload
+              />
               <Button
-                color="danger"
-                onClick={() => navigate('/profile/delete-account')}
-                variant="outlined"
-                isFullWidth
+                color="primary"
+                variant="contained"
+                className="pc"
+                onClick={onSave}
               >
-                アカウント削除
+                保存
               </Button>
             </div>
-          </div>
-        </section>
+            <div className={`${styles.contents} ${isPcWindow ? '' : 'inner'}`}>
+              <div className={styles.form}>
+                <Input
+                  color="primary"
+                  id="nameEditProfile"
+                  onChange={(event) => setUserName(event.target.value)}
+                  type="text"
+                  value={userName}
+                  variant={isPcWindow ? 'outlined' : 'standard'}
+                  isFullWidth
+                  label="ユーザーネーム"
+                  startIcon={<FontAwesomeIcon icon={faIdCard} />}
+                />
+                <Input
+                  color="primary"
+                  id="email"
+                  onChange={(event) => setEmail(event.target.value)}
+                  type="email"
+                  value={email}
+                  variant={isPcWindow ? 'outlined' : 'standard'}
+                  isFullWidth
+                  label="メールアドレス"
+                  startIcon={<FontAwesomeIcon icon={faEnvelope} />}
+                />
+              </div>
+              <div className={styles.buttonArea}>
+                <Button
+                  color="danger"
+                  onClick={() => navigate('/profile/delete-account')}
+                  variant="outlined"
+                  isFullWidth
+                >
+                  アカウント削除
+                </Button>
+              </div>
+            </div>
+          </section>
+        )}
       </main>
     </>
   );
