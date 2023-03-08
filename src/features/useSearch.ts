@@ -1,18 +1,7 @@
-import { useState } from 'react';
-
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { useAtom } from 'jotai';
-
-import { INITIAL_ICON_URL } from '@/constants';
-import { useUser, useGroup } from '@/hooks';
-import { db } from '@/main';
-import { authUserAtom, usersAtom, groupsAtom, joinedGroupsAtom } from '@/store';
+import { useUser } from '@/hooks';
 
 export const useSearch = () => {
-  const [users, setUsers] = useAtom(usersAtom);
-  const [groupsId, setGroupsId] = useAtom(joinedGroupsAtom);
   const { getUser, saveUser, getSearchedFriends, getSearchedUser } = useUser();
-  const { getGroups, saveGroups } = useGroup();
 
   // 検索したユーザー一覧をグローバルステートに保存して、一覧を返す
   const searchUserList = async (search: string) => {

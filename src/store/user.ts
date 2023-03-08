@@ -25,6 +25,6 @@ export interface UsersIdCacheObject {
 }
 
 export const authUserAtom = atom<User | null>(null);
-
 export const usersAtom = atom<Users>({});
 export const friendsIdAtom = atom<CacheObject | null>(null);
+export const blockUserIdAtom = atom<CacheObject | null>(null);
