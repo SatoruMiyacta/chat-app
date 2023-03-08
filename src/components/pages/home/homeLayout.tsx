@@ -1,16 +1,19 @@
-import { Outlet } from 'react-router-dom';
-
-import Header from '@/components/organisms/Header';
-import SideMenu from '@/components/organisms/SideMenu';
+import HomeOverview from '@/components/organisms/HomeOverview';
 
 interface HomeLayoutProps {
   children?: React.ReactNode;
 }
 const HomeLayout = ({ children }: HomeLayoutProps) => {
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
-      <div className="sp">{children}</div>
-      <div className="pc">{children}</div>
+      {!isPcWindow && <div>{children}</div>}
+      {isPcWindow && (
+        <div className="flex">
+          <HomeOverview />
+          {children}
+        </div>
+      )}
     </>
   );
 };
