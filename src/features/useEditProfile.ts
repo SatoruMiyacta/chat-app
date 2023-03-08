@@ -1,34 +1,18 @@
 import { useState } from 'react';
 
-import {
-  updateEmail,
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-} from 'firebase/auth';
-import {
-  doc,
-  serverTimestamp,
-  setDoc,
-  getDoc,
-  updateDoc,
-} from 'firebase/firestore';
+import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useAtom } from 'jotai';
 
 import { InitialUserData } from './useCreateAccount';
 
 import { db, storage, auth } from '@/main';
-import { authUserAtom, usersAtom, UserCacheObject } from '@/store';
-import {
-  isValidEmail,
-  getCacheExpirationDate,
-  fetchUserData,
-  isCacheActive,
-} from '@/utils';
+import { authUserAtom } from '@/store';
+import { isValidEmail } from '@/utils';
 
 export const useEditProfile = () => {
   const [authUser] = useAtom(authUserAtom);
-  const [users, setUsers] = useAtom(usersAtom);
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [myIconUrl, setMyIconUrl] = useState('');
