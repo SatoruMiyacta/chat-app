@@ -1,18 +1,18 @@
-import { Outlet } from 'react-router-dom';
-
-import BottomNavigation from '@/components/organisms/BottomNavigation';
-
+import RoomOverview from '@/components/organisms/RoomOverview';
 interface RoomLayoutProps {
   children?: React.ReactNode;
 }
 const RoomLayout = ({ children }: RoomLayoutProps) => {
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
-      <div className="sp">
-        {children}
-        <BottomNavigation />
-      </div>
-      <div className="pc flex fullWidth">{children}</div>
+      {!isPcWindow && <div>{children}</div>}
+      {isPcWindow && (
+        <div className="flex fullWidth">
+          <RoomOverview />
+          {children}
+        </div>
+      )}
     </>
   );
 };
