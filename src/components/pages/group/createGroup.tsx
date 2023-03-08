@@ -1,82 +1,77 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
-import { User } from 'firebase/auth';
+import { writeBatch } from 'firebase/firestore';
+import { deleteObject, ref } from 'firebase/storage';
 import { useAtom } from 'jotai';
+import { v4 as uuidv4 } from 'uuid';
 
 import styles from './createGroup.module.css';
 
-import {
-  faMagnifyingGlass,
-  faUser,
-  faUsers,
-  faPlus,
-} from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Button from '@/components/atoms/Button';
 import Input from '@/components/atoms/Input';
+import Skeleton from '@/components/atoms/Skeleton';
 import Modal from '@/components/molecules/Modal';
 import Avatar from '@/components/organisms/Avatar';
 import AvatarList, { IdObject } from '@/components/organisms/AvatarList';
 import Header from '@/components/organisms/Header';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { useCreateGroup, useSearch, InitialGroupData } from '@/features';
-import { useFriend, useGroup, useUser } from '@/hooks';
 import {
-  usersAtom,
-  authUserAtom,
-  UserData,
-  groupsAtom,
-  friendsIdAtom,
-} from '@/store';
+  useCreateGroup,
+  useSearch,
+  InitialGroupData,
+  JoinedRoomsDataObject,
+} from '@/features';
+import { useFriend, useGroup, useUser, UserAndGroupId } from '@/hooks';
+import { db, storage } from '@/main';
+import { authUserAtom, joinedGroupsAtom } from '@/store';
 import {
   getFirebaseError,
-  getCacheExpirationDate,
-  fetchUserData,
-  isCacheActive,
   resizeFile,
   validateBlobSize,
-  isValidPassword,
   convertCanvasToBlob,
-  addGroupsData,
+  setGroupsData,
   setGroupsMember,
-  setDataToJoinedGroups,
   fetchGroupsData,
+  setMyJoinedGroups,
+  setUsersUnAuthRoom,
+  uploadIcon,
+  setRoom,
+  setUsersJoinedRooms,
 } from '@/utils';
 
 const CreateMember = () => {
   const [search, setSearch] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
-  const [authUser, setAuthUser] = useAtom(authUserAtom);
-  const [auth, setAuth] = useState<User>();
-  const [users, setUsers] = useAtom(usersAtom);
-  const [friends, setFriends] = useAtom(friendsIdAtom);
+  const [authUser] = useAtom(authUserAtom);
+  const [joinedGroups] = useAtom(joinedGroupsAtom);
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
-  // const [friendList, setFriendList] = useState<string[]>([]);
+  const [isOpenCompleteModal, setIsOpenCompleteModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [groupIconBlob, setGroupIconBlob] = useState<Blob>();
   const [initialIconUrl, setInitialIconUrl] = useState(INITIAL_ICON_URL);
+  const [filterFriendList, setFilterFriendList] = useState<string[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const {
-    setLastFriend,
     getMyFriendIdList,
     saveFriendIdList,
     saveFriendData,
-    searchFriendsIdList,
     setFriendList,
     friendList,
   } = useFriend();
-
-  const { getUser, saveUser, getSearchedFriends } = useUser();
-  const { groupName, setGroupName, isComplete, uploadIcon, createMyRoom } =
-    useCreateGroup();
-
-  const { convertnotFriendsObject, searchUserList } = useSearch();
-  const { getGroups, saveGroups, saveJoinedGroups } = useGroup();
+  const { getSearchedFriends } = useUser();
+  const { groupName, setGroupName, isComplete } = useCreateGroup();
+  const { searchUserList } = useSearch();
+  const { saveGroups, saveJoinedGroups } = useGroup();
 
   const convertObject = (): IdObject => {
     const checkboxObject = friendList.reduce((accumulater, value) => {
@@ -86,7 +81,7 @@ const CreateMember = () => {
     return checkboxObject;
   };
   const [checkboxItems, setCheckboxItems] = useState<IdObject>(convertObject());
-
+  const navigate = useNavigate();
   const onCheckedUser = (
     event: React.ChangeEvent<HTMLInputElement>,
     index?: number
@@ -98,16 +93,13 @@ const CreateMember = () => {
     const newItems = { ...checkboxItems };
     newItems[checkedId] = !newItems[checkedId];
 
-    setCheckboxItems(newItems);
-  };
-
-  const onExtractGroupMember = () => {
-    const groupMemberList = Object.keys(checkboxItems).filter(
-      (key) => checkboxItems[key] === true
+    const groupMemberList = Object.keys(newItems).filter(
+      (key) => newItems[key] === true
     );
 
-    setFriendList(groupMemberList);
-    setActiveIndex(1);
+    setFilterFriendList(groupMemberList);
+
+    setCheckboxItems(newItems);
   };
 
   const onExcludeUser = (
@@ -116,26 +108,57 @@ const CreateMember = () => {
   ) => {
     if (!checkboxItems) return;
 
-    const deleteItemsList = [...friendList];
+    const deleteItemsList = [...filterFriendList];
     deleteItemsList.splice(index, 1);
 
-    setFriendList(deleteItemsList);
+    setFilterFriendList(deleteItemsList);
   };
 
   const onCreateGroup = async () => {
+    const groupId = uuidv4();
     try {
       let groupIconUrl = INITIAL_ICON_URL;
       if (groupIconBlob) groupIconUrl = await uploadIcon(groupIconBlob, userId);
 
-      const initialUserData: InitialGroupData = { groupName, groupIconUrl };
-      const groupId = await addGroupsData(userId, initialUserData);
+      const batch = writeBatch(db);
 
-      await setGroupsMember(friendList, groupId, userId);
+      const userAndGroupId: UserAndGroupId = { userId, groupId };
+      const initialGroupData: InitialGroupData = { groupName, groupIconUrl };
 
-      await setDataToJoinedGroups(friendList, groupId, userId);
+      const type = 'group';
+      const anotherId = groupId;
+      const isVisible = true;
+      const joinedRoomsDataObject: JoinedRoomsDataObject = {
+        anotherId,
+        type,
+        isVisible,
+      };
+
+      await setGroupsData(userAndGroupId, initialGroupData, batch);
+
+      await setGroupsMember(filterFriendList, userAndGroupId, batch);
+
+      await setMyJoinedGroups(userAndGroupId, batch);
+
+      await setUsersJoinedRooms(userId, groupId, joinedRoomsDataObject, batch);
+
+      await setRoom(userId, groupId, batch);
+
+      // 他のメンバーのunAuthRoomに追加
+      await setUsersUnAuthRoom(groupId, filterFriendList, groupId, type, batch);
+
+      await batch.commit();
 
       const groupData = await fetchGroupsData(groupId);
       if (groupData) saveGroups(groupId, groupData);
+
+      if (joinedGroups && typeof joinedGroups !== 'undefined') {
+        const joinedGroupsCacheList = joinedGroups.data as string[];
+        joinedGroupsCacheList.unshift(groupId);
+        saveJoinedGroups(joinedGroupsCacheList);
+      }
+
+      setIsOpenCompleteModal(true);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -145,6 +168,11 @@ const CreateMember = () => {
       }
 
       setIsOpenErrorModal(true);
+      if (groupIconBlob) {
+        const desertRef = ref(storage, `iconImage/groups/${groupId}/groupIcon`);
+
+        if (desertRef) await deleteObject(desertRef);
+      }
     }
   };
 
@@ -153,7 +181,7 @@ const CreateMember = () => {
     try {
       if (!userId) return;
 
-      getMyFriendIdList(true).then((friendIdList) => {
+      getMyFriendIdList(false).then((friendIdList) => {
         saveFriendData(friendIdList);
         saveFriendIdList(friendIdList);
       });
@@ -167,6 +195,7 @@ const CreateMember = () => {
 
       setIsOpenErrorModal(true);
     }
+    setIsLoading(false);
   }, [userId]);
 
   const searchFriend = async () => {
@@ -188,8 +217,6 @@ const CreateMember = () => {
           saveFriendData(friendIdList);
           saveFriendIdList(friendIdList);
         });
-      } else if (search) {
-        searchFriend();
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -202,8 +229,23 @@ const CreateMember = () => {
     }
   }, [search]);
 
+  const scrollRefCurrent = scrollRef.current;
+  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
+
   const handleScroll = async () => {
-    if (document.body.scrollHeight !== window.pageYOffset + window.innerHeight)
+    if (!scrollRefCurrent) return;
+
+    let contentsHeight;
+    if (isPcWindow) {
+      contentsHeight = window.innerHeight - 80;
+    } else {
+      contentsHeight = window.innerHeight - 232;
+    }
+
+    if (
+      scrollRefCurrent.scrollHeight !==
+      scrollRefCurrent.scrollTop + contentsHeight
+    )
       return;
 
     getMyFriendIdList(false).then((friendIdList) => {
@@ -212,11 +254,11 @@ const CreateMember = () => {
     });
   };
   useEffect(() => {
-    window.document.addEventListener('scroll', handleScroll);
+    scrollRefCurrent?.addEventListener('scroll', handleScroll);
     return () => {
-      window.document.removeEventListener('scroll', handleScroll);
+      scrollRefCurrent?.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [scrollRefCurrent]);
 
   const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -243,6 +285,36 @@ const CreateMember = () => {
 
       setIsOpenErrorModal(true);
     }
+  };
+
+  const renderCompleteModal = () => {
+    if (!isOpenCompleteModal) return;
+
+    return (
+      <Modal
+        onClose={() => setIsOpenCompleteModal(false)}
+        title="完了"
+        titleAlign="center"
+        hasInner
+        isOpen={isOpenCompleteModal}
+        isBoldTitle
+      >
+        <div>
+          <p>グループが作成されました</p>
+        </div>
+        <div className={styles.controler}>
+          <Button
+            color="primary"
+            onClick={() => navigate('/')}
+            variant="contained"
+            isFullWidth
+            size="small"
+          >
+            OK
+          </Button>
+        </div>
+      </Modal>
+    );
   };
 
   const renderErrorModal = () => {
@@ -274,13 +346,28 @@ const CreateMember = () => {
       </Modal>
     );
   };
+
   return (
     <>
+      {renderCompleteModal()}
       {renderErrorModal()}
       <Header title="グループ作成" className="sp" showBackButton />
-      {activeIndex === 0 && (
+      {isLoading && (
+        <>
+          <div className={styles.container}>
+            <div className={`${styles.searchForm} inner`}>
+              <Skeleton variant="rectangular" height={32} />
+            </div>
+            <Skeleton variant="rectangular" height={550} />
+            <div className={`${styles.buttonArea} flex alic inner`}>
+              <Skeleton variant="rectangular" height={32} radius={32} />
+            </div>
+          </div>
+        </>
+      )}
+      {!isLoading && activeIndex === 0 && !isPcWindow && (
         <div className={styles.container}>
-          <div className={`${styles.searchForm} inner`}>
+          <div className={`${styles.searchForm} flex inner`}>
             <Input
               color="primary"
               id="search"
@@ -292,19 +379,24 @@ const CreateMember = () => {
               placeholder="search"
               startIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
             />
+            <button onClick={searchFriend}>
+              {<FontAwesomeIcon icon={faMagnifyingGlass} />}
+            </button>
           </div>
-          {friendList && (
-            <AvatarList
-              idList={friendList}
-              showCheckbox
-              checkboxItems={checkboxItems}
-              onChange={(event, index) => onCheckedUser(event, index)}
-            />
+          {friendList.length !== 0 && (
+            <div ref={scrollRef} className={styles.contents}>
+              <AvatarList
+                idList={friendList}
+                showCheckbox
+                checkboxItems={checkboxItems}
+                onChange={(event, index) => onCheckedUser(event, index)}
+              />
+            </div>
           )}
           <div className={`${styles.buttonArea} flex alic inner`}>
             <Button
               color="primary"
-              onClick={onExtractGroupMember}
+              onClick={() => setActiveIndex(1)}
               variant="contained"
               isFullWidth
               size="small"
@@ -314,7 +406,7 @@ const CreateMember = () => {
           </div>
         </div>
       )}
-      {activeIndex === 1 && (
+      {!isLoading && activeIndex === 1 && !isPcWindow && (
         <div className={styles.container}>
           <div className={`${styles.groupProfile} flex inner`}>
             <Avatar
@@ -334,17 +426,19 @@ const CreateMember = () => {
               placeholder="グループネーム"
             />
           </div>
-          <AvatarList
-            idList={friendList}
-            onClick={onExcludeUser}
-            showDeleteButton
-          />
+          <div ref={scrollRef} className={styles.contents}>
+            <AvatarList
+              idList={filterFriendList}
+              onClick={onExcludeUser}
+              showDeleteButton
+            />
+          </div>
           <div className={`${styles.buttonArea} flex alic fdrc inner`}>
             <Button
               color="primary"
               onClick={onCreateGroup}
               variant="contained"
-              isDisabled={!isComplete}
+              isDisabled={!isComplete()}
               isFullWidth
               size="small"
             >
@@ -359,6 +453,77 @@ const CreateMember = () => {
             >
               メンバー選択に戻る
             </Button>
+          </div>
+        </div>
+      )}
+      {!isLoading && isPcWindow && (
+        <div className={`${styles.container} flex`}>
+          <div className={`${styles.filterMember} `}>
+            <div className={`${styles.searchForm} flex inner`}>
+              <Input
+                color="primary"
+                id="search"
+                onChange={(event) => setSearch(event.target.value)}
+                type="text"
+                value={search}
+                variant="filled"
+                isFullWidth
+                placeholder="search"
+                startIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
+              />
+              <button onClick={searchFriend}>
+                {<FontAwesomeIcon icon={faMagnifyingGlass} />}
+              </button>
+            </div>
+            {friendList.length !== 0 && (
+              <div ref={scrollRef} className={styles.contents}>
+                <AvatarList
+                  idList={friendList}
+                  showCheckbox
+                  checkboxItems={checkboxItems}
+                  onChange={(event, index) => onCheckedUser(event, index)}
+                />
+              </div>
+            )}
+          </div>
+          <div className={`${styles.groupOverView} `}>
+            <div className={`${styles.groupProfile} flex inner`}>
+              <Avatar
+                iconUrl={initialIconUrl}
+                hasCameraIcon
+                onChange={onFileChange}
+              />
+              <Input
+                color="primary"
+                id="groupName"
+                onChange={(event) => setGroupName(event.target.value)}
+                type="text"
+                value={groupName}
+                variant="standard"
+                isFullWidth
+                isRequired
+                label="グループネーム"
+              />
+            </div>
+            <div ref={scrollRef} className={styles.contents}>
+              <AvatarList
+                idList={filterFriendList}
+                onClick={onExcludeUser}
+                showDeleteButton
+              />
+            </div>
+            <div className={`${styles.buttonArea} flex alic fdrc inner`}>
+              <Button
+                color="primary"
+                onClick={onCreateGroup}
+                variant="contained"
+                isDisabled={!isComplete()}
+                isFullWidth
+                size="small"
+              >
+                作成
+              </Button>
+            </div>
           </div>
         </div>
       )}
