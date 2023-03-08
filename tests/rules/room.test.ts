@@ -8,7 +8,6 @@ import {
 import {
   setDoc,
   getDoc,
-  getDocs,
   updateDoc,
   deleteDoc,
   doc,
@@ -19,14 +18,7 @@ import {
 } from '@firebase/firestore';
 
 import { readFileSync } from 'fs';
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  it,
-} from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, it } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 
 let testEnv: RulesTestEnvironment;
