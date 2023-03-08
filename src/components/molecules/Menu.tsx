@@ -7,7 +7,7 @@ import Button from '@/components/atoms/Button';
 
 export interface MenuItem {
   label: React.ReactNode;
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClick: () => void;
 }
 
 export interface MenuProps {
@@ -75,9 +75,9 @@ const Menu = ({
               <button
                 type="button"
                 className={styles.label}
-                onClick={(event) => {
+                onClick={() => {
                   setOpen(false);
-                  item.onClick(event);
+                  item.onClick();
                 }}
               >
                 {item.label}
