@@ -19,5 +19,10 @@ export interface Groups {
   [groupId: string]: GroupCacheObject;
 }
 
+export interface GroupMember {
+  [groupId: string]: CacheObject;
+}
+
 export const groupsAtom = atom<Groups>({});
 export const joinedGroupsAtom = atom<CacheObject | null>(null);
+export const groupsMemberAtom = atom<GroupMember>({});
