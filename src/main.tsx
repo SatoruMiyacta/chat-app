@@ -1,19 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  RouterProvider,
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
-import App from './App';
-import BottomNavigation from './components/organisms/BottomNavigation';
 import RoomLayout from './components/pages/rooms/roomLayout';
+import Users from './components/pages/users';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
@@ -25,8 +20,10 @@ import CreateAcconunts from '@/components/pages/accounts/create';
 import Login from '@/components/pages/accounts/login';
 import ResetPassword from '@/components/pages/accounts/resetPassword';
 import CreateGroup from '@/components/pages/group/createGroup';
-import Edit from '@/components/pages/group/editGroup';
+import EditGroup from '@/components/pages/group/editGroup';
 import GroupLayout from '@/components/pages/group/groupLayout';
+import GroupProfile from '@/components/pages/group/profile';
+import Block from '@/components/pages/home/block';
 import HomeLayout from '@/components/pages/home/homeLayout';
 import Home from '@/components/pages/home/index';
 import Search from '@/components/pages/home/search';
@@ -70,7 +67,6 @@ export const auth = getAuth(app);
 const router = createBrowserRouter([
   {
     path: 'accounts',
-    errorElement: <NotFound />,
     children: [
       {
         path: 'login',
@@ -104,9 +100,23 @@ const router = createBrowserRouter([
     path: '/search',
     element: (
       <AuthProvider>
-        <HomeLayout>
-          <Search />
-        </HomeLayout>
+        <Search />
+      </AuthProvider>
+    ),
+  },
+  {
+    path: '/block',
+    element: (
+      <AuthProvider>
+        <Block />
+      </AuthProvider>
+    ),
+  },
+  {
+    path: 'users/:postId',
+    element: (
+      <AuthProvider>
+        <Users />
       </AuthProvider>
     ),
   },
@@ -122,7 +132,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: 'rooms/message',
+    path: 'rooms/:postId/message',
     element: (
       <AuthProvider>
         <RoomLayout>
@@ -172,12 +182,22 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: 'group/edit',
+    path: 'group/:postId/edit',
     element: (
       <AuthProvider>
-        <GroupLayout>
-          <Edit />
-        </GroupLayout>
+        <HomeLayout>
+          <EditGroup />
+        </HomeLayout>
+      </AuthProvider>
+    ),
+  },
+  {
+    path: 'group/:postId/profile',
+    element: (
+      <AuthProvider>
+        <HomeLayout>
+          <GroupProfile />
+        </HomeLayout>
       </AuthProvider>
     ),
   },

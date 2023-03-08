@@ -1,8 +1,3 @@
-import { ReactNode } from 'react';
-import { Outlet } from 'react-router-dom';
-
-import BottomNavigation from '@/components/organisms/BottomNavigation';
-
 interface GroupLayoutProps {
   children: React.ReactNode;
 }
