@@ -60,10 +60,7 @@ const EditGroup = () => {
   const navigate = useNavigate();
   const { postId } = useParams();
 
-  const onExcludeUser = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    index: number
-  ) => {
+  const onExcludeUser = async (index: number) => {
     if (!postId) return;
 
     const deleteItemsList = [...groupMemberList];
@@ -263,7 +260,7 @@ const EditGroup = () => {
           <div className={styles.listArea}>
             <AvatarList
               idList={groupMemberList}
-              onClick={onExcludeUser}
+              onClick={(index) => onExcludeUser(index)}
               showDeleteButton
             />
           </div>
