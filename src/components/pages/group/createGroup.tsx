@@ -82,10 +82,8 @@ const CreateMember = () => {
   };
   const [checkboxItems, setCheckboxItems] = useState<IdObject>(convertObject());
   const navigate = useNavigate();
-  const onCheckedUser = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index?: number
-  ) => {
+
+  const onCheckedUser = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!checkboxItems) return;
 
     const checkedId = event.target.id;
@@ -102,10 +100,7 @@ const CreateMember = () => {
     setCheckboxItems(newItems);
   };
 
-  const onExcludeUser = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    index: number
-  ) => {
+  const onExcludeUser = (index: number) => {
     if (!checkboxItems) return;
 
     const deleteItemsList = [...filterFriendList];
@@ -389,7 +384,7 @@ const CreateMember = () => {
                 idList={friendList}
                 showCheckbox
                 checkboxItems={checkboxItems}
-                onChange={(event, index) => onCheckedUser(event, index)}
+                onChange={(event) => onCheckedUser(event)}
               />
             </div>
           )}
@@ -429,7 +424,7 @@ const CreateMember = () => {
           <div ref={scrollRef} className={styles.contents}>
             <AvatarList
               idList={filterFriendList}
-              onClick={onExcludeUser}
+              onClick={(index) => onExcludeUser(index)}
               showDeleteButton
             />
           </div>
@@ -481,7 +476,7 @@ const CreateMember = () => {
                   idList={friendList}
                   showCheckbox
                   checkboxItems={checkboxItems}
-                  onChange={(event, index) => onCheckedUser(event, index)}
+                  onChange={(event) => onCheckedUser(event)}
                 />
               </div>
             )}
@@ -508,7 +503,7 @@ const CreateMember = () => {
             <div ref={scrollRef} className={styles.contents}>
               <AvatarList
                 idList={filterFriendList}
-                onClick={onExcludeUser}
+                onClick={(index) => onExcludeUser(index)}
                 showDeleteButton
               />
             </div>

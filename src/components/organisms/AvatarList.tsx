@@ -48,10 +48,7 @@ export interface AvatarListProps {
   lastMessage?: string;
   menuItems?: MenuObject;
   onChange?: CheckboxProps['onChange'];
-  onClick?: (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    index: number
-  ) => void;
+  onClick?: (index: number) => void;
   path?: string;
   showCheckbox?: boolean;
   showDeleteButton?: boolean;
@@ -372,11 +369,7 @@ const AvatarList = ({
                     />
                   )}
                   {showDeleteButton && onClick && (
-                    <button
-                      onClick={(event) => {
-                        onClick(event, index);
-                      }}
-                    >
+                    <button onClick={() => onClick(index)}>
                       {isBlockUser ? '解除' : '削除'}
                     </button>
                   )}
