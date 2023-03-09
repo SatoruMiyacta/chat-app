@@ -47,10 +47,7 @@ const Block = () => {
   const { searchUserList } = useSearch();
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const onExcludeUser = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    index: number
-  ) => {
+  const onExcludeUser = async (index: number) => {
     if (!userId) return;
 
     const deleteItemsList = [...blockUserList];
@@ -261,7 +258,7 @@ const Block = () => {
               <AvatarList
                 idList={blockUserList}
                 isBlockUser
-                onClick={onExcludeUser}
+                onClick={(index) => onExcludeUser(index)}
                 showDeleteButton
               />
             </div>
