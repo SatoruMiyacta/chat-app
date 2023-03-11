@@ -6,12 +6,16 @@
   margin-top: 32px;
 }
 
-.sendButton {
+.buttonArea {
   margin-top: 64px;
 }
 
 .controler {
   margin-top: 24px;
+}
+
+.buttonArea> button + button {
+  margin-top: 32px;
 }
 
 @media screen and (min-width: 1024px) {

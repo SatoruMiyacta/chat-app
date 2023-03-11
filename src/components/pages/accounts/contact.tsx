@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 
@@ -27,6 +28,7 @@ const Contact = () => {
     '予期せぬエラーが発生しました。お手数ですが、再度送信してください。'
   );
   const [modalTitle, setModalTitle] = useState('');
+  const navigate = useNavigate();
 
   const {
     userName,
@@ -149,7 +151,7 @@ const Contact = () => {
                 startIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
               />
             </div>
-            <div className={styles.sendButton}>
+            <div className={styles.buttonArea}>
               <Button
                 color="primary"
                 variant="contained"
@@ -158,6 +160,15 @@ const Contact = () => {
                 isFullWidth
               >
                 送信
+              </Button>
+              <Button
+                color="primary"
+                variant="text"
+                onClick={() => navigate(-1)}
+                isFullWidth
+                size="medium"
+              >
+                戻る
               </Button>
             </div>
           </section>

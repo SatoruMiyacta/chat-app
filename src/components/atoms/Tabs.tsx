@@ -9,10 +9,7 @@ export interface TabsItem {
 export interface TabsProps {
   activeIndex: number;
   items: TabsItem[];
-  onClick: (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    index: number
-  ) => void;
+  onClick: (index: number) => void;
   color?: 'primary' | 'black';
   iconPosition?: 'start' | 'end' | 'top' | 'bottom';
   isBorder?: boolean;
@@ -40,11 +37,8 @@ const Tabs = ({
     return tabClassNameList.join(' ');
   };
 
-  const handleClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    index: number
-  ) => {
-    onClick(event, index);
+  const handleClick = (index: number) => {
+    onClick(index);
   };
 
   return (
@@ -55,7 +49,7 @@ const Tabs = ({
           type="button"
           className={getTabClass(index)}
           disabled={item.isDisabled}
-          onClick={(event) => handleClick(event, index)}
+          onClick={() => handleClick(index)}
         >
           {item.icon && <span className={styles.icon}>{item.icon}</span>}
           {item.label && <span className={styles.label}>{item.label}</span>}

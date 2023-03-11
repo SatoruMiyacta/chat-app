@@ -9,6 +9,7 @@ export interface ButtonProps {
   className?: string;
   isFullWidth?: boolean;
   isDisabled?: boolean;
+  isRounded?: boolean;
 }
 
 const Button = ({
@@ -16,6 +17,7 @@ const Button = ({
   variant,
   isFullWidth = false,
   isDisabled = false,
+  isRounded = true,
   size = 'medium',
   children,
   className,
@@ -33,6 +35,10 @@ const Button = ({
   }
   if (isDisabled) {
     classNameList.push('disabled');
+  }
+
+  if (isRounded) {
+    classNameList.push(styles.isRounded);
   }
 
   const handleClick = (
