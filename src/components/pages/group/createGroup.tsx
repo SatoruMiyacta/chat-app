@@ -106,6 +106,16 @@ const CreateMember = () => {
     const deleteItemsList = [...filterFriendList];
     deleteItemsList.splice(index, 1);
 
+    const filterList = filterFriendList.filter(
+      (i) => deleteItemsList.indexOf(i) == -1
+    );
+    const newItems = { ...checkboxItems };
+
+    for (const deleteId of filterList) {
+      newItems[deleteId] = !newItems[deleteId];
+    }
+    setCheckboxItems(newItems);
+
     setFilterFriendList(deleteItemsList);
   };
 
@@ -232,9 +242,9 @@ const CreateMember = () => {
 
     let contentsHeight;
     if (isPcWindow) {
-      contentsHeight = window.innerHeight - 80;
+      contentsHeight = window.innerHeight - 176;
     } else {
-      contentsHeight = window.innerHeight - 232;
+      contentsHeight = window.innerHeight - 241;
     }
 
     if (
@@ -371,12 +381,18 @@ const CreateMember = () => {
               value={search}
               variant="filled"
               isFullWidth
-              placeholder="search"
+              placeholder="ユーザー名を入力してください"
               startIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
             />
-            <button onClick={searchFriend}>
-              {<FontAwesomeIcon icon={faMagnifyingGlass} />}
-            </button>
+            <Button
+              color="primary"
+              variant="contained"
+              isRounded={false}
+              onClick={searchFriend}
+              size="large"
+            >
+              検索
+            </Button>
           </div>
           {friendList.length !== 0 && (
             <div ref={scrollRef} className={styles.contents}>
@@ -394,7 +410,6 @@ const CreateMember = () => {
               onClick={() => setActiveIndex(1)}
               variant="contained"
               isFullWidth
-              size="small"
             >
               次へ
             </Button>
@@ -435,7 +450,6 @@ const CreateMember = () => {
               variant="contained"
               isDisabled={!isComplete()}
               isFullWidth
-              size="small"
             >
               作成
             </Button>
@@ -444,7 +458,6 @@ const CreateMember = () => {
               onClick={() => setActiveIndex(0)}
               variant="outlined"
               isFullWidth
-              size="small"
             >
               メンバー選択に戻る
             </Button>
@@ -463,12 +476,18 @@ const CreateMember = () => {
                 value={search}
                 variant="filled"
                 isFullWidth
-                placeholder="search"
+                placeholder="ユーザー名を入力してください"
                 startIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
               />
-              <button onClick={searchFriend}>
-                {<FontAwesomeIcon icon={faMagnifyingGlass} />}
-              </button>
+              <Button
+                color="primary"
+                variant="contained"
+                isRounded={false}
+                onClick={searchFriend}
+                size="large"
+              >
+                検索
+              </Button>
             </div>
             {friendList.length !== 0 && (
               <div ref={scrollRef} className={styles.contents}>
@@ -506,6 +525,9 @@ const CreateMember = () => {
                 onClick={(index) => onExcludeUser(index)}
                 showDeleteButton
               />
+              {filterFriendList.length === 0 && (
+                <p>グループメンバーを追加してください</p>
+              )}
             </div>
             <div className={`${styles.buttonArea} flex alic fdrc inner`}>
               <Button
@@ -514,7 +536,6 @@ const CreateMember = () => {
                 variant="contained"
                 isDisabled={!isComplete()}
                 isFullWidth
-                size="small"
               >
                 作成
               </Button>
