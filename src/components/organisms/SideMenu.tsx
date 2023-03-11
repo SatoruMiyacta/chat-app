@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
@@ -35,10 +35,14 @@ const SideMenu = () => {
   const { resetCache } = useAuth();
 
   const getActiveClass = (path: string) => {
+    const slicePath = path.slice(1);
     if (location.pathname === path) {
+      return styles.active;
+    } else if (location.pathname.indexOf(slicePath) > 0) {
       return styles.active;
     }
   };
+
   const logOut = async () => {
     try {
       await signOut(auth);
@@ -130,10 +134,7 @@ const SideMenu = () => {
       <div className={`${styles.sideMenu}`}>
         <ul className={styles.navigationItems}>
           <li>
-            <Link
-              className={`${getActiveClass('/')} ${getActiveClass('/')}`}
-              to={'/'}
-            >
+            <Link className={`${getActiveClass('/')} `} to={'/'}>
               <FontAwesomeIcon
                 icon={faHouse}
                 style={{ marginRight: '8px', marginLeft: '16px' }}
