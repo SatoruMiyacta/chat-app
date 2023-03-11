@@ -41,7 +41,8 @@ import {
 
 const HomeOverview = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [friendSearch, setFriendSearch] = useState('');
+  const [groupSearch, setGroupSearch] = useState('');
   const [authUser] = useAtom(authUserAtom);
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -58,6 +59,7 @@ const HomeOverview = () => {
   const [isOpenCompleteModal, setIsOpenCompleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState('');
   const [joinedRoomsList] = useAtom(joinedRoomListAtom);
+  const [isSearchResults, setIsSearchResults] = useState(true);
 
   const {
     getMyGroupIdList,
@@ -164,10 +166,7 @@ const HomeOverview = () => {
     return groupMenuItems;
   };
 
-  const changeActiveTab = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    index: number
-  ) => {
+  const changeActiveTab = (index: number) => {
     if (tabs[index] !== tabs[activeIndex]) setActiveIndex(index);
   };
 
@@ -251,7 +250,6 @@ const HomeOverview = () => {
 
         setJoinedGroupList(groupIdList);
       });
-
       setIsLoading(false);
     } catch (error) {
       if (error instanceof Error) {
@@ -266,31 +264,34 @@ const HomeOverview = () => {
   }, [userId]);
 
   const searchFriend = async () => {
-    const searchList = await searchUserList(search);
+    const searchList = await searchUserList(friendSearch);
     const searchedFriendsIdList = await getSearchedFriends(searchList, userId);
-    if (searchedFriendsIdList) {
+    if (searchedFriendsIdList && searchedFriendsIdList.length !== 0) {
       setFriendList(searchedFriendsIdList);
     } else {
+      setIsSearchResults(false);
       setFriendList([]);
     }
   };
 
   const searchGroup = async () => {
-    const searchList = await searchGroupList(search);
+    const searchList = await searchGroupList(groupSearch);
     const searchedGroupsIdList = await getSearchedJoinedGroups(
       searchList,
       userId
     );
-    if (searchedGroupsIdList) {
+    if (searchedGroupsIdList && searchedGroupsIdList.length !== 0) {
       setJoinedGroupList(searchedGroupsIdList);
     } else {
+      setIsSearchResults(false);
       setJoinedGroupList([]);
     }
   };
 
   const searchList = async () => {
     if (!userId) return;
-    if (!search) return;
+    if (activeIndex === 0 && !friendSearch) return;
+    if (activeIndex === 1 && !groupSearch) return;
 
     try {
       if (activeIndex === 0) {
@@ -311,14 +312,15 @@ const HomeOverview = () => {
 
   useEffect(() => {
     if (!userId) return;
-    if (search) return;
+    if (!isSearchResults) setIsSearchResults(true);
+    if (activeIndex === 0 && friendSearch) return;
+    if (activeIndex === 1 && groupSearch) return;
 
     try {
       if (activeIndex === 0) {
         getMyFriendIdList(true).then((friendIdList) => {
           saveFriendData(friendIdList);
           saveFriendIdList(friendIdList);
-          // setFriendList(friendIdList);
         });
       } else if (activeIndex === 1) {
         getMyGroupIdList(true).then((groupIdList) => {
@@ -341,7 +343,7 @@ const HomeOverview = () => {
       }
       setIsOpenErrorModal(true);
     }
-  }, [search]);
+  }, [friendSearch, groupSearch, activeIndex]);
 
   const scrollRefCurrent = scrollRef.current;
   const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
@@ -351,9 +353,9 @@ const HomeOverview = () => {
 
     let contentsHeight;
     if (isPcWindow) {
-      contentsHeight = window.innerHeight - 130;
+      contentsHeight = window.innerHeight - 80;
     } else {
-      contentsHeight = window.innerHeight - 242;
+      contentsHeight = window.innerHeight - 192;
     }
 
     if (
@@ -483,14 +485,6 @@ const HomeOverview = () => {
     );
   };
 
-  const navigatePath = () => {
-    if (activeIndex === 0) {
-      return navigate('/search');
-    } else {
-      return navigate('/group/create');
-    }
-  };
-
   return (
     <>
       {renderDeleteCautionModal()}
@@ -520,50 +514,100 @@ const HomeOverview = () => {
                 activeIndex={activeIndex}
                 color="black"
                 items={tabs}
-                onClick={(event, index) => changeActiveTab(event, index)}
+                onClick={(index) => changeActiveTab(index)}
                 isBorder
               />
             </div>
-            <div className={`${styles.searchForm} flex inner`}>
-              <Input
-                color="primary"
-                id="search"
-                onChange={(event) => setSearch(event.target.value)}
-                type="text"
-                value={search}
-                variant="filled"
-                isFullWidth
-                placeholder="search"
-                startIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
-              />
-              <button onClick={searchList}>検索</button>
-            </div>
-            <div ref={scrollRef} className={styles.contents}>
-              {activeIndex === 0 && (
-                <AvatarList
-                  idList={friendList}
-                  menuItems={convertFriendObject()}
-                  path={'/'}
-                />
-              )}
-              {activeIndex === 1 && (
-                <AvatarList
-                  idList={joinedGroupList}
-                  menuItems={convertGroupObject()}
-                  path={'/'}
-                />
-              )}
-              <div className={`${styles.fab} sp`}>
-                <Fab
-                  color="primary"
-                  onClick={() => navigatePath()}
-                  variant="circular"
-                  size="large"
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </Fab>
-              </div>
-            </div>
+            {activeIndex === 0 && (
+              <>
+                <div className={`${styles.searchForm} flex inner`}>
+                  <Input
+                    color="primary"
+                    id="search"
+                    onChange={(event) => setFriendSearch(event.target.value)}
+                    type="text"
+                    value={friendSearch}
+                    variant="filled"
+                    isFullWidth
+                    placeholder="search"
+                    startIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
+                  />
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    isRounded={false}
+                    onClick={searchList}
+                    size="large"
+                  >
+                    検索
+                  </Button>
+                </div>
+                <div ref={scrollRef} className={styles.contents}>
+                  {isSearchResults && (
+                    <AvatarList
+                      idList={friendList}
+                      menuItems={convertFriendObject()}
+                    />
+                  )}
+                  {!isSearchResults && <p>ユーザーが見つかりませんでした</p>}
+                  <div className={`${styles.fab} sp`}>
+                    <Fab
+                      color="primary"
+                      onClick={() => navigate('/search')}
+                      variant="circular"
+                      size="large"
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </Fab>
+                  </div>
+                </div>
+              </>
+            )}
+            {activeIndex === 1 && (
+              <>
+                <div className={`${styles.searchForm} flex inner`}>
+                  <Input
+                    color="primary"
+                    id="search"
+                    onChange={(event) => setGroupSearch(event.target.value)}
+                    type="text"
+                    value={groupSearch}
+                    variant="filled"
+                    isFullWidth
+                    placeholder="search"
+                    startIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
+                  />
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    isRounded={false}
+                    onClick={searchList}
+                    size="large"
+                  >
+                    検索
+                  </Button>
+                </div>
+                <div ref={scrollRef} className={styles.contents}>
+                  {isSearchResults && (
+                    <AvatarList
+                      idList={joinedGroupList}
+                      menuItems={convertGroupObject()}
+                    />
+                  )}
+                  {!isSearchResults && <p>グループが見つかりませんでした</p>}
+                  <div className={`${styles.fab} sp`}>
+                    <Fab
+                      color="primary"
+                      onClick={() => navigate('/group/create')}
+                      variant="circular"
+                      size="large"
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </Fab>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
       </main>
