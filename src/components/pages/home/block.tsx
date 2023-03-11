@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 import { useAtom } from 'jotai';
@@ -16,6 +16,7 @@ import Modal from '@/components/molecules/Modal';
 import AvatarList from '@/components/organisms/AvatarList';
 import Header from '@/components/organisms/Header';
 import PcNavigation from '@/components/organisms/PcNavigation';
+import UsersOverview from '@/components/organisms/UserOverview';
 
 import { useSearch, useBlock } from '@/features';
 import { useFriend } from '@/hooks';
@@ -33,6 +34,7 @@ const Block = () => {
   );
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [isOpenCompleteModal, setIsOpenCompleteModal] = useState(false);
+  const [searchPatams] = useSearchParams();
 
   const {
     getBlockUserIdList,
@@ -46,6 +48,8 @@ const Block = () => {
   const { saveFriendIdList } = useFriend();
   const { searchUserList } = useSearch();
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const userPathId = searchPatams.get('userId');
 
   const onExcludeUser = async (index: number) => {
     if (!userId) return;
@@ -63,8 +67,10 @@ const Block = () => {
     setBlockUserList(deleteItemsList);
 
     const friendIdListCache = friends?.data as string[];
-    friendIdListCache.push(unBlockUserId);
-    saveFriendIdList(friendIdListCache);
+    if (friendIdListCache && friendIdListCache.length !== 0) {
+      friendIdListCache.push(unBlockUserId);
+      saveFriendIdList(friendIdListCache);
+    }
 
     setIsOpenCompleteModal(true);
   };
@@ -174,7 +180,7 @@ const Block = () => {
         <div className={styles.controler}>
           <Button
             color="primary"
-            onClick={() => navigate('/')}
+            onClick={() => setIsOpenCompleteModal(false)}
             variant="contained"
             isFullWidth
             size="small"
@@ -252,7 +258,15 @@ const Block = () => {
                 placeholder="search"
                 startIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
               />
-              <button onClick={searchFriend}>検索</button>
+              <Button
+                color="primary"
+                variant="contained"
+                isRounded={false}
+                onClick={searchFriend}
+                size="large"
+              >
+                検索
+              </Button>
             </div>
             <div ref={scrollRef} className={styles.contents}>
               <AvatarList
@@ -265,7 +279,10 @@ const Block = () => {
           </div>
         )}
         <div className="pc">
-          <PcNavigation>解除ボタンでブロック解除できます</PcNavigation>
+          {!userPathId && (
+            <PcNavigation>解除ボタンでブロック解除できます</PcNavigation>
+          )}
+          {userPathId && <UsersOverview userId={userPathId} />}
         </div>
       </main>
     </>

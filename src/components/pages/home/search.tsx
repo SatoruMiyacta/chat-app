@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 import { useAtom } from 'jotai';
@@ -15,8 +15,9 @@ import Modal from '@/components/molecules/Modal';
 import AvatarList, { IdObject } from '@/components/organisms/AvatarList';
 import Header from '@/components/organisms/Header';
 import PcNavigation from '@/components/organisms/PcNavigation';
+import UsersOverview from '@/components/organisms/UserOverview';
 
-import { useSearch, JoinedRoomsDataObject } from '@/features';
+import { useSearch, JoinedRoomsDataObject, useBlock } from '@/features';
 import { useFriend, useTalkRoom } from '@/hooks';
 import { authUserAtom, friendsIdAtom } from '@/store';
 import {
@@ -39,25 +40,53 @@ const Search = () => {
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
+  const [isSearchResults, setIsSearchResults] = useState(true);
 
-  const { saveFriendIdList } = useFriend();
+  const { saveFriendIdList, addUserToFriend } = useFriend();
   const { saveJoinedRooms } = useTalkRoom();
+  const { getSearchedBlockUser } = useBlock();
   const { convertnotFriendsObject, searchUserList } = useSearch();
+  const [searchPatams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
   const userId = authUser?.uid || '';
 
+  const userPathId = searchPatams.get('userId');
+
   const searchUser = async () => {
     if (!userId) return;
+
     try {
       const searchList = await searchUserList(search);
+
+      if (searchList.length === 0) {
+        setIsSearchResults(false);
+        return;
+      }
+
+      const newSearchList = [...searchList];
+      const userIdIndex = newSearchList.indexOf(userId);
+      if (userIdIndex !== -1) newSearchList.splice(userIdIndex, 1);
+
       const notFriendsObject = await convertnotFriendsObject(
         searchList,
         userId
       );
       if (notFriendsObject) setUnknownUserIdObject(notFriendsObject);
 
-      setSearchedIdList(searchList);
+      const searchedBlockUserIdList = await getSearchedBlockUser(
+        newSearchList,
+        userId
+      );
+
+      if (searchedBlockUserIdList && searchedBlockUserIdList.length !== 0) {
+        const newList = newSearchList.filter(
+          (i) => searchedBlockUserIdList.indexOf(i) == -1
+        );
+        setSearchedIdList(newList);
+      } else {
+        setSearchedIdList(newSearchList);
+      }
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
@@ -70,65 +99,19 @@ const Search = () => {
   };
 
   useEffect(() => {
-    if (!search) setSearchedIdList([]);
+    setIsSearchResults(true);
+    setSearchedIdList([]);
+    if (!search) {
+      setSearchedIdList([]);
+    }
   }, [search]);
 
-  const addFriend = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    id: string
-  ) => {
+  const addFriend = async (id: string) => {
     if (!userId) return;
 
     try {
-      const type = 'user';
-      const querySnapshot = await searchUnAuthRoom(userId, id, type);
-
-      if (querySnapshot && querySnapshot.docs.length !== 0) {
-        for (const doc of querySnapshot.docs) {
-          const roomId = doc.id;
-          const roomData = doc.data();
-          const type = roomData.type;
-          const isVisible = true;
-          const anotherId = id;
-
-          const joinedRoomsDataObject: JoinedRoomsDataObject = {
-            anotherId,
-            type,
-            isVisible,
-          };
-
-          await setUsersJoinedRooms(userId, roomId, joinedRoomsDataObject);
-          await deleteUnAuthRoom(userId, roomId);
-        }
-      } else {
-        const type = 'user';
-        const roomId = await addRoom(userId);
-        const isVisible = true;
-        const anotherId = id;
-
-        const joinedRoomsDataObject: JoinedRoomsDataObject = {
-          anotherId,
-          type,
-          isVisible,
-        };
-
-        await setUsersJoinedRooms(userId, roomId, joinedRoomsDataObject);
-
-        const data = await getJoinedRoomData(userId, roomId);
-
-        if (data) saveJoinedRooms(roomId, data);
-
-        await setUnAuthRoom(userId, id, roomId, type);
-      }
-
-      if (friends && typeof friends !== 'undefined') {
-        const friendsCacheList = friends.data as string[];
-        friendsCacheList.unshift(id);
-        saveFriendIdList(friendsCacheList);
-      }
-
-      await setFriend(userId, id);
-      navigate(`/`);
+      await addUserToFriend(userId, id);
+      navigate('/search');
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -172,7 +155,7 @@ const Search = () => {
   return (
     <>
       {renderErrorModal()}
-      <Header title="ユーザー検索" className="sp" showBackButton />
+      <Header title="友達追加" className="sp" showBackButton />
       <main className={styles.pcLayout}>
         <div className={styles.container}>
           <div className={`${styles.searchForm} flex inner`}>
@@ -184,25 +167,38 @@ const Search = () => {
               value={search}
               variant="filled"
               isFullWidth
-              placeholder="search"
+              placeholder="ユーザー名を入力してください"
               startIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
             />
-            <button onClick={searchUser}>検索</button>
+            <Button
+              color="primary"
+              variant="contained"
+              isRounded={false}
+              onClick={searchUser}
+              size="large"
+            >
+              検索
+            </Button>
           </div>
-          <AvatarList
-            idList={searchedIdList}
-            addFriend={addFriend}
-            batchIdObject={unknownUserIdObject}
-            path={'/search'}
-          />
+          <div className={styles.contents}>
+            {isSearchResults && (
+              <AvatarList
+                idList={searchedIdList}
+                addFriend={(id) => addFriend(id)}
+                batchIdObject={unknownUserIdObject}
+              />
+            )}
+            {!isSearchResults && <p>ユーザーが見つかりませんでした</p>}
+          </div>
         </div>
-        {location.pathname === '/search' && (
-          <div className="pc">
+        <div className="pc">
+          {location.pathname === '/search' && !userPathId && (
             <PcNavigation>
               ユーザー名を入力後、ボタンを押してください
             </PcNavigation>
-          </div>
-        )}
+          )}
+          {userPathId && <UsersOverview userId={userPathId} />}
+        </div>
       </main>
     </>
   );

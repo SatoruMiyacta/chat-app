@@ -106,7 +106,7 @@ export const useBlock = () => {
     }
   };
   /**
-   * 名前検索したユーザーリストを受け取り、追加済みフレンドを返す
+   * 名前検索したユーザーリストを受け取り、ブロックユーザーを返す
    */
   const getSearchedBlockUser = async (searchList: string[], userId: string) => {
     const searchedBlockUserIdList: string[] = [];
