@@ -1,7 +1,7 @@
 .groupProfile {
   position: sticky;
   top: 56px;
-  z-index: 90;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -31,7 +31,7 @@
 .buttonArea {
   position: fixed;
   bottom: 0;
-  z-index: 90;
+  z-index: 10;
   justify-content: space-evenly;
   width: 100%;
   height: 96px;
