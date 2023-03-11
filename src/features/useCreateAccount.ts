@@ -37,11 +37,13 @@ export const useCreateAccount = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [isPasswordComplete, setIsPasswordComplete] = useState(false);
 
   const isComplete = () => {
     if (!userName) return false;
     if (!isValidEmail(email)) return false;
     if (!isValidPassword(password)) return false;
+    if (password.length < 8) return false;
 
     return true;
   };
@@ -106,7 +108,7 @@ export const useCreateAccount = () => {
 
     if (snapshot.docs.length !== 0) await deleteDoc(doc(db, 'users', uid));
 
-    await deleteUser(auth.currentUser);
+    if (auth.currentUser) await deleteUser(auth.currentUser);
   };
 
   /**
@@ -144,5 +146,7 @@ export const useCreateAccount = () => {
     uploadIcon,
     createMyRoom,
     deleteUserDate,
+    isPasswordComplete,
+    setIsPasswordComplete,
   };
 };

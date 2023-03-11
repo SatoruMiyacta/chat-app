@@ -126,7 +126,10 @@ export const useMessage = () => {
   const setMessageDate = (id: string) => {
     if (!messageDataObject) return;
 
-    const month = `${messageDataObject[id].createdAt.getMonth() + 1}`;
+    const month = `${messageDataObject[id].createdAt.getMonth() + 1}`.padStart(
+      2,
+      '0'
+    );
     const date = `${messageDataObject[id].createdAt.getDate()}`.padStart(
       2,
       '0'
@@ -140,7 +143,7 @@ export const useMessage = () => {
       '0'
     );
 
-    return `${month}/${date} ${hours} : ${minutes}`;
+    return `${month}/${date} ${hours}:${minutes}`;
   };
 
   return {
