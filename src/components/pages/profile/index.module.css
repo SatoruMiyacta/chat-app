@@ -12,7 +12,7 @@
 .contents span + span {
   display: flex;
   margin-right: auto;
-  margin-left: 0;
+  margin-left: 16px;
   transform: translateY(-60%);
 }
 
