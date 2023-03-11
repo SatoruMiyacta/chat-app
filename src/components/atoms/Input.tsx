@@ -34,6 +34,11 @@ interface InputType {
       | React.FocusEvent<HTMLInputElement, Element>
       | React.FocusEvent<HTMLTextAreaElement, Element>
   ) => void;
+  onKeyDown?: (
+    event:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>
+  ) => void;
   rows?: number;
   minRows?: number;
   maxRows?: number;
@@ -73,6 +78,7 @@ const Input = (props: InputProps) => {
     isRequired = false,
     onBlur,
     onFocus,
+    onKeyDown,
     rows,
     minRows,
     maxRows,
@@ -135,8 +141,25 @@ const Input = (props: InputProps) => {
     if (placeholder) {
       setDisplayPlaceholder(placeholder);
     }
+    if (value === '' && isRequired) {
+      setErrorMessage('');
+    }
     if (onFocus) {
       onFocus(event);
+    }
+  };
+
+  const handleKeyDown = (
+    event:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (
+      onKeyDown &&
+      event.key === 'Enter' &&
+      (event.ctrlKey || event.metaKey)
+    ) {
+      onKeyDown(event);
     }
   };
 
@@ -276,6 +299,7 @@ const Input = (props: InputProps) => {
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
+              onKeyDown={handleKeyDown}
               rows={rows}
             />
             {label && <span className={labelClassList.join(' ')}>{label}</span>}
@@ -304,6 +328,7 @@ const Input = (props: InputProps) => {
             onChange={handleChange}
             onBlur={handleBlur}
             onFocus={handleFocus}
+            onKeyDown={handleKeyDown}
           />
           {label && <span className={labelClassList.join(' ')}>{label}</span>}
         </label>
