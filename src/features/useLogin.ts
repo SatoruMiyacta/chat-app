@@ -9,10 +9,12 @@ export const useLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [isPasswordComplete, setIsPasswordComplete] = useState(false);
 
   const isComplete = () => {
     if (!isValidEmail(email)) return false;
     if (!isValidPassword(password)) return false;
+    if (password.length < 8) return false;
 
     return true;
   };
@@ -36,5 +38,7 @@ export const useLogin = () => {
     passwordErrorMessage,
     setPasswordErrorMessage,
     isComplete,
+    isPasswordComplete,
+    setIsPasswordComplete,
   };
 };

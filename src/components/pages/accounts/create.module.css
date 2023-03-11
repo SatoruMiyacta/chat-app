@@ -13,6 +13,10 @@
   margin-top: 64px;
 }
 
+.buttonArea > button + button {
+  margin-top: 24px;
+}
+
 .controler {
   margin-top: 24px;
 }

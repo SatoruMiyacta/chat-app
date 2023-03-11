@@ -19,7 +19,7 @@
   margin-top: 64px;
 }
 
-.fullWidthButton button + button {
+.fullWidthButton > button + button {
   margin-top: 24px;
 }
 
