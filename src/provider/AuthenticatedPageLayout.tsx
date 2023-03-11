@@ -26,7 +26,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   });
   const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
-    <>
+    <div>
       {!isPcWindow && <div>{children}</div>}
       {isPcWindow && (
         <div className="flex">
@@ -34,7 +34,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           <div>{children}</div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

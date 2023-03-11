@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
+import Progress from '@/components/atoms/Progress';
 import Modal from '@/components/molecules/Modal';
 import Avatar from '@/components/organisms/Avatar';
 import AvatarBackgroundImage from '@/components/organisms/AvatarBackgroundImage';
@@ -34,6 +35,7 @@ import {
 } from '@/utils';
 
 const CreateAcconunt = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
@@ -58,14 +60,18 @@ const CreateAcconunt = () => {
     registerUserDate,
     createMyRoom,
     deleteUserDate,
+    isPasswordComplete,
+    setIsPasswordComplete,
   } = useCreateAccount();
 
   const { saveUser } = useUser();
 
   const createAccount = async () => {
     if (!isComplete()) return;
+    if (isLoading) return;
 
     try {
+      setIsLoading(true);
       // emailとpasswordでサインアップ
       // user情報を返す
       const user = await signUp(email, password);
@@ -84,7 +90,6 @@ const CreateAcconunt = () => {
       saveUser(userId, userData);
 
       await createMyRoom(userId);
-      // await fetchRoom(roomId);
 
       navigate('/');
     } catch (error) {
@@ -94,8 +99,17 @@ const CreateAcconunt = () => {
       }
       setIsOpenErrorModal(true);
       await deleteUserDate(userName, userIconBlob);
+
+      navigate('/accounts/create');
+      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const isPassword = isComplete();
+
+    setIsPasswordComplete(isPassword);
+  }, [password.length]);
 
   const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -142,7 +156,10 @@ const CreateAcconunt = () => {
         <div className={styles.controler}>
           <Button
             color="primary"
-            onClick={() => setIsOpenErrorModal(false)}
+            onClick={() => {
+              setIsLoading(false);
+              setIsOpenErrorModal(false);
+            }}
             variant="contained"
             isFullWidth
             size="small"
@@ -183,7 +200,6 @@ const CreateAcconunt = () => {
               <Avatar
                 iconUrl={initialIconUrl}
                 className="pc"
-                hasCameraIcon
                 isUploadButton={isPcWindow}
                 onChange={onFileChange}
                 uploadIconSize="l"
@@ -225,14 +241,18 @@ const CreateAcconunt = () => {
                   variant={isPcWindow ? 'outlined' : 'standard'}
                   errorMessage={passwordErrorMessage}
                   isFullWidth
+                  isRequired
                   label="パスワード"
-                  minLength={10}
+                  minLength={8}
                   onBlur={() => {
-                    if (!isValidPassword(password)) {
+                    if (!isValidPassword(password) && password.length !== 0) {
                       setPasswordErrorMessage('半角英数字で入力してください');
                     } else {
                       setPasswordErrorMessage('');
                     }
+                  }}
+                  onFocus={() => {
+                    setPasswordErrorMessage('');
                   }}
                   startIcon={<FontAwesomeIcon icon={faLock} />}
                 />
@@ -242,11 +262,21 @@ const CreateAcconunt = () => {
                   color="primary"
                   variant="contained"
                   onClick={createAccount}
-                  isDisabled={!isComplete()}
+                  isDisabled={!isPasswordComplete}
                   isFullWidth
                   size="medium"
                 >
-                  作成
+                  {isLoading && <Progress color="inherit" size={24} />}
+                  {!isLoading && '作成'}
+                </Button>
+                <Button
+                  color="primary"
+                  variant="text"
+                  onClick={() => navigate(-1)}
+                  isFullWidth
+                  size="medium"
+                >
+                  戻る
                 </Button>
               </div>
             </div>
