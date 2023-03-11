@@ -13,7 +13,7 @@ import { useAtom } from 'jotai';
 
 import styles from './MessageForm.module.css';
 
-import { faCamera, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Button from '@/components/atoms/Button';
@@ -108,44 +108,56 @@ const MessageForm = ({ postId }: MessageProps) => {
     if (!userId) return;
     if (!postId) return;
 
-    const data = await getUnAuthRoom(userId, postId);
+    try {
+      const data = await getUnAuthRoom(userId, postId);
 
-    if (!data) return;
+      if (!data) return;
 
-    const type = data.type;
-    const anotherId = data.id;
-    const isVisible = false;
+      const type = data.type;
+      const anotherId = data.id;
+      const isVisible = false;
 
-    const joinedRoomsDataObject: JoinedRoomsDataObject = {
-      anotherId,
-      type,
-      isVisible,
-    };
+      const joinedRoomsDataObject: JoinedRoomsDataObject = {
+        anotherId,
+        type,
+        isVisible,
+      };
 
-    if (type === 'user') {
-      await setUsersBlockUser(userId, anotherId);
+      if (type === 'user') {
+        await setUsersBlockUser(userId, anotherId);
 
-      await setUsersJoinedRooms(userId, postId, joinedRoomsDataObject);
+        await setUsersJoinedRooms(userId, postId, joinedRoomsDataObject);
 
-      await deleteUnAuthRoom(userId, postId);
+        await deleteUnAuthRoom(userId, postId);
 
-      const blockUserIdListCache = blockUser?.data as string[];
-      if (blockUserIdListCache) blockUserIdListCache.push(anotherId);
+        const blockUserIdListCache = blockUser?.data as string[];
+        if (blockUserIdListCache) blockUserIdListCache.push(anotherId);
 
-      saveBlockUserIdList(blockUserIdListCache);
+        saveBlockUserIdList(blockUserIdListCache);
 
-      const roomList = joinedRoomsList?.data as string[];
+        const roomList = joinedRoomsList?.data as string[];
 
-      const newJoinedRoomsList = [...roomList];
-      const index = newJoinedRoomsList.indexOf(anotherId);
-      newJoinedRoomsList.splice(index, 1);
+        const newJoinedRoomsList = [...roomList];
+        const index = newJoinedRoomsList.indexOf(anotherId);
+        newJoinedRoomsList.splice(index, 1);
 
-      saveJoinedRoomsList(newJoinedRoomsList);
-    } else {
-      await deleteUnAuthRoom(userId, postId);
-      await deleteGroupMember(anotherId, userId);
+        setMessageIdList(newJoinedRoomsList);
+        saveJoinedRoomsList(newJoinedRoomsList);
+      } else {
+        await deleteUnAuthRoom(userId, postId);
+        await deleteGroupMember(anotherId, userId);
+      }
+      navigate(`/rooms`);
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else if (error instanceof FirebaseError) {
+        const errorCode = error.code;
+        setErrorMessage(getFirebaseError(errorCode));
+      }
+
+      setIsOpenErrorModal(true);
     }
-    navigate(`/rooms`);
   };
 
   const onAuthenticateRoom = async () => {
@@ -192,15 +204,23 @@ const MessageForm = ({ postId }: MessageProps) => {
 
         await setMyJoinedGroups(userAndGroupId);
       }
+
       if (joinedRoomsList && typeof joinedRoomsList !== 'undefined') {
         const joinedRoomsCacheList = joinedRoomsList.data as string[];
         joinedRoomsCacheList.unshift(postId);
         saveJoinedRoomsList(joinedRoomsCacheList);
       }
 
-      navigate(`/rooms`);
+      setIsUnAuthRoom(false);
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else if (error instanceof FirebaseError) {
+        const errorCode = error.code;
+        setErrorMessage(getFirebaseError(errorCode));
+      }
+
+      setIsOpenErrorModal(true);
     }
   };
 
@@ -223,6 +243,7 @@ const MessageForm = ({ postId }: MessageProps) => {
 
       if (querySnapshot.docs.length === 0) {
         await updateJoinedRoomsUpdatedAt(roomTypeId, postId);
+        await updateJoinedRoomsUpdatedAt(userId, postId);
       }
     } else if (roomType === 'group') {
       const memberIdList = await getGroupsMember(roomTypeId);
@@ -241,7 +262,11 @@ const MessageForm = ({ postId }: MessageProps) => {
   const getMessage = async (isUsedCache: boolean) => {
     if (!postId) return;
 
-    if (location.pathname !== `/rooms/${postId}/message`) return;
+    if (
+      location.pathname !== `/rooms/${postId}/message` &&
+      location.pathname !== '/profile'
+    )
+      return;
 
     const messageIdList = await getMessageIdList(postId, isUsedCache);
 
@@ -358,14 +383,25 @@ const MessageForm = ({ postId }: MessageProps) => {
   const scrollRefCurrent = scrollRef.current;
 
   useEffect(() => {
-    if (messageIdList.length === 10) {
+    let contentsHeight;
+    if (isPcWindow) {
+      contentsHeight = window.innerHeight - 80;
+    } else {
+      contentsHeight = window.innerHeight - 105;
+    }
+
+    console.log(scrollRefCurrent?.scrollHeight);
+    console.log(scrollRefCurrent?.clientHeight);
+    console.log(scrollRefCurrent?.scrollTop);
+    console.log(contentsHeight);
+    if (messageIdList.length < 10) {
       setTimeout(() => {
         scrollBottomRef.current?.scrollIntoView(false);
       }, 700);
     } else if (
       scrollRefCurrent &&
       scrollRefCurrent?.scrollHeight ===
-        scrollRefCurrent?.clientHeight + scrollRefCurrent?.scrollTop + 17
+        scrollRefCurrent?.clientHeight + scrollRefCurrent?.scrollTop + 33
     ) {
       setTimeout(() => {
         scrollBottomRef.current?.scrollIntoView(false);
@@ -460,7 +496,7 @@ const MessageForm = ({ postId }: MessageProps) => {
               )}
             </li>
           ))}
-          <li ref={scrollBottomRef}></li>
+          <li className={styles.listBottom} ref={scrollBottomRef}></li>
         </ul>
       </div>
     );
@@ -485,10 +521,7 @@ const MessageForm = ({ postId }: MessageProps) => {
       {!isUnAuthRoom && !isPcWindow && (
         <div className={styles.container}>
           {showMessageList()}
-          <div className={`${styles.messageContents} flex alic`}>
-            <button>
-              <FontAwesomeIcon icon={faCamera} size="lg" />
-            </button>
+          <div className={`${styles.messageContents} flex alic jcc`}>
             <Input
               color="primary"
               id="contact"
@@ -501,6 +534,7 @@ const MessageForm = ({ postId }: MessageProps) => {
               isRounded
               maxRows={2}
               maxLength={1000}
+              onKeyDown={() => sendMessage()}
               size="small"
             />
             <button onClick={sendMessage}>
@@ -515,9 +549,6 @@ const MessageForm = ({ postId }: MessageProps) => {
             {showMessageList()}
             <div className={`${styles.messageContents}`}>
               <span className="inner flex">
-                <button>
-                  <FontAwesomeIcon icon={faCamera} size="lg" />
-                </button>
                 <button onClick={sendMessage}>
                   <FontAwesomeIcon icon={faPaperPlane} size="lg" />
                 </button>
@@ -535,6 +566,7 @@ const MessageForm = ({ postId }: MessageProps) => {
                 maxRows={13}
                 minRows={2}
                 maxLength={1000}
+                onKeyDown={() => sendMessage()}
               />
             </div>
           </div>

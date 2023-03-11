@@ -22,7 +22,7 @@ import AvatarList from '@/components/organisms/AvatarList';
 import { useRoom, JoinedRoomsObject } from '@/features';
 import { useUser, useGroup, useTalkRoom } from '@/hooks';
 import { db } from '@/main';
-import { authUserAtom } from '@/store';
+import { authUserAtom, joinedRoomListAtom } from '@/store';
 import { getFirebaseError, getUnAuthRoomData } from '@/utils';
 
 export interface UnReadCount {
@@ -32,6 +32,7 @@ export interface UnReadCount {
 const RoomOverview = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [authUser] = useAtom(authUserAtom);
+  const [joinedRoomsList] = useAtom(joinedRoomListAtom);
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
@@ -53,6 +54,7 @@ const RoomOverview = () => {
   const { saveGroupData } = useGroup();
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const joinedRoomsCacheList = joinedRoomsList?.data as string[];
   const userId = authUser?.uid || '';
 
   const countUnReadMessage = async (
@@ -198,6 +200,7 @@ const RoomOverview = () => {
             ...prev,
             ...unAuthRoomsObject,
           }));
+
           setMyRoomList((prev) => {
             return Array.from(new Set([...newRoomList, ...prev]));
           });
@@ -205,7 +208,7 @@ const RoomOverview = () => {
       }
     );
     return () => unsubscribe();
-  }, [userId]);
+  }, [userId, joinedRoomsCacheList?.length]);
 
   const getRoomList = async (isUsedCache: boolean) => {
     const roomIdList = await getMyRoomIdList(isUsedCache);
@@ -301,16 +304,31 @@ const RoomOverview = () => {
       {renderErrorModal()}
       <main>
         {isLoading && (
-          <div ref={scrollRef} className={styles.container}>
-            <Skeleton variant="rectangular" height={64} />
-            <Skeleton variant="rectangular" height={64} />
-            <Skeleton variant="rectangular" height={64} />
-            <Skeleton variant="rectangular" height={64} />
-            <Skeleton variant="rectangular" height={64} />
-            <Skeleton variant="rectangular" height={64} />
-            <Skeleton variant="rectangular" height={64} />
-            <Skeleton variant="rectangular" height={64} />
-          </div>
+          <>
+            <div className={`${styles.container} sp`}>
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+            </div>
+            <div className={`${styles.container} pc`}>
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+            </div>
+          </>
         )}
         {!isLoading && (
           <div ref={scrollRef} className={styles.container}>
