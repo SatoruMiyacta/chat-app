@@ -1,4 +1,6 @@
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+
+import { useAtom } from 'jotai';
 
 import Search from '../home/search';
 
@@ -8,39 +10,16 @@ import Header from '@/components/organisms/Header';
 import HomeOverview from '@/components/organisms/HomeOverview';
 import UsersOverview from '@/components/organisms/UserOverview';
 
+import { authUserAtom } from '@/store';
+
 const Users = () => {
   const { postId } = useParams();
-  const location = useLocation();
 
-  const showOverview = () => {
-    if (!postId) return;
-
-    const beforeLocation = location.state;
-
-    if (beforeLocation.beforePath === '/') {
-      return (
-        <>
-          <HomeOverview />
-          <UsersOverview userId={postId} />
-        </>
-      );
-    } else if (beforeLocation.beforePath === '/search') {
-      return (
-        <>
-          <Search />
-          <UsersOverview userId={postId} />
-        </>
-      );
-    }
-  };
-
-  const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   return (
     <>
       <Header title="プロフィール" className="sp" showBackButton />
       <main className={`${styles.container}`}>
-        {!isPcWindow && postId && <UsersOverview userId={postId} />}
-        {isPcWindow && postId && <div className="flex">{showOverview()}</div>}
+        {postId && <UsersOverview userId={postId} />}
       </main>
     </>
   );
