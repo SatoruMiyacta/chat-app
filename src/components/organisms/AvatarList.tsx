@@ -37,10 +37,7 @@ export interface MenuObject {
 
 export interface AvatarListProps {
   idList: string[];
-  addFriend?: (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    id: string
-  ) => void;
+  addFriend?: (id: string) => void;
   batchIdObject?: IdObject;
   checkboxItems?: IdObject;
   isBlockUser?: boolean;
@@ -49,7 +46,6 @@ export interface AvatarListProps {
   menuItems?: MenuObject;
   onChange?: CheckboxProps['onChange'];
   onClick?: (index: number) => void;
-  path?: string;
   showCheckbox?: boolean;
   showDeleteButton?: boolean;
   unReadCount?: CountObject;
@@ -66,7 +62,6 @@ const AvatarList = ({
   menuItems,
   onChange,
   onClick,
-  path,
   showCheckbox = false,
   showDeleteButton = false,
   unReadCount,
@@ -103,12 +98,45 @@ const AvatarList = ({
     setIsOpenModal(true);
   };
 
-  const navigatePath = () => {
-    let navigationPath = `/users/${modalAvatarId}`;
-    if (groups[modalAvatarId])
-      navigationPath = `/group/${modalAvatarId}/profile`;
+  const navigateUserPath = (id: string) => {
+    const currentLocation = location.pathname;
+    let navigationPath = '';
+    if (currentLocation === '/') {
+      navigationPath = `/?userId=${id}`;
+    } else if (currentLocation === '/search') {
+      navigationPath = `/search?userId=${id}`;
+    } else if (currentLocation === '/block') {
+      navigationPath = `/block?userId=${id}`;
+    }
 
     return navigationPath;
+  };
+
+  const navigateGroupPath = (id: string) => {
+    const currentLocation = location.pathname;
+    let navigationPath = '';
+    if (currentLocation === '/') {
+      navigationPath = `/?groupId=${id}`;
+    } else if (currentLocation === '/search') {
+      navigationPath = `/search?groupId=${id}`;
+    } else if (currentLocation === '/block') {
+      navigationPath = `/block?groupId=${id}`;
+    }
+
+    return navigationPath;
+  };
+
+  const navigateModalPath = (id: string) => {
+    if (isPcWindow) {
+      const navigationPath = navigateUserPath(id);
+
+      return navigationPath;
+    } else {
+      let path = `/users/${id}`;
+      if (groups[id]) path = `/group/${id}/profile`;
+
+      return path;
+    }
   };
 
   const renderUserModal = () => {
@@ -141,14 +169,8 @@ const AvatarList = ({
                     トーク
                   </Link>
                 </button>
-                <button
-                  onClick={() =>
-                    navigate(navigatePath(), {
-                      state: { beforePath: path },
-                    })
-                  }
-                >
-                  <Link to={navigatePath()}>
+                <button onClick={() => setIsOpenModal(false)}>
+                  <Link to={navigateModalPath(modalAvatarId)}>
                     <FontAwesomeIcon
                       icon={faCircleUser}
                       style={{ marginBottom: '4px' }}
@@ -171,14 +193,8 @@ const AvatarList = ({
                     トーク
                   </Link>
                 </button>
-                <button
-                  onClick={() =>
-                    navigate(navigatePath(), {
-                      state: { beforePath: path },
-                    })
-                  }
-                >
-                  <Link to={navigatePath()}>
+                <button onClick={() => setIsOpenModal(false)}>
+                  <Link to={navigateModalPath(modalAvatarId)}>
                     <FontAwesomeIcon
                       icon={faCircleUser}
                       style={{ marginBottom: '4px' }}
@@ -191,7 +207,7 @@ const AvatarList = ({
             )}
             {batchIdObject && batchIdObject[modalAvatarId] && addFriend && (
               <>
-                <button onClick={(event) => addFriend(event, modalAvatarId)}>
+                <button onClick={() => addFriend(modalAvatarId)}>
                   <Link to={'/search'}>
                     <FontAwesomeIcon
                       icon={faUserPlus}
@@ -201,14 +217,8 @@ const AvatarList = ({
                     友達追加
                   </Link>
                 </button>
-                <button
-                  onClick={() =>
-                    navigate(navigatePath(), {
-                      state: { beforePath: path },
-                    })
-                  }
-                >
-                  <Link to={navigatePath()}>
+                <button onClick={() => setIsOpenModal(false)}>
+                  <Link to={navigateModalPath(modalAvatarId)}>
                     <FontAwesomeIcon
                       icon={faCircleUser}
                       style={{ marginBottom: '4px' }}
@@ -228,10 +238,8 @@ const AvatarList = ({
   const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   const showAvatarList = (id: string) => {
     const onClickUser = () => {
-      if (isPcWindow && !addFriend) {
-        return navigate(`/users/${id}`, {
-          state: { beforePath: path },
-        });
+      if (isPcWindow) {
+        return navigate(navigateUserPath(id));
       } else {
         return showAvatarModal(id);
       }
@@ -239,9 +247,7 @@ const AvatarList = ({
 
     const onClickGroup = () => {
       if (isPcWindow) {
-        return navigate(`/group/${id}/profile`, {
-          state: { beforePath: path },
-        });
+        return navigate(navigateGroupPath(id));
       } else {
         return showAvatarModal(id);
       }
@@ -329,16 +335,19 @@ const AvatarList = ({
     }
   };
 
-  const getActiveClass = (path: string) => {
-    if (!joinedRoomsObject) return;
-
-    if (location.pathname === path) {
+  const getActiveClass = (id: string) => {
+    if (location.pathname === `/rooms/${id}/message`) {
+      return styles.active;
+    } else if (location.pathname === `/users/${id}`) {
+      return styles.active;
+    } else if (location.pathname === `/group/${id}/profile`) {
       return styles.active;
     }
   };
 
   const buttonStyles: React.CSSProperties = { pointerEvents: 'auto' };
-  if (showCheckbox || showDeleteButton) buttonStyles.pointerEvents = 'none';
+  if (showCheckbox || (showDeleteButton && !isBlockUser))
+    buttonStyles.pointerEvents = 'none';
 
   const oneLineClassNameList = [styles.oneLine];
   if (joinedRoomsObject) oneLineClassNameList.push(styles.roomList);
@@ -354,7 +363,7 @@ const AvatarList = ({
               <li
                 key={`list-${id}${index}`}
                 className={`${oneLineClassNameList.join(' ')} ${getActiveClass(
-                  `/rooms/${id}/message`
+                  id
                 )} flex alic inner`}
               >
                 {showAvatarList(id)}
@@ -374,10 +383,12 @@ const AvatarList = ({
                     </button>
                   )}
                   {batchIdObject && batchIdObject[id] && (
-                    <FontAwesomeIcon
-                      icon={faUserPlus}
-                      style={{ marginBottom: '4px' }}
-                    />
+                    <button onClick={() => showAvatarModal(id)}>
+                      <FontAwesomeIcon
+                        icon={faUserPlus}
+                        style={{ marginBottom: '4px' }}
+                      />
+                    </button>
                   )}
                   {unReadCount && unReadCount[id] > 0 && (
                     <span>{unReadCount[id]}</span>

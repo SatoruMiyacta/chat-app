@@ -15,10 +15,22 @@ import {
 import { useAtom } from 'jotai';
 
 import { INITIAL_ICON_URL } from '@/constants';
-import { useUser } from '@/hooks';
+import { JoinedRoomsDataObject } from '@/features';
+import { useTalkRoom, useUser } from '@/hooks';
 import { db } from '@/main';
 import { authUserAtom, friendsIdAtom } from '@/store';
-import { getCacheExpirationDate, isCacheActive, searchfriends } from '@/utils';
+import {
+  getCacheExpirationDate,
+  isCacheActive,
+  searchfriends,
+  setFriend,
+  searchUnAuthRoom,
+  deleteUnAuthRoom,
+  setUsersJoinedRooms,
+  addRoom,
+  setUnAuthRoom,
+  getJoinedRoomData,
+} from '@/utils';
 
 /**
  * フレンドデータ一覧のキャッシュが古くないか
@@ -32,6 +44,7 @@ export const useFriend = () => {
   const [friends, setFriends] = useAtom(friendsIdAtom);
   const [friendList, setFriendList] = useState<string[]>([]);
   const { getUser, saveUser, getSearchedUser } = useUser();
+  const { saveJoinedRooms } = useTalkRoom();
   const userRef = useRef<User>();
   const lastFriendRef = useRef<QueryDocumentSnapshot<DocumentData>>();
   const friendListRef = useRef<string[]>();
@@ -123,6 +136,60 @@ export const useFriend = () => {
   };
 
   /**
+   * 友達追加
+   */
+  const addUserToFriend = async (userId: string, friendId: string) => {
+    const type = 'user';
+    const querySnapshot = await searchUnAuthRoom(userId, friendId, type);
+
+    if (querySnapshot && querySnapshot.docs.length !== 0) {
+      for (const doc of querySnapshot.docs) {
+        const roomId = doc.id;
+        const roomData = doc.data();
+        const type = roomData.type;
+        const isVisible = true;
+        const anotherId = friendId;
+
+        const joinedRoomsDataObject: JoinedRoomsDataObject = {
+          anotherId,
+          type,
+          isVisible,
+        };
+
+        await setUsersJoinedRooms(userId, roomId, joinedRoomsDataObject);
+        await deleteUnAuthRoom(userId, roomId);
+      }
+    } else {
+      const type = 'user';
+      const roomId = await addRoom(userId);
+      const isVisible = true;
+      const anotherId = friendId;
+
+      const joinedRoomsDataObject: JoinedRoomsDataObject = {
+        anotherId,
+        type,
+        isVisible,
+      };
+
+      await setUsersJoinedRooms(userId, roomId, joinedRoomsDataObject);
+
+      const data = await getJoinedRoomData(userId, roomId);
+
+      if (data) saveJoinedRooms(roomId, data);
+
+      await setUnAuthRoom(userId, friendId, roomId, type);
+    }
+
+    if (friends && typeof friends !== 'undefined') {
+      const friendsCacheList = friends.data as string[];
+      friendsCacheList.unshift(friendId);
+      saveFriendIdList(friendsCacheList);
+    }
+
+    await setFriend(userId, friendId);
+  };
+
+  /**
    * グローバルstateの情報を更新
    */
   const saveFriendIdList = (friendIdList: string[]) => {
@@ -140,5 +207,6 @@ export const useFriend = () => {
     searchFriendsIdList,
     setFriendList,
     friendList,
+    addUserToFriend,
   };
 };
