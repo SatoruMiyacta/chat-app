@@ -113,6 +113,7 @@ const ResetPassword = () => {
                 value={email}
                 variant={isPcWindow ? 'outlined' : 'standard'}
                 isFullWidth
+                isRequired
                 label="メールアドレス"
                 startIcon={<FontAwesomeIcon icon={faEnvelope} />}
               />
@@ -135,6 +136,15 @@ const ResetPassword = () => {
                 isFullWidth
               >
                 問い合わせ
+              </Button>
+              <Button
+                color="inherit"
+                variant="text"
+                onClick={() => navigate(-1)}
+                isFullWidth
+                size="medium"
+              >
+                戻る
               </Button>
             </div>
           </section>
