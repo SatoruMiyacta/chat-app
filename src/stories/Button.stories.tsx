@@ -31,27 +31,39 @@ const Template: ComponentStory<typeof Button> = (args) => (
     <p>variants</p>
     <ul>
       <li>
-        <Button {...args} variant="contained" />
+        <Button {...args} variant="contained" isRounded={false} />
       </li>
       <li>
-        <Button {...args} variant="outlined" />
+        <Button {...args} variant="outlined" isRounded={false} />
       </li>
       <li>
-        <Button {...args} variant="text" />
+        <Button {...args} variant="text" isRounded={false} />
       </li>
     </ul>
     <ul>
       <li>
-        <Button {...args} variant="contained" isDisabled />
+        <Button {...args} variant="contained" isDisabled isRounded={false} />
       </li>
       <li>
-        <Button {...args} variant="outlined" isDisabled />
+        <Button {...args} variant="outlined" isDisabled isRounded={false} />
       </li>
       <li>
-        <Button {...args} variant="text" isDisabled />
+        <Button {...args} variant="text" isDisabled isRounded={false} />
       </li>
     </ul>
     <p>sizes</p>
+    <ul>
+      <li>
+        <Button {...args} variant="contained" size="small" isRounded={false} />
+      </li>
+      <li>
+        <Button {...args} variant="contained" size="medium" isRounded={false} />
+      </li>
+      <li>
+        <Button {...args} variant="contained" size="large" isRounded={false} />
+      </li>
+    </ul>
+    <p>rounded</p>
     <ul>
       <li>
         <Button {...args} variant="contained" size="small" />
@@ -66,10 +78,16 @@ const Template: ComponentStory<typeof Button> = (args) => (
     <p>wide</p>
     <ul>
       <li className="wide">
-        <Button {...args} variant="contained" isFullWidth />
+        <Button {...args} variant="contained" isFullWidth isRounded={false} />
       </li>
       <li className="wide">
-        <Button {...args} variant="contained" isDisabled isFullWidth />
+        <Button
+          {...args}
+          variant="contained"
+          isDisabled
+          isFullWidth
+          isRounded={false}
+        />
       </li>
     </ul>
   </>
