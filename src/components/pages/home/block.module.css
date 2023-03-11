@@ -13,21 +13,8 @@
   background-color: #fff;
 }
 
-.searchForm > button {
-  width: 56px;
-  height: 48px;
-  color: #fff;
-  background-color: #ff971d;
-  border-radius: 5px;
-}
-
 .searchForm > div {
-  width: calc(100% - 64px);
-}
-
-.searchForm > button {
-  width: 48px;
-  height: 48px;
+  width: calc(100% - 72px);
 }
 
 .controler {
@@ -46,6 +33,15 @@
   color: #afafaf;
   text-decoration: none;
   background-color: #fff;
+}
+
+.contents {
+  position: relative;
+  z-index: 10;
+  height: calc(100vh - 192px);
+  overflow: auto;
+  background-color: #fff;
+  border-top: 1px solid rgb(227, 227, 227);
 }
 
 @media screen and (min-width: 1024px) {

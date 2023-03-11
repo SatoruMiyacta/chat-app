@@ -183,11 +183,13 @@ const HomeOverview = () => {
     saveFriendIdList(deleteList);
 
     const roomList = joinedRoomsList?.data as string[];
-    const newJoinedRoomsList = [...roomList];
-    const roomsIndex = newJoinedRoomsList.indexOf(roomId);
-    newJoinedRoomsList.splice(roomsIndex, 1);
+    if (roomList.length !== 0) {
+      const newJoinedRoomsList = [...roomList];
+      const roomsIndex = newJoinedRoomsList.indexOf(roomId);
+      newJoinedRoomsList.splice(roomsIndex, 1);
 
-    saveJoinedRoomsList(newJoinedRoomsList);
+      saveJoinedRoomsList(newJoinedRoomsList);
+    }
 
     await setUsersBlockUser(userId, friendId);
     await updateJoinedRoomsIsVisible(userId, roomId);
