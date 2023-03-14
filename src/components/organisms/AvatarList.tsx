@@ -207,7 +207,12 @@ const AvatarList = ({
             )}
             {batchIdObject && batchIdObject[modalAvatarId] && addFriend && (
               <>
-                <button onClick={() => addFriend(modalAvatarId)}>
+                <button
+                  onClick={() => {
+                    addFriend(modalAvatarId);
+                    setIsOpenModal(false);
+                  }}
+                >
                   <Link to={'/search'}>
                     <FontAwesomeIcon
                       icon={faUserPlus}

@@ -168,7 +168,8 @@ const RoomOverview = () => {
       }
     );
     return () => unsubscribe();
-  }, [myRoomList.length]);
+  }, [userId]);
+  // }, [myRoomList.length]);
 
   useEffect(() => {
     if (!userId) return;
@@ -218,7 +219,8 @@ const RoomOverview = () => {
       }
     );
     return () => unsubscribe();
-  }, [myRoomList.length]);
+  }, [userId]);
+  // }, [JSON.stringify(joinedRooms)]);
 
   const getRoomList = async (isUsedCache: boolean) => {
     const roomIdList = await getMyRoomIdList(isUsedCache);
