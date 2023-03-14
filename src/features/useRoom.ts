@@ -53,7 +53,6 @@ export const useRoom = () => {
 
     if (isUsedCache && joinedRoomsList && isCacheActive(joinedRoomsList)) {
       const joinedRoomCacheIdList = joinedRoomsList?.data as string[];
-      setMyRoomList(joinedRoomCacheIdList);
 
       return joinedRoomCacheIdList;
     }
@@ -81,13 +80,16 @@ export const useRoom = () => {
       roomIdList.push(roomId);
     }
 
-    if (joinedRoomNewIdList) {
+    if (joinedRoomNewIdList && joinedRoomNewIdList.length !== 0) {
       setMyRoomList((prev) => {
         return Array.from(new Set([...prev, ...roomIdList]));
       });
+
       const newList = joinedRoomNewIdList.concat(roomIdList);
       saveJoinedRoomsList(newList);
     }
+
+    saveJoinedRoomsList(roomIdList);
 
     return roomIdList;
   };
@@ -149,6 +151,7 @@ export const useRoom = () => {
     setMyRoomList,
     getJoinedRoomData,
     myRoomList,
+    myRoomListRef,
     setLastRoom,
   };
 };

@@ -122,7 +122,6 @@ export const setUnAuthRoom = async (
   anotherId: string,
   roomId: string,
   type: string
-  // batch?: WriteBatch
 ) => {
   const docRef = doc(db, 'users', anotherId, 'unAuthRoom', roomId);
   await setDoc(docRef, {
@@ -231,16 +230,17 @@ export const setUsersJoinedRooms = async (
 };
 
 /**
- * ルームを非表示に変える
+ * ルームのisVisibleを変える
  */
 export const updateJoinedRoomsIsVisible = async (
   userId: string,
-  roomId: string
+  roomId: string,
+  isVisible: boolean
 ) => {
   const docRef = doc(db, 'users', userId, 'joinedRooms', roomId);
   await updateDoc(docRef, {
     updatedAt: serverTimestamp(),
-    isVisible: false,
+    isVisible: isVisible,
   });
 };
 

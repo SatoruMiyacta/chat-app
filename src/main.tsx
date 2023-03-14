@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { initializeApp } from 'firebase/app';
@@ -124,9 +124,7 @@ const router = createBrowserRouter([
     path: 'rooms',
     element: (
       <AuthProvider>
-        <RoomLayout>
-          <Rooms />
-        </RoomLayout>
+        <Rooms />
       </AuthProvider>
     ),
   },
@@ -206,10 +204,16 @@ const router = createBrowserRouter([
   },
 ]);
 
-if (import.meta.env.MODE !== 'test') {
-  ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>
-  );
-}
+let container: HTMLElement | null = null;
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (!container && import.meta.env.MODE !== 'test') {
+    container = document.getElementById('root') as HTMLElement;
+    const root = createRoot(container);
+    root.render(
+      <React.StrictMode>
+        <RouterProvider router={router} />
+      </React.StrictMode>
+    );
+  }
+});
