@@ -22,7 +22,7 @@ import AvatarList from '@/components/organisms/AvatarList';
 import { useRoom, JoinedRoomsObject } from '@/features';
 import { useUser, useGroup, useTalkRoom } from '@/hooks';
 import { db } from '@/main';
-import { authUserAtom, joinedRoomListAtom } from '@/store';
+import { authUserAtom } from '@/store';
 import { getFirebaseError, getUnAuthRoomData } from '@/utils';
 
 export interface UnReadCount {
@@ -32,7 +32,6 @@ export interface UnReadCount {
 const RoomOverview = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [authUser] = useAtom(authUserAtom);
-  const [joinedRoomsList] = useAtom(joinedRoomListAtom);
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
@@ -46,15 +45,15 @@ const RoomOverview = () => {
     getJoinedRoomData,
     myRoomList,
     setLastRoom,
+    myRoomListRef,
   } = useRoom();
-  const { saveJoinedRooms } = useTalkRoom();
+  const { saveJoinedRooms, saveJoinedRoomsList } = useTalkRoom();
 
   const { saveUserData } = useUser();
 
   const { saveGroupData } = useGroup();
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const joinedRoomsCacheList = joinedRoomsList?.data as string[];
   const userId = authUser?.uid || '';
 
   const countUnReadMessage = async (
@@ -65,6 +64,7 @@ const RoomOverview = () => {
     for (const roomId of roomIdList) {
       if (typeof joinedRoomsObject === 'undefined') return;
       if (typeof joinedRoomsObject[roomId] === 'undefined') return;
+      if (location.pathname === `/rooms/${roomId}/message`) return;
 
       const date = joinedRoomsObject[roomId].lastReadAt;
 
@@ -80,6 +80,12 @@ const RoomOverview = () => {
         [roomId]: count,
       }));
     }
+
+    const filterList = unReadBatchList.filter(
+      (i) => `/rooms/${i}/message` === location.pathname
+    );
+    if (filterList.length === 0) return;
+
     setMyRoomList((prev) => {
       return Array.from(new Set([...prev, ...unReadBatchList]));
     });
@@ -120,14 +126,12 @@ const RoomOverview = () => {
         await saveGroupData(secondGroupIdList);
       }
     }
-    setJoinedRooms((prev) => ({
-      ...prev,
-      ...joinedRoomsObject,
-    }));
 
     await saveRoomData(roomIdList);
 
     await countUnReadMessage(joinedRoomsObject, roomIdList);
+
+    return joinedRoomsObject;
   };
 
   useEffect(() => {
@@ -137,7 +141,8 @@ const RoomOverview = () => {
     const unsubscribe = onSnapshot(
       query(
         querySnapshot,
-        where('isVisible', '==', true),
+        where('isVisible', '!=', false),
+        orderBy('isVisible', 'desc'),
         orderBy('updatedAt', 'desc'),
         limit(1)
       ),
@@ -150,15 +155,20 @@ const RoomOverview = () => {
           setLastRoom(doc);
         }
 
-        getUserAndGroupData(newRoomIdList).then(() => {
-          setMyRoomList((prev) => {
-            return Array.from(new Set([...newRoomIdList, ...prev]));
-          });
+        setMyRoomList((prev) => {
+          return Array.from(new Set([...newRoomIdList, ...prev]));
+        });
+
+        getUserAndGroupData(newRoomIdList).then((joinedRoomsObject) => {
+          setJoinedRooms((prev) => ({
+            ...prev,
+            ...joinedRoomsObject,
+          }));
         });
       }
     );
     return () => unsubscribe();
-  }, [userId]);
+  }, [myRoomList.length]);
 
   useEffect(() => {
     if (!userId) return;
@@ -208,13 +218,18 @@ const RoomOverview = () => {
       }
     );
     return () => unsubscribe();
-  }, [userId, joinedRoomsCacheList?.length]);
+  }, [myRoomList.length]);
 
   const getRoomList = async (isUsedCache: boolean) => {
     const roomIdList = await getMyRoomIdList(isUsedCache);
-
+    setMyRoomList(roomIdList);
     if (roomIdList.length === 0) return;
-    await getUserAndGroupData(roomIdList);
+
+    const joinedRoomsObject = await getUserAndGroupData(roomIdList);
+    setJoinedRooms((prev) => ({
+      ...prev,
+      ...joinedRoomsObject,
+    }));
 
     return roomIdList;
   };
@@ -222,8 +237,15 @@ const RoomOverview = () => {
   useEffect(() => {
     try {
       if (!userId) return;
+
+      myRoomListRef.current = [];
+      setMyRoomList([]);
+      setJoinedRooms({});
       getRoomList(true).then((roomIdList) => {
-        if (roomIdList) saveRoomData(roomIdList);
+        if (roomIdList) {
+          saveJoinedRoomsList(roomIdList);
+          saveRoomData(roomIdList);
+        }
       });
 
       setIsLoading(false);

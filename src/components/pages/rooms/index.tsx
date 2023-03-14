@@ -7,8 +7,8 @@ const Rooms = () => {
   return (
     <>
       <Header title="トーク" className="sp" />
-      <main>
-        <div className="sp">
+      <main className="flex">
+        <div className="">
           <RoomOverview />
         </div>
         <div className="pc">

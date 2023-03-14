@@ -139,7 +139,7 @@
   .list {
     position: relative;
     width: calc(100vw - 550px);
-    height: calc(100vh - 105px);
+    height: calc(100vh - 113px);
     overflow-y: scroll;
     white-space: nowrap;
   }

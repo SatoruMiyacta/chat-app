@@ -59,6 +59,7 @@ import {
   updateJoinedRoomsUpdatedAt,
   getFirebaseError,
   setFriend,
+  isCacheActive,
 } from '@/utils';
 
 export interface MessageProps {
@@ -130,24 +131,26 @@ const MessageForm = ({ postId }: MessageProps) => {
 
         await deleteUnAuthRoom(userId, postId);
 
-        const blockUserIdListCache = blockUser?.data as string[];
-        if (blockUserIdListCache) blockUserIdListCache.push(anotherId);
+        if (blockUser && isCacheActive(blockUser)) {
+          const blockUserIdListCache = blockUser.data as string[];
+          blockUserIdListCache.push(anotherId);
+          saveBlockUserIdList(blockUserIdListCache);
+        }
 
-        saveBlockUserIdList(blockUserIdListCache);
+        if (joinedRoomsList && isCacheActive(joinedRoomsList)) {
+          const joinedRoomsCacheList = joinedRoomsList.data as string[];
 
-        const roomList = joinedRoomsList?.data as string[];
+          const newList = joinedRoomsCacheList.filter((i) => i !== postId);
+          saveJoinedRoomsList(newList);
+        }
 
-        const newJoinedRoomsList = [...roomList];
-        const index = newJoinedRoomsList.indexOf(anotherId);
-        newJoinedRoomsList.splice(index, 1);
-
-        setMessageIdList(newJoinedRoomsList);
-        saveJoinedRoomsList(newJoinedRoomsList);
+        navigate(`/rooms`);
       } else {
         await deleteUnAuthRoom(userId, postId);
         await deleteGroupMember(anotherId, userId);
+
+        navigate(`/rooms`);
       }
-      navigate(`/rooms`);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -304,6 +307,7 @@ const MessageForm = ({ postId }: MessageProps) => {
       setIsUnAuthRoom(false);
       setMessageIdList([]);
       setLastMessge(null);
+
       checkAuthRoom(userId, postId);
     } catch (error) {
       if (error instanceof Error) {
@@ -383,25 +387,18 @@ const MessageForm = ({ postId }: MessageProps) => {
   const scrollRefCurrent = scrollRef.current;
 
   useEffect(() => {
-    let contentsHeight;
-    if (isPcWindow) {
-      contentsHeight = window.innerHeight - 80;
-    } else {
-      contentsHeight = window.innerHeight - 105;
-    }
+    if (!scrollRefCurrent) return;
 
-    console.log(scrollRefCurrent?.scrollHeight);
-    console.log(scrollRefCurrent?.clientHeight);
-    console.log(scrollRefCurrent?.scrollTop);
-    console.log(contentsHeight);
+    const scrollUnder =
+      scrollRefCurrent.clientHeight + scrollRefCurrent.scrollTop;
+
     if (messageIdList.length < 10) {
       setTimeout(() => {
         scrollBottomRef.current?.scrollIntoView(false);
       }, 700);
     } else if (
-      scrollRefCurrent &&
-      scrollRefCurrent?.scrollHeight ===
-        scrollRefCurrent?.clientHeight + scrollRefCurrent?.scrollTop + 33
+      scrollRefCurrent.scrollHeight === scrollUnder + 33 ||
+      scrollRefCurrent.scrollHeight === scrollUnder + 87
     ) {
       setTimeout(() => {
         scrollBottomRef.current?.scrollIntoView(false);
