@@ -22,6 +22,7 @@ import { useFriend } from '@/hooks';
 import { authUserAtom } from '@/store';
 import { getFirebaseError } from '@/utils';
 const Search = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [searchedIdList, setSearchedIdList] = useState<string[]>([]);
   const [unknownUserIdObject, setUnknownUserIdObject] = useState<IdObject>({});
@@ -97,7 +98,9 @@ const Search = () => {
 
   const addFriend = async (id: string) => {
     if (!userId) return;
+    if (isLoading) return;
 
+    setIsLoading(true);
     try {
       await addUserToFriend(userId, id);
       setSearch('');
@@ -109,6 +112,7 @@ const Search = () => {
         const errorCode = error.code;
         setErrorMessage(getFirebaseError(errorCode));
       }
+      setIsLoading(false);
     }
   };
 
