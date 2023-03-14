@@ -8,8 +8,11 @@ import { isValidPassword } from '@/utils';
 export const useDeleteAccount = () => {
   const [password, setPassword] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [isPasswordComplete, setIsPasswordComplete] = useState(false);
+
   const isComplete = () => {
     if (!isValidPassword(password)) return false;
+    if (password.length < 8) return false;
 
     return true;
   };
@@ -29,5 +32,7 @@ export const useDeleteAccount = () => {
     setPassword,
     password,
     isComplete,
+    isPasswordComplete,
+    setIsPasswordComplete,
   };
 };

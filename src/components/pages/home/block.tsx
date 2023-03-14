@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 import { useAtom } from 'jotai';
@@ -19,16 +19,23 @@ import PcNavigation from '@/components/organisms/PcNavigation';
 import UsersOverview from '@/components/organisms/UserOverview';
 
 import { useSearch, useBlock } from '@/features';
-import { useFriend } from '@/hooks';
-import { authUserAtom, friendsIdAtom } from '@/store';
-import { getFirebaseError, deleteBlockUser, setFriend } from '@/utils';
+import { useFriend, useTalkRoom } from '@/hooks';
+import { authUserAtom, friendsIdAtom, joinedRoomListAtom } from '@/store';
+import {
+  getFirebaseError,
+  deleteBlockUser,
+  setFriend,
+  updateJoinedRoomsIsVisible,
+  searchRoomId,
+  isCacheActive,
+} from '@/utils';
 
 const Block = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [authUser] = useAtom(authUserAtom);
   const [friends] = useAtom(friendsIdAtom);
-  const navigate = useNavigate();
+  const [joinedRoomsList] = useAtom(joinedRoomListAtom);
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
@@ -47,6 +54,7 @@ const Block = () => {
 
   const { saveFriendIdList } = useFriend();
   const { searchUserList } = useSearch();
+  const { saveJoinedRoomsList } = useTalkRoom();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const userPathId = searchPatams.get('userId');
@@ -66,10 +74,21 @@ const Block = () => {
     saveBlockUserIdList(deleteItemsList);
     setBlockUserList(deleteItemsList);
 
-    const friendIdListCache = friends?.data as string[];
-    if (friendIdListCache && friendIdListCache.length !== 0) {
+    if (friends && isCacheActive(friends)) {
+      const friendIdListCache = friends.data as string[];
       friendIdListCache.push(unBlockUserId);
       saveFriendIdList(friendIdListCache);
+    }
+
+    const roomId = await searchRoomId(userId, unBlockUserId);
+
+    if (roomId) await updateJoinedRoomsIsVisible(userId, roomId, true);
+
+    if (joinedRoomsList && isCacheActive(joinedRoomsList) && roomId) {
+      const joinedRoomCacheIdList = joinedRoomsList.data as string[];
+      joinedRoomCacheIdList.push(roomId);
+
+      saveJoinedRoomsList(joinedRoomCacheIdList);
     }
 
     setIsOpenCompleteModal(true);
@@ -79,7 +98,7 @@ const Block = () => {
   useEffect(() => {
     try {
       if (!userId) return;
-      getBlockUserIdList(true).then((blockUserIdList) => {
+      getBlockUserIdList(false).then((blockUserIdList) => {
         saveBlockUserIdList(blockUserIdList);
         saveBlockUserData(blockUserIdList);
       });

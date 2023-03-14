@@ -16,7 +16,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const auth = getAuth();
   const navigate = useNavigate();
   onAuthStateChanged(auth, (user) => {
-    console.log('onAuthStateChanged');
     if (user) {
       setAuthUser(user);
     } else {

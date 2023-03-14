@@ -37,6 +37,7 @@ import {
   deleteJoinedRooms,
   deleteGroupMember,
   deleteJoinedGroups,
+  isCacheActive,
 } from '@/utils';
 
 const HomeOverview = () => {
@@ -170,6 +171,8 @@ const HomeOverview = () => {
     if (tabs[index] !== tabs[activeIndex]) setActiveIndex(index);
   };
 
+  const joinedRoomCacheIdList = joinedRoomsList?.data as string[];
+
   const blockFriend = async (friendId: string) => {
     const roomId = await searchRoomId(userId, friendId);
 
@@ -182,9 +185,8 @@ const HomeOverview = () => {
     setFriendList(deleteList);
     saveFriendIdList(deleteList);
 
-    const roomList = joinedRoomsList?.data as string[];
-    if (roomList.length !== 0) {
-      const newJoinedRoomsList = [...roomList];
+    if (joinedRoomsList && isCacheActive(joinedRoomsList)) {
+      const newJoinedRoomsList = [...joinedRoomCacheIdList];
       const roomsIndex = newJoinedRoomsList.indexOf(roomId);
       newJoinedRoomsList.splice(roomsIndex, 1);
 
@@ -192,13 +194,14 @@ const HomeOverview = () => {
     }
 
     await setUsersBlockUser(userId, friendId);
-    await updateJoinedRoomsIsVisible(userId, roomId);
+    await updateJoinedRoomsIsVisible(userId, roomId, false);
     await deletefriends(userId, friendId);
 
-    const blockUserIdListCache = blockUser?.data as string[];
-    if (blockUserIdListCache) blockUserIdListCache.push(friendId);
-
-    saveBlockUserIdList(blockUserIdListCache);
+    if (blockUser && isCacheActive(blockUser)) {
+      const blockUserIdListCache = blockUser.data as string[];
+      blockUserIdListCache.push(friendId);
+      saveBlockUserIdList(blockUserIdListCache);
+    }
   };
 
   const deleteFriendAndGroup = async () => {
@@ -227,6 +230,14 @@ const HomeOverview = () => {
 
       await deleteJoinedRooms(userId, roomId);
       await deletefriends(userId, deleteId);
+    }
+
+    if (joinedRoomsList && isCacheActive(joinedRoomsList)) {
+      const newJoinedRoomsList = [...joinedRoomCacheIdList];
+      const roomIndex = newJoinedRoomsList.indexOf(roomId);
+      newJoinedRoomsList.splice(roomIndex, 1);
+
+      saveJoinedRoomsList(newJoinedRoomsList);
     }
     setIsOpenCompleteModal(true);
   };

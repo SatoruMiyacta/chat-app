@@ -41,7 +41,7 @@ export const useGroup = () => {
       query(userRef, where(documentId(), 'in', groupIdList))
     );
     for (const doc of querySnapshots.docs) {
-      const data = doc.data();
+      const data = doc.data({ serverTimestamps: 'estimate' });
       const id = doc.id;
 
       let groupData;
@@ -64,7 +64,7 @@ export const useGroup = () => {
         };
       }
 
-      saveGroups(id, groupData);
+      if (groupData) saveGroups(id, groupData);
     }
   };
   /**
