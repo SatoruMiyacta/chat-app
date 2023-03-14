@@ -17,33 +17,22 @@ import Header from '@/components/organisms/Header';
 import PcNavigation from '@/components/organisms/PcNavigation';
 import UsersOverview from '@/components/organisms/UserOverview';
 
-import { useSearch, JoinedRoomsDataObject, useBlock } from '@/features';
-import { useFriend, useTalkRoom } from '@/hooks';
-import { authUserAtom, friendsIdAtom } from '@/store';
-import {
-  getFirebaseError,
-  setFriend,
-  searchUnAuthRoom,
-  deleteUnAuthRoom,
-  setUsersJoinedRooms,
-  addRoom,
-  setUnAuthRoom,
-  getJoinedRoomData,
-} from '@/utils';
+import { useSearch, useBlock } from '@/features';
+import { useFriend } from '@/hooks';
+import { authUserAtom } from '@/store';
+import { getFirebaseError } from '@/utils';
 const Search = () => {
   const [search, setSearch] = useState('');
   const [searchedIdList, setSearchedIdList] = useState<string[]>([]);
   const [unknownUserIdObject, setUnknownUserIdObject] = useState<IdObject>({});
   const [authUser] = useAtom(authUserAtom);
-  const [friends] = useAtom(friendsIdAtom);
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
   );
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [isSearchResults, setIsSearchResults] = useState(true);
 
-  const { saveFriendIdList, addUserToFriend } = useFriend();
-  const { saveJoinedRooms } = useTalkRoom();
+  const { addUserToFriend } = useFriend();
   const { getSearchedBlockUser } = useBlock();
   const { convertnotFriendsObject, searchUserList } = useSearch();
   const [searchPatams] = useSearchParams();
@@ -111,6 +100,7 @@ const Search = () => {
 
     try {
       await addUserToFriend(userId, id);
+      setSearch('');
       navigate('/search');
     } catch (error) {
       if (error instanceof Error) {

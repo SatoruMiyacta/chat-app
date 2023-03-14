@@ -258,6 +258,8 @@ const AvatarList = ({
       Object.keys(joinedRoomsObject).length !== 0
     ) {
       if (!joinedRoomsObject[id]) return;
+      if (joinedRoomsObject[id].isVisible === false) return;
+
       const roomType = joinedRoomsObject[id].type;
       const roomTypeId = joinedRoomsObject[id].id;
 
