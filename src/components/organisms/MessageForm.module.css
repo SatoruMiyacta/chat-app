@@ -57,7 +57,7 @@
 .list {
   position: relative;
   width: 100%;
-  height: calc(100vh - 145px);
+  height: calc(100vh - 105px);
   overflow-y: scroll;
   white-space: nowrap;
 }
