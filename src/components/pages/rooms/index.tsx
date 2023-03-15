@@ -8,7 +8,7 @@ const Rooms = () => {
     <>
       <Header title="トーク" className="sp" />
       <main className="flex">
-        <div className="">
+        <div>
           <RoomOverview />
         </div>
         <div className="pc">

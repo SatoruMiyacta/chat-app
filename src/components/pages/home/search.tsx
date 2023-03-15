@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 import { useAtom } from 'jotai';
@@ -22,7 +22,6 @@ import { useFriend } from '@/hooks';
 import { authUserAtom } from '@/store';
 import { getFirebaseError } from '@/utils';
 const Search = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [searchedIdList, setSearchedIdList] = useState<string[]>([]);
   const [unknownUserIdObject, setUnknownUserIdObject] = useState<IdObject>({});
@@ -36,8 +35,8 @@ const Search = () => {
   const { addUserToFriend } = useFriend();
   const { getSearchedBlockUser } = useBlock();
   const { convertnotFriendsObject, searchUserList } = useSearch();
+  const processing = useRef(false);
   const [searchPatams] = useSearchParams();
-  const navigate = useNavigate();
   const location = useLocation();
   const userId = authUser?.uid || '';
 
@@ -98,21 +97,21 @@ const Search = () => {
 
   const addFriend = async (id: string) => {
     if (!userId) return;
-    if (isLoading) return;
+    if (processing.current) return;
 
-    setIsLoading(true);
     try {
+      processing.current = true;
+
       await addUserToFriend(userId, id);
       setSearch('');
-      navigate('/search');
     } catch (error) {
+      processing.current = false;
       if (error instanceof Error) {
         setErrorMessage(error.message);
       } else if (error instanceof FirebaseError) {
         const errorCode = error.code;
         setErrorMessage(getFirebaseError(errorCode));
       }
-      setIsLoading(false);
     }
   };
 

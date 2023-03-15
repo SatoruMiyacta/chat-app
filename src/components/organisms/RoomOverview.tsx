@@ -60,35 +60,24 @@ const RoomOverview = () => {
     joinedRoomsObject: JoinedRoomsObject,
     roomIdList: string[]
   ) => {
-    const unReadBatchList: string[] = [];
     for (const roomId of roomIdList) {
       if (typeof joinedRoomsObject === 'undefined') return;
       if (typeof joinedRoomsObject[roomId] === 'undefined') return;
-      if (location.pathname === `/rooms/${roomId}/message`) return;
 
       const date = joinedRoomsObject[roomId].lastReadAt;
+
+      date.setSeconds(date.getSeconds() + 0.1);
 
       const collectionRef = collection(db, 'rooms', roomId, 'messages');
       const query_ = query(collectionRef, where('createdAt', '>', date));
       const snapshot = await getCountFromServer(query_);
       const count = snapshot.data().count;
 
-      if (count !== 0) unReadBatchList.push(roomId);
-
       setUnReadCount((prev) => ({
         ...prev,
         [roomId]: count,
       }));
     }
-
-    const filterList = unReadBatchList.filter(
-      (i) => `/rooms/${i}/message` === location.pathname
-    );
-    if (filterList.length === 0) return;
-
-    setMyRoomList((prev) => {
-      return Array.from(new Set([...prev, ...unReadBatchList]));
-    });
   };
 
   const getUserAndGroupData = async (roomIdList: string[]) => {
@@ -168,8 +157,8 @@ const RoomOverview = () => {
       }
     );
     return () => unsubscribe();
-  }, [userId]);
-  // }, [myRoomList.length]);
+    // }, [userId]);
+  }, [myRoomList.length]);
 
   useEffect(() => {
     if (!userId) return;
@@ -219,8 +208,8 @@ const RoomOverview = () => {
       }
     );
     return () => unsubscribe();
-  }, [userId]);
-  // }, [JSON.stringify(joinedRooms)]);
+    // }, [userId]);
+  }, [myRoomList.length]);
 
   const getRoomList = async (isUsedCache: boolean) => {
     const roomIdList = await getMyRoomIdList(isUsedCache);
