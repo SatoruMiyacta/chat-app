@@ -9,37 +9,55 @@ export default {
 
 const Template: ComponentStory<typeof Modal> = (args) => (
   <div>
-    <Modal {...args} title="Card" hasInner>
+    <Modal {...args}>
       <p>Cards contain content and actions about a single subject.</p>
     </Modal>
   </div>
 );
 
-export const Start = Template.bind({});
-Start.args = {
+export const TitleStart = Template.bind({});
+TitleStart.args = {
+  title: 'Card',
   titleAlign: 'start',
+  hasInner: true,
   isOpen: true,
+  isBoldTitle: false,
+  showCloseButton: false,
 };
 
-export const Center = Template.bind({});
-Center.args = {
+export const TitleCenter = Template.bind({});
+TitleCenter.args = {
+  title: 'Card',
   titleAlign: 'center',
+  hasInner: true,
   isOpen: true,
+  isBoldTitle: false,
+  showCloseButton: false,
 };
-export const End = Template.bind({});
-End.args = {
+export const TitleEnd = Template.bind({});
+TitleEnd.args = {
+  title: 'Card',
   titleAlign: 'end',
+  hasInner: true,
   isOpen: true,
+  isBoldTitle: false,
+  showCloseButton: false,
 };
-export const closeButton = Template.bind({});
-closeButton.args = {
+export const CloseButton = Template.bind({});
+CloseButton.args = {
+  title: 'Card',
   titleAlign: 'center',
-  showCloseButton: true,
+  hasInner: true,
   isOpen: true,
+  isBoldTitle: false,
+  showCloseButton: true,
 };
 export const BoledTitle = Template.bind({});
 BoledTitle.args = {
+  title: 'Card',
   titleAlign: 'center',
+  hasInner: true,
   isOpen: true,
   isBoldTitle: true,
+  showCloseButton: false,
 };

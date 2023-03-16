@@ -53,10 +53,15 @@ const menuItems = [
   },
 ];
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof Menu> = (args) => (
   <>
-    <p>menuPosition</p>
+    <h2>menuPosition</h2>
+
+    <p>
+      メニュー表示位置はデフォルトでボタン要素の左下に表示されます。
+      <br />
+      左下に余白がないときは、メニュー要素の高さと横幅の分余白が空いているところに表示されます
+    </p>
     <ul className="menu">
       <li>
         <Menu {...args} />
@@ -74,36 +79,9 @@ const Template: ComponentStory<typeof Menu> = (args) => (
   </>
 );
 
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  items: menuItems,
-  buttonColor: 'primary',
-  buttonChildren: <FontAwesomeIcon icon={faEllipsisVertical} />,
-};
-export const Inherit = Template.bind({});
-Inherit.args = {
+export const Basic = Template.bind({});
+Basic.args = {
   items: menuItems,
   buttonColor: 'inherit',
-  buttonChildren: <FontAwesomeIcon icon={faEllipsisVertical} />,
-};
-
-export const White = Template.bind({});
-White.args = {
-  items: menuItems,
-  buttonColor: 'white',
-  buttonChildren: <FontAwesomeIcon icon={faEllipsisVertical} />,
-};
-White.decorators = [
-  (Story) => (
-    <body style={{ background: '#333', color: '#fff', width: '200px' }}>
-      <Story />
-    </body>
-  ),
-];
-export const Danger = Template.bind({});
-Danger.args = {
-  items: menuItems,
-  buttonColor: 'danger',
   buttonChildren: <FontAwesomeIcon icon={faEllipsisVertical} />,
 };
