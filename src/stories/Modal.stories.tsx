@@ -1,10 +1,3 @@
-import {
-  faEllipsisVertical,
-  faBan,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import Modal from '@/components/molecules/Modal';
 
 import type { ComponentMeta, ComponentStory } from '@storybook/react';
