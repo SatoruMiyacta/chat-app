@@ -6,12 +6,12 @@ import Button from '@/components/atoms/Button';
 import type { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
-  title: 'Example/Button',
+  title: 'Atoms/Button',
   component: Button,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     color: {
-      options: ['primary', 'gray', 'white', 'danger'],
+      options: ['primary', 'inherit', 'white', 'danger'],
       control: { type: 'radio' },
     },
     variant: {
@@ -105,4 +105,23 @@ export const InheritIconText = Template.bind({});
 InheritIconText.args = {
   color: 'inherit',
   children: <FontAwesomeIcon icon={faEllipsisVertical} />,
+};
+
+export const White = Template.bind({});
+White.args = {
+  color: 'white',
+  children: 'ボタン',
+};
+White.decorators = [
+  (Story) => (
+    <body style={{ background: '#333', color: '#fff' }}>
+      <Story />
+    </body>
+  ),
+];
+
+export const Danger = Template.bind({});
+Danger.args = {
+  color: 'danger',
+  children: 'ボタン',
 };

@@ -10,7 +10,7 @@ import Fab from '@/components/atoms/FloatingActionButton';
 import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
-  title: 'components/FloatingActionButton',
+  title: 'Atoms/FloatingActionButton',
   component: Fab,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
@@ -116,7 +116,7 @@ White.decorators = [
   ),
 ];
 
-export const danger = Template.bind({});
-danger.args = {
+export const Danger = Template.bind({});
+Danger.args = {
   color: 'danger',
 };

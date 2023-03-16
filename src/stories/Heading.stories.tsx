@@ -3,7 +3,7 @@ import Heading from '@/components/atoms/Heading';
 import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
-  title: 'components/Heading',
+  title: 'Atoms/Heading',
   component: Heading,
 } as ComponentMeta<typeof Heading>;
 
@@ -47,8 +47,8 @@ Black.args = {
   color: 'black',
 };
 
-export const gray = Template.bind({});
-gray.args = {
+export const Gray = Template.bind({});
+Gray.args = {
   color: 'gray',
 };
 

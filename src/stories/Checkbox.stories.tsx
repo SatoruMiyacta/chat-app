@@ -3,7 +3,7 @@ import Checkbox from '@/components/atoms/Checkbox';
 import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
-  title: 'components/Checkbox',
+  title: 'Atoms/Checkbox',
   component: Checkbox,
   argTypes: {
     color: {
