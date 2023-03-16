@@ -1,0 +1,58 @@
+.caution {
+  padding: 16px;
+  margin-top: 32px;
+  border: 1px solid #ff971d;
+  border-radius: 5px;
+}
+
+.contents {
+  margin-top: 32px;
+}
+
+.buttonArea {
+  margin-top: 32px;
+}
+
+.controler {
+  margin-top: 24px;
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    position: relative;
+    z-index: 10;
+    width: calc(100vw - 550px);
+    height: 100vh;
+    background-color: #fff;
+  }
+
+  .caution {
+    flex-direction: row;
+  }
+
+  .caution > p {
+    margin-left: 16px;
+  }
+
+  .container > section {
+    margin-top: 48px;
+  }
+
+  .container > section > h1 {
+    color: #ff971d;
+  }
+
+  .container > section > div {
+    margin-top: 32px;
+  }
+
+  .container > section > div + div {
+    margin-top: 64px;
+  }
+
+  .buttonArea {
+    padding-right: 96px;
+    padding-left: 96px;
+    margin-top: 96px;
+  }
+}

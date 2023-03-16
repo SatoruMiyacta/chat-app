@@ -1,0 +1,32 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  /* width: 100vw; */
+  height: 56px;
+  color: #fff;
+  background-color: #ff971d;
+  box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.1);
+}
+
+.actionItems {
+  display: flex;
+}
+
+.backButton {
+  min-width: fit-content;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionArea {
+  display: flex;
+  min-width: fit-content;
+  margin-left: auto;
+}

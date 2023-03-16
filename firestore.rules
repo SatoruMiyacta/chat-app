@@ -1,8 +1,115 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+    function isUserAuthenticated(userId) {
+      return request.auth.uid == userId
     }
+
+    function isAuthenticated() {
+      return request.auth != null
+    }
+
+    function requestData() {
+      return request.resource.data
+    }
+
+    function isValidString(fieldName,minNumber,maxNumber) {
+     return request.resource.data[fieldName] is string 
+       && request.resource.data[fieldName].size() <= maxNumber 
+       && request.resource.data[fieldName].size() >= minNumber 
+    }
+
+    function isValidNumber(fieldName,minNumber,maxNumber) {
+     return request.resource.data[fieldName] is number
+       && request.resource.data[fieldName].size() <= maxNumber 
+       && request.resource.data[fieldName].size() >= minNumber 
+    }
+
+    function isExist(fieldName) {
+      return request.resource.data[fieldName] != null
+    }
+
+    function isNotExist(fieldName) {
+      return request.resource.data[fieldName] == null
+    }
+
+    function isRequestServertimestamp(fieldName) {
+      return isExist(fieldName)
+      && request.time == request.resource.data[fieldName]
+    }
+
+    function isNotUpdated(fieldName) {
+      return isNotExist(fieldName)
+      || request.resource.data[fieldName] == resource.data[fieldName]
+    }
+
+    match /users/{userId} {
+      allow delete: if isUserAuthenticated(userId);
+      allow read: if isAuthenticated();
+      allow update: if isUserAuthenticated(userId) 
+        && isValidString('name',1,20)
+        && isValidString('iconUrl',10,10000)
+        && isNotUpdated('createdAt')
+        && isRequestServertimestamp('updatedAt');
+      allow create: if isUserAuthenticated(userId) 
+        && isValidString('name',1,20)
+        && isValidString('iconUrl',10,10000)
+        && isRequestServertimestamp('createdAt')
+        && isRequestServertimestamp('updatedAt');
+
+      match /friends/{friendUserId} {
+      allow read, create, delete: if isUserAuthenticated(userId);
+    }
+      match /joinedGroups/{groupId} {
+      allow read, create, update, delete: if isUserAuthenticated(userId);
+    }
+      match /joinedRooms/{roomId} {
+      allow read, delete: if isUserAuthenticated(userId);
+      allow create, update: if isAuthenticated();
+    }
+      match /blockUser/{blockUserId} {
+      allow read, delete, update: if isUserAuthenticated(userId);
+      allow create: if isAuthenticated();
+    }
+      match /unAuthRoom/{roomId} {
+      allow delete, update: if isUserAuthenticated(userId);
+      allow read, create: if isAuthenticated();
+    }
+    }
+
+    match /rooms/{roomId} {
+      allow read: if isAuthenticated() 
+      allow create: if isAuthenticated()
+        && isExist('authorId')
+        && isValidString('authorId',1,50);
+      allow delete: if isUserAuthenticated(resource.data.authorId);
+
+      match /messages/{messageId} {
+        allow read: if isAuthenticated()
+        allow create: if isAuthenticated()
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedRooms/$(roomId)) 
+        allow delete: if isUserAuthenticated(resource.data.postUserId);
+        allow update: if isUserAuthenticated(resource.data.postUserId)
+          && isValidString('message',1,10000)
+          && isRequestServertimestamp('updatedAt');
+      }
+    }
+
+    match /groups/{groupId} {
+      allow read: if isAuthenticated() 
+      allow update: if isAuthenticated() 
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedGroups/$(groupId));
+      allow create: if isAuthenticated();
+      allow delete: if isUserAuthenticated(resource.data.authorId);
+
+      match /members/{memberId} {
+        allow create: if isAuthenticated();
+        allow update: if isAuthenticated();
+        allow read: if isAuthenticated()
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedGroups/$(groupId))
+        allow delete: if isUserAuthenticated(memberId)
+      }
+    }
+    
   }
 }

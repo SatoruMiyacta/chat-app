@@ -1,0 +1,39 @@
+.contents {
+  margin-top: 32px;
+}
+
+.form div + div {
+  margin-top: 32px;
+}
+
+.buttonArea {
+  margin-top: 64px;
+}
+
+.controler {
+  margin-top: 24px;
+}
+
+.buttonArea > button + button {
+  margin-top: 32px;
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    width: 50vw;
+    margin-top: 96px;
+  }
+
+  .contents {
+    width: 70%;
+    margin: auto;
+  }
+
+  .contents > h1 {
+    color: #ff971d;
+  }
+
+  .form {
+    margin-top: 64px;
+  }
+}

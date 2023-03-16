@@ -1,0 +1,50 @@
+.contents > section {
+  position: relative;
+  width: 100%;
+  padding-top: 48px;
+  background-color: #fff;
+}
+
+.contents span + span {
+  display: flex;
+  margin-right: auto;
+  margin-left: 0;
+  transform: translateY(-60%);
+}
+
+.buttonArea {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  height: 56px;
+  background-color: #fff;
+}
+
+.controler {
+  display: flex;
+  margin-top: 48px;
+}
+
+.controler > button {
+  flex: 1;
+}
+
+.controler > button a {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #afafaf;
+  text-decoration: none;
+  background-color: #fff;
+}
+
+@media screen and (min-width: 1024px) {
+  .contents {
+    width: calc(100vw - 550px);
+    height: 100vh;
+  }
+
+  .buttonArea {
+    width: calc(100vw - 550px);
+  }
+}

@@ -1,0 +1,88 @@
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.oneLine {
+  position: relative;
+  width: 100%;
+  height: 48px;
+  border-bottom: 1px solid rgb(227, 227, 227);
+}
+
+.oneLine:hover {
+  background-color: rgba(196, 196, 196, 0.2);
+}
+
+.oneLine.active {
+  background-color: rgba(196, 196, 196, 0.2);
+}
+
+.oneLine > button {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0);
+  object-fit: cover;
+}
+
+.oneLine > div {
+  min-width: fit-content;
+  color: #afafaf;
+}
+
+.oneLine > button > h1 {
+  width: calc(390px - 140px);
+  margin-left: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oneLine.roomList {
+  height: 64px;
+}
+
+.modal > div > div {
+  width: 320px;
+  height: 240px;
+}
+
+.avatarArea > div {
+  display: flex;
+  margin: 24px auto 0;
+}
+
+.avatarArea > h1 {
+  margin-top: 8px;
+}
+.controler {
+  display: flex;
+  margin-top: 48px;
+}
+
+.controler > button {
+  flex: 1;
+}
+
+.controler > button a {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #afafaf;
+  text-decoration: none;
+  background-color: #fff;
+}
+
+.filterArea > button {
+  color: #afafaf;
+  background-color: inherit;
+}
+
+.filterArea > span {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #ff971d;
+  border-radius: 100px;
+}

@@ -1,8 +1,18 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if false;
+    function isUserAuthenticated(userId) {
+      return request.auth.uid == userId
+    }
+
+    function isAuthenticated() {
+      return request.auth != null
+    }
+
+    match /iconImage/{userId}/userIcon {
+      allow create, update: if isUserAuthenticated(userId) && requset.resource.size() <= 10 * 1024 * 1024
+      allow read: if isAuthenticated()
+      allow delete: if if isUserAuthenticated(userId)
     }
   }
 }

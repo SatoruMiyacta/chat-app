@@ -1,0 +1,48 @@
+.formArea {
+  position: relative;
+  z-index: 10;
+  padding-top: 40px;
+  background-color: #fff;
+}
+
+.form div + div {
+  margin-top: 24px;
+}
+
+.buttonArea {
+  margin-top: 64px;
+}
+
+.buttonArea > button + button {
+  margin-top: 24px;
+}
+
+.controler {
+  margin-top: 24px;
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    width: 50vw;
+    margin-top: 96px;
+  }
+
+  .contents {
+    width: 70%;
+    margin: auto;
+  }
+
+  .form div + div {
+    margin-top: 32px;
+  }
+
+  .iconImage {
+    display: flex;
+    align-items: center;
+    margin-top: 32px;
+  }
+
+  .contents > h1 {
+    color: #ff971d;
+  }
+}

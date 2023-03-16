@@ -8,13 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 16
+      - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 16
-      - name: lint and test
+          node-version: 18
+      - name: install
         run: |
           npm install
+          npm install -g firebase-tools
+      - name: lint and test
+        run: |
           npm run lint
           npm run test
       - run: npm run build:prod

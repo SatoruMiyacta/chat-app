@@ -1,0 +1,55 @@
+html {
+  line-height: 1.5;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.inner {
+  padding-right: 16px;
+  padding-left: 16px;
+}
+
+.flex {
+  display: flex;
+}
+
+.jcc {
+  justify-content: center;
+}
+
+.alic {
+  align-items: center;
+}
+
+.fdrc {
+flex-direction: column;
+}
+
+.grow {
+  flex: 1;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.viewHeight {
+  height: 100vh;
+}
+
+@media screen and (min-width:1024px) {
+  .sp {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width:1023px) {
+  .pc {
+    display: none !important;
+  }
+}
+
+

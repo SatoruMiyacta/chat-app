@@ -1,0 +1,55 @@
+.xxs {
+  font-size: 0.625rem;
+}
+
+.xs {
+  font-size: 0.75rem;
+}
+
+.s {
+  font-size: 0.9375rem;
+}
+
+.m {
+  font-size: 1rem;
+}
+
+.l {
+  font-size: 1.25rem;
+}
+
+.xl {
+  font-size: 1.5rem;
+}
+
+.xxl {
+  font-size: 2rem;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.black {
+  color: #333;
+}
+
+.gray {
+  color: #afafaf;
+}
+
+.inherit {
+  color: inherit;
+}
+
+.start {
+  text-align: start;
+}
+
+.center {
+  text-align: center;
+}
+
+.end {
+  text-align: end;
+}

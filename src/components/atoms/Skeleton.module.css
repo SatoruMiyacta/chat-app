@@ -1,0 +1,40 @@
+.skeleton {
+  display: inline-block;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.11);
+  animation: animation 1.5s ease-in-out 0.5s infinite;
+}
+
+.skeleton.text {
+  height: 16px;
+  border-radius: 4px;
+}
+
+.skeleton.circular {
+  width: 48px;
+  height: 48px;
+  border-radius: 100%;
+}
+
+.skeleton.rounded {
+  height: 16px;
+  border-radius: 5px;
+}
+
+.skeleton.rectangular {
+  height: 16px;
+}
+
+@keyframes animation {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

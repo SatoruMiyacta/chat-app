@@ -1,0 +1,172 @@
+.authArea {
+  width: 100vw;
+  height: 64px;
+}
+
+.authArea > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.authArea > div > button {
+  width: 40%;
+  height: 40px;
+  margin-top: 32px;
+  color: #fff;
+  background-color: #ff971d;
+  border-radius: 5px;
+}
+
+.authArea > div > button:first-child {
+  background-color: #e51a1a;
+}
+
+.authArea > div > p {
+  padding: 16px;
+  margin-top: 32px;
+  border: 1px solid #ff971d;
+  border-radius: 5px;
+}
+
+.container {
+  position: relative;
+  overflow: hidden;
+}
+
+.messageContents {
+  position: fixed;
+  bottom: 0;
+  z-index: 50;
+  width: 100%;
+  height: fit-content;
+  padding: 8px 0;
+  background-color: #fff;
+  border-top: 1px solid rgb(227, 227, 227);
+}
+
+.messageContents > button {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  color: #333;
+  background-color: #fff;
+  border-radius: 10px 10px 0 0;
+}
+
+.list {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 105px);
+  overflow-y: scroll;
+  white-space: nowrap;
+}
+
+.list > ul > li:not(:first-child) {
+  border-top: 1px solid rgb(227, 227, 227);
+}
+
+.list > ul > li:not(.listBottom) {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.list > ul > li:last-child {
+  border: none;
+}
+
+.oneline {
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.oneline > div > h1 {
+  width: calc(100vw - 140px);
+  margin-left: 8px;
+  overflow: hidden;
+  color: rgba(51, 51, 51, 0.8);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oneline > div + div {
+  height: fit-content;
+  padding: 0;
+  font-size: 8px;
+}
+
+.message {
+  margin-left: 32px;
+}
+
+.message > p {
+  font-size: 1.25rem;
+  white-space: pre-wrap;
+}
+
+.messageContents > div {
+  width: calc(100% - 96px);
+}
+
+.controler {
+  display: flex;
+  margin-top: 48px;
+}
+
+.controler > button {
+  flex: 1;
+}
+
+.controler > button a {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #afafaf;
+  text-decoration: none;
+  background-color: #fff;
+}
+
+@media screen and (min-width: 1024px) {
+  .authArea {
+    width: calc(100vw - 550px);
+  }
+
+  .messageContents {
+    padding: 0;
+  }
+
+  .list {
+    position: relative;
+    width: calc(100vw - 550px);
+    height: calc(100vh - 113px);
+    overflow-y: scroll;
+    white-space: nowrap;
+  }
+
+  .container {
+    width: calc(100vw - 550px);
+  }
+
+  .oneline > div > h1 {
+    width: calc(100vw - 700px);
+  }
+
+  .messageContents > div {
+    width: calc(100vw - 550px);
+  }
+
+  .messageContents > span {
+    align-items: center;
+    justify-content: flex-end;
+    width: calc(100vw - 550px);
+    height: 32px;
+    background-color: #ff971d;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .messageContents > span > button {
+    color: #fff;
+    background-color: #ff971d;
+  }
+}

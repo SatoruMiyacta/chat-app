@@ -1,0 +1,18 @@
+.container {
+  width: 390px;
+  height: 100vh;
+  border-right: 1px solid rgb(227, 227, 227);
+}
+
+.contents {
+  height: 50%;
+  border-bottom: 1px solid rgb(227, 227, 227);
+}
+
+.contents div + div {
+  position: relative;
+  z-index: 10;
+  justify-content: space-between;
+  padding-top: 40px;
+  background-color: #fff;
+}

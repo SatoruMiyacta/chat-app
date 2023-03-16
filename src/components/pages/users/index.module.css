@@ -1,0 +1,9 @@
+.container {
+  width: 100vw;
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    width: calc(100vw - 160px);
+  }
+}
