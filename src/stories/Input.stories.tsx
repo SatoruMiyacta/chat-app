@@ -11,7 +11,7 @@ import Input from '@/components/atoms/Input';
 import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
-  title: 'components/Input',
+  title: 'Atoms/Input',
   component: Input,
   argTypes: {
     color: { options: ['primary', 'black'], control: { type: 'radio' } },
@@ -243,11 +243,11 @@ const Template: ComponentStory<typeof Input> = (args) => (
   </>
 );
 
-export const primary = Template.bind({});
-primary.args = {
+export const Primary = Template.bind({});
+Primary.args = {
   color: 'primary',
 };
-export const black = Template.bind({});
-black.args = {
+export const Black = Template.bind({});
+Black.args = {
   color: 'black',
 };

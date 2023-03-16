@@ -25,4 +25,24 @@
   .typography {
     color: #e51a1a;
   }
+  .menu {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border: 1px solid #333;
+  }
+  .menu > li:nth-child(2) {
+    position: absolute;
+    right: 0;
+  }
+  .menu > li:nth-child(3) {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+  .menu > li:last-child {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
 </style>

@@ -6,7 +6,7 @@ import Tabs from '@/components/atoms/Tabs';
 import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
-  title: 'components/Tabs',
+  title: 'Atoms/Tabs',
   component: Tabs,
   onClick: { action: 'clicked' },
 } as ComponentMeta<typeof Tabs>;
