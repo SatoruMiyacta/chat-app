@@ -1,7 +1,4 @@
-import {
-  faChevronLeft,
-  faEllipsisVertical,
-} from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Button from '@/components/atoms/Button';
@@ -9,7 +6,7 @@ import Button from '@/components/atoms/Button';
 import type { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
-  title: 'components/Button',
+  title: 'Example/Button',
   component: Button,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
@@ -94,6 +91,7 @@ const Template: ComponentStory<typeof Button> = (args) => (
 );
 
 export const Primary = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
   color: 'primary',
   children: 'ボタン',
@@ -107,22 +105,4 @@ export const InheritIconText = Template.bind({});
 InheritIconText.args = {
   color: 'inherit',
   children: <FontAwesomeIcon icon={faEllipsisVertical} />,
-};
-export const WhiteText = Template.bind({});
-WhiteText.args = {
-  color: 'white',
-  children: <FontAwesomeIcon icon={faChevronLeft} />,
-};
-WhiteText.decorators = [
-  (Story) => (
-    <body style={{ background: '#333', color: '#fff' }}>
-      <Story />
-    </body>
-  ),
-];
-
-export const DangerOutlinedFullWidth = Template.bind({});
-DangerOutlinedFullWidth.args = {
-  color: 'danger',
-  children: 'アカウント削除',
 };
