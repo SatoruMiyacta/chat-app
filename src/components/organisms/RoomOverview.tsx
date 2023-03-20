@@ -66,7 +66,7 @@ const RoomOverview = () => {
 
       const date = joinedRoomsObject[roomId].lastReadAt;
 
-      date.setSeconds(date.getSeconds() + 0.1);
+      date.setSeconds(date.getSeconds() + 0.5);
 
       const collectionRef = collection(db, 'rooms', roomId, 'messages');
       const query_ = query(collectionRef, where('createdAt', '>', date));

@@ -111,9 +111,7 @@ const Input = (props: InputProps) => {
   ) => {
     if (errorMessage) {
       const result = validate();
-      if (result === '') {
-        setErrorMessage('');
-      }
+      setErrorMessage(result);
     }
     onChange(event);
   };
@@ -162,6 +160,12 @@ const Input = (props: InputProps) => {
       onKeyDown(event);
     }
   };
+
+  useEffect(() => {
+    if (typeof value === 'number') return;
+
+    if ([...value].length === minLength) setErrorMessage('');
+  }, [value]);
 
   // validation
   const validate = () => {

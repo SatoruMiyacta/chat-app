@@ -133,13 +133,15 @@
   }
 
   .messageContents {
+    height: fit-content;
     padding: 0;
+    border: none;
   }
 
   .list {
     position: relative;
     width: calc(100vw - 550px);
-    height: calc(100vh - 113px);
+    height: calc(100vh - 112px);
     overflow-y: scroll;
     white-space: nowrap;
   }

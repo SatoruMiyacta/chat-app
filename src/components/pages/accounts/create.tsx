@@ -74,6 +74,7 @@ const CreateAcconunt = () => {
       setIsLoading(true);
       // emailとpasswordでサインアップ
       // user情報を返す
+
       const user = await signUp(email, password);
       const userId = user.uid;
 
@@ -104,6 +105,10 @@ const CreateAcconunt = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    navigate('/accounts/create');
+  }, []);
 
   useEffect(() => {
     const isPassword = isComplete();
