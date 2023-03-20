@@ -387,7 +387,6 @@ const MessageForm = ({ postId }: MessageProps) => {
   const scrollRefCurrent = scrollRef.current;
 
   useEffect(() => {
-    console.log(scrollRefCurrent);
     if (!scrollRefCurrent) return;
 
     let contentsHeight;
@@ -400,16 +399,8 @@ const MessageForm = ({ postId }: MessageProps) => {
     const scrollUnder =
       scrollRefCurrent.clientHeight + scrollRefCurrent.scrollTop;
 
-    console.log(scrollUnder);
-    console.log(contentsHeight);
-    console.log(window.innerHeight);
-    console.log(scrollRefCurrent.clientHeight);
-    console.log(scrollRefCurrent.scrollTop);
-    console.log(scrollRefCurrent.scrollHeight);
     if (messageIdList.length < 10) {
-      console.log('scroll');
       setTimeout(() => {
-        console.log('scroll');
         scrollBottomRef.current?.scrollIntoView(false);
       }, 700);
     } else if (
@@ -417,7 +408,6 @@ const MessageForm = ({ postId }: MessageProps) => {
       scrollUnder === contentsHeight
     ) {
       setTimeout(() => {
-        console.log('scrollUnder');
         scrollBottomRef.current?.scrollIntoView(false);
       }, 500);
     }
