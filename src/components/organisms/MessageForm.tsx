@@ -387,24 +387,41 @@ const MessageForm = ({ postId }: MessageProps) => {
   const scrollRefCurrent = scrollRef.current;
 
   useEffect(() => {
+    console.log(scrollRefCurrent);
     if (!scrollRefCurrent) return;
+
+    let contentsHeight;
+    if (isPcWindow) {
+      contentsHeight = window.innerHeight - 112;
+    } else {
+      contentsHeight = window.innerHeight - 105;
+    }
 
     const scrollUnder =
       scrollRefCurrent.clientHeight + scrollRefCurrent.scrollTop;
 
+    console.log(scrollUnder);
+    console.log(contentsHeight);
+    console.log(window.innerHeight);
+    console.log(scrollRefCurrent.clientHeight);
+    console.log(scrollRefCurrent.scrollTop);
+    console.log(scrollRefCurrent.scrollHeight);
     if (messageIdList.length < 10) {
+      console.log('scroll');
       setTimeout(() => {
+        console.log('scroll');
         scrollBottomRef.current?.scrollIntoView(false);
       }, 700);
     } else if (
-      scrollRefCurrent.scrollHeight === scrollUnder + 33 ||
-      scrollRefCurrent.scrollHeight === scrollUnder + 87
+      scrollRefCurrent.scrollHeight <= scrollUnder + 33 ||
+      scrollUnder === contentsHeight
     ) {
       setTimeout(() => {
+        console.log('scrollUnder');
         scrollBottomRef.current?.scrollIntoView(false);
       }, 500);
     }
-  }, [messageIdList.length]);
+  }, [messageIdList.length, scrollRefCurrent]);
 
   const isPcWindow = window.matchMedia('(min-width:1024px)').matches;
   const handleScroll = async () => {
