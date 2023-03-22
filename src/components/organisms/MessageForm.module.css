@@ -40,15 +40,14 @@
   z-index: 50;
   width: 100%;
   height: fit-content;
-  padding: 8px 0;
+  padding: 8px 16px;
   background-color: #fff;
   border-top: 1px solid rgb(227, 227, 227);
+  white-space: normal;
 }
 
 .messageContents > button {
-  position: absolute;
-  right: 16px;
-  bottom: 12px;
+  flex: 1;
   color: #333;
   background-color: #fff;
   border-radius: 10px 10px 0 0;
@@ -106,7 +105,7 @@
 }
 
 .messageContents > div {
-  width: calc(100% - 96px);
+  flex: 8;
 }
 
 .controler {

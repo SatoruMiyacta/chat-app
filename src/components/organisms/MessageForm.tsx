@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@/components/atoms/Button';
 import Heading from '@/components/atoms/Heading';
 import Input from '@/components/atoms/Input';
+import Skeleton from '@/components/atoms/Skeleton';
 import Modal from '@/components/molecules/Modal';
 import Avatar from '@/components/organisms/Avatar';
 
@@ -67,6 +68,7 @@ export interface MessageProps {
 }
 
 const MessageForm = ({ postId }: MessageProps) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [authUser] = useAtom(authUserAtom);
   const [sendingMessge, setSendingMessage] = useState('');
   const [friends] = useAtom(friendsIdAtom);
@@ -309,6 +311,7 @@ const MessageForm = ({ postId }: MessageProps) => {
       setLastMessge(null);
 
       checkAuthRoom(userId, postId);
+      setIsLoading(false);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -393,7 +396,7 @@ const MessageForm = ({ postId }: MessageProps) => {
     if (isPcWindow) {
       contentsHeight = window.innerHeight - 112;
     } else {
-      contentsHeight = window.innerHeight - 105;
+      contentsHeight = window.innerHeight - 136;
     }
 
     const scrollUnder =
@@ -509,7 +512,21 @@ const MessageForm = ({ postId }: MessageProps) => {
   return (
     <>
       {renderErrorModal()}
-      {isUnAuthRoom && (
+      {isLoading && (
+        <div className={styles.container}>
+          <Skeleton variant="rectangular" height={87} />
+          <Skeleton variant="rectangular" height={87} />
+          <Skeleton variant="rectangular" height={87} />
+          <Skeleton variant="rectangular" height={87} />
+          <Skeleton variant="rectangular" height={87} />
+          <Skeleton variant="rectangular" height={87} />
+
+          <div className={`${styles.messageContents} flex alic jcc`}>
+            <Skeleton variant="rectangular" height={32} />
+          </div>
+        </div>
+      )}
+      {!isLoading && isUnAuthRoom && (
         <div className={`${styles.authArea} `}>
           <div>
             <button onClick={onBlockUser}>ブロック</button>
@@ -522,7 +539,7 @@ const MessageForm = ({ postId }: MessageProps) => {
           </div>
         </div>
       )}
-      {!isUnAuthRoom && !isPcWindow && (
+      {!isLoading && !isUnAuthRoom && !isPcWindow && (
         <div className={styles.container}>
           {showMessageList()}
           <div className={`${styles.messageContents} flex alic jcc`}>
@@ -536,7 +553,7 @@ const MessageForm = ({ postId }: MessageProps) => {
               isFullWidth
               isMultiLines
               isRounded
-              maxRows={2}
+              maxRows={3}
               maxLength={1000}
               onKeyDown={() => sendMessage()}
               size="small"
@@ -547,7 +564,7 @@ const MessageForm = ({ postId }: MessageProps) => {
           </div>
         </div>
       )}
-      {!isUnAuthRoom && isPcWindow && (
+      {!isLoading && !isUnAuthRoom && isPcWindow && (
         <>
           <div className={styles.container}>
             {showMessageList()}
