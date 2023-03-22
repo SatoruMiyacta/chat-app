@@ -41,9 +41,9 @@
   width: 100%;
   height: fit-content;
   padding: 8px 16px;
+  white-space: normal;
   background-color: #fff;
   border-top: 1px solid rgb(227, 227, 227);
-  white-space: normal;
 }
 
 .messageContents > button {
