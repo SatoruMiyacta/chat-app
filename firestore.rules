@@ -58,7 +58,8 @@ service cloud.firestore {
         && isRequestServertimestamp('updatedAt');
 
       match /friends/{friendUserId} {
-      allow read, create, delete: if isUserAuthenticated(userId);
+      allow create, delete: if isUserAuthenticated(userId);
+      allow read: if isAuthenticated();
     }
       match /joinedGroups/{groupId} {
       allow read, create, update, delete: if isUserAuthenticated(userId);

@@ -1,5 +1,5 @@
-.container {
-  height: calc(100vh - 210px);
+.listArea {
+  height: calc(100vh - 222px);
 }
 
 .groupProfile {
@@ -10,6 +10,10 @@
   justify-content: space-between;
   padding-top: 16px;
   background-color: #fff;
+}
+
+.groupProfile > div + div {
+  width: calc(100% - 64px);
 }
 
 .buttonArea {
@@ -44,12 +48,12 @@
   .container {
     position: relative;
     width: calc(100vw - 550px);
-    height: calc(100vh - 154px);
+
     border-right: 1px solid rgb(227, 227, 227);
   }
 
   .listArea {
-    margin-top: 16px;
+    height: calc(100vh - 166px);
   }
 
   .groupProfile {

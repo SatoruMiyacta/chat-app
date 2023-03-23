@@ -144,7 +144,7 @@ const GroupOverview = ({ groupId }: GroupProps) => {
           onClick={() => navigate(`/group/${groupId}/edit`)}
           variant="outlined"
           isFullWidth
-          size={isPcWindow ? 'medium' : 'small'}
+          size="medium"
         >
           編集
         </Button>
@@ -169,7 +169,7 @@ const GroupOverview = ({ groupId }: GroupProps) => {
       )}
       {!isLoading && (
         <div className={styles.container}>
-          <div className={`${styles.groupProfile} inner`}>
+          <div className={`${styles.groupProfile}`}>
             <Avatar iconUrl={groupIconUrl} isNotUpload uploadIconSize="l" />
             <Heading tag="h2" align="center" isBold size="l">
               <span>{groupName}</span>
@@ -185,7 +185,7 @@ const GroupOverview = ({ groupId }: GroupProps) => {
               onClick={() => navigate(`/rooms/${groupId}/message`)}
               variant="contained"
               isFullWidth
-              size={isPcWindow ? 'medium' : 'small'}
+              size="medium"
             >
               トーク
             </Button>

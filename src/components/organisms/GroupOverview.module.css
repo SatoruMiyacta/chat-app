@@ -6,7 +6,7 @@
   flex-direction: column;
   align-items: center;
   width: fit-content;
-  padding: 16px;
+  padding-top: 16px;
   margin: 0 auto;
   background-color: #fff;
 }
@@ -16,8 +16,8 @@
 }
 
 .groupProfile > h2 > span:first-child {
-  display: block;
-  width: calc(100vw - 650px);
+  /* display: block; */
+  max-width: 300px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -34,7 +34,7 @@
   z-index: 10;
   justify-content: space-evenly;
   width: 100%;
-  height: 96px;
+  height: 104px;
   background-color: #fff;
 }
 
