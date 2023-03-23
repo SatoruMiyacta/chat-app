@@ -30,9 +30,9 @@ const UsersOverview = ({ userId }: UserProps) => {
   );
   const [isLoading, setIsLoading] = useState(true);
   const [isFriend, setIsFriend] = useState(false);
-  const [friendList, setFriendList] = useState<string[]>([]);
+  const [friendCount, setFriendCount] = useState<number>(0);
   const navigate = useNavigate();
-  const { getMyFriendIdList, addUserToFriend } = useFriend();
+  const { getFriendCount, addUserToFriend } = useFriend();
   const { getUser, saveUser, getSearchedFriends } = useUser();
 
   const authUserId = authUser?.uid;
@@ -51,8 +51,8 @@ const UsersOverview = ({ userId }: UserProps) => {
         setIconUrl(userData.iconUrl);
       });
 
-      getMyFriendIdList(false).then((friendIdList) => {
-        setFriendList(friendIdList);
+      getFriendCount(userId).then((count) => {
+        setFriendCount(count);
       });
 
       const searchList = [];
@@ -91,7 +91,7 @@ const UsersOverview = ({ userId }: UserProps) => {
 
     try {
       await addUserToFriend(authUserId, userId);
-      navigate(`/search`);
+      navigate(`/`);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -159,10 +159,10 @@ const UsersOverview = ({ userId }: UserProps) => {
               <Heading tag="h1" align="start" isBold size="xxl">
                 {userName}
               </Heading>
-              <span>{`友達 ${friendList.length}`}</span>
+              <span>{`友達 ${friendCount}`}</span>
             </section>
             {isFriend && (
-              <div className={`${styles.buttonArea} inner`}>
+              <div className={`${styles.buttonArea} flex alic inner`}>
                 <Button
                   color="primary"
                   variant="contained"

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 
 import { FirebaseError } from 'firebase/app';
 import { useAtom } from 'jotai';
@@ -38,6 +38,7 @@ const Search = () => {
   const processing = useRef(false);
   const [searchPatams] = useSearchParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const userId = authUser?.uid || '';
 
   const userPathId = searchPatams.get('userId');
@@ -104,6 +105,7 @@ const Search = () => {
 
       await addUserToFriend(userId, id);
       setSearch('');
+      navigate('/');
     } catch (error) {
       processing.current = false;
       if (error instanceof Error) {
