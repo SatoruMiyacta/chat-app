@@ -11,6 +11,7 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
   QueryConstraint,
+  getCountFromServer,
 } from 'firebase/firestore';
 import { useAtom } from 'jotai';
 
@@ -136,6 +137,18 @@ export const useFriend = () => {
   };
 
   /**
+   * 友達の人数を返す
+   */
+  const getFriendCount = async (userId: string) => {
+    const collectionRef = collection(db, 'users', userId, 'friends');
+
+    const snapshot = await getCountFromServer(collectionRef);
+    const count = snapshot.data().count;
+
+    return count;
+  };
+
+  /**
    * 友達追加
    */
   const addUserToFriend = async (userId: string, friendId: string) => {
@@ -208,5 +221,6 @@ export const useFriend = () => {
     setFriendList,
     friendList,
     addUserToFriend,
+    getFriendCount,
   };
 };

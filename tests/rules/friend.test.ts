@@ -52,7 +52,7 @@ const setFriend = async (userId: string) => {
 
 describe('/users/{userId}/friends/{friendUserId}', () => {
   describe('read', () => {
-    it('自分は読み込み可。', async () => {
+    it('認証userは読み込み可。', async () => {
       const userId = uuidv4();
       await setFriend(userId);
 
@@ -62,11 +62,11 @@ describe('/users/{userId}/friends/{friendUserId}', () => {
       await assertSucceeds(getDoc(usersRef));
     });
 
-    it('自分以外は読み込み不可。', async () => {
+    it('未認証userは読み込み不可。', async () => {
       const userId = uuidv4();
       await setFriend(userId);
 
-      const context = testEnv.authenticatedContext(uuidv4());
+      const context = testEnv.unauthenticatedContext();
       const db = context.firestore();
       const usersRef = doc(db, 'users', userId, 'friends', uuidv4());
       await assertFails(getDoc(usersRef));

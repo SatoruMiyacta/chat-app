@@ -157,7 +157,6 @@ const RoomOverview = () => {
       }
     );
     return () => unsubscribe();
-    // }, [userId]);
   }, [myRoomList.length]);
 
   useEffect(() => {
@@ -208,12 +207,14 @@ const RoomOverview = () => {
       }
     );
     return () => unsubscribe();
-    // }, [userId]);
   }, [myRoomList.length]);
 
   const getRoomList = async (isUsedCache: boolean) => {
     const roomIdList = await getMyRoomIdList(isUsedCache);
-    setMyRoomList(roomIdList);
+    // setMyRoomList(roomIdList);
+    setMyRoomList((prev) => {
+      return Array.from(new Set([...prev, ...roomIdList]));
+    });
     if (roomIdList.length === 0) return;
 
     const joinedRoomsObject = await getUserAndGroupData(roomIdList);
@@ -272,8 +273,12 @@ const RoomOverview = () => {
       return;
 
     const roomIdList = await getRoomList(false);
-    if (roomIdList) saveRoomData(roomIdList);
+    if (roomIdList && roomIdList.length !== 0) {
+      saveJoinedRoomsList(roomIdList);
+      saveRoomData(roomIdList);
+    }
   };
+
   useEffect(() => {
     scrollRefCurrent?.addEventListener('scroll', handleScroll);
 
