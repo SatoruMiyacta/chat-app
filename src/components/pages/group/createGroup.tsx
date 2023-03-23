@@ -123,7 +123,8 @@ const CreateMember = () => {
     const groupId = uuidv4();
     try {
       let groupIconUrl = INITIAL_ICON_URL;
-      if (groupIconBlob) groupIconUrl = await uploadIcon(groupIconBlob, userId);
+      if (groupIconBlob)
+        groupIconUrl = await uploadIcon(groupIconBlob, groupId);
 
       const batch = writeBatch(db);
 

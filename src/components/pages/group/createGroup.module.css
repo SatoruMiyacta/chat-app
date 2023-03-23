@@ -34,7 +34,7 @@
 
 .buttonArea {
   position: fixed;
-  bottom: 8px;
+  bottom: 0;
   z-index: 90;
   justify-content: space-evenly;
   width: 100%;

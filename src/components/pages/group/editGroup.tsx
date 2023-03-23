@@ -271,7 +271,6 @@ const EditGroup = () => {
               variant="contained"
               isDisabled={!isComplete}
               isFullWidth
-              size="small"
             >
               保存
             </Button>
