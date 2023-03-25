@@ -32,12 +32,12 @@ export const useRoom = () => {
   const [myRoomList, setMyRoomList] = useState<string[]>([]);
 
   const [lastRoom, setLastRoom] =
-    useState<QueryDocumentSnapshot<DocumentData>>();
+    useState<QueryDocumentSnapshot<DocumentData> | null>();
 
-  const { getRooms, saveRooms, saveJoinedRoomsList } = useTalkRoom();
+  const { getRooms, saveRooms } = useTalkRoom();
 
   const userRef = useRef<User>();
-  const lastRoomRef = useRef<QueryDocumentSnapshot<DocumentData>>();
+  const lastRoomRef = useRef<QueryDocumentSnapshot<DocumentData> | null>();
   const myRoomListRef = useRef<string[]>();
 
   if (authUser) userRef.current = authUser;
@@ -84,12 +84,7 @@ export const useRoom = () => {
       setMyRoomList((prev) => {
         return Array.from(new Set([...prev, ...roomIdList]));
       });
-
-      const newList = joinedRoomNewIdList.concat(roomIdList);
-      saveJoinedRoomsList(newList);
     }
-
-    saveJoinedRoomsList(roomIdList);
 
     return roomIdList;
   };
