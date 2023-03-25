@@ -7,6 +7,7 @@
   align-items: center;
   width: fit-content;
   padding-top: 16px;
+  padding-bottom: 8px;
   margin: 0 auto;
   background-color: #fff;
 }
@@ -16,7 +17,6 @@
 }
 
 .groupProfile > h2 > span:first-child {
-  /* display: block; */
   max-width: 300px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -24,8 +24,9 @@
 }
 
 .contents {
-  height: calc(100vh - 278px);
+  height: calc(100vh - 286px);
   overflow: auto;
+  border-top: 1px solid rgb(227, 227, 227);
 }
 
 .buttonArea {
@@ -63,7 +64,7 @@
     border-right: 1px solid rgb(227, 227, 227);
   }
   .contents {
-    height: calc(100vh - 262px);
+    height: calc(100vh - 270px);
     overflow: auto;
   }
 

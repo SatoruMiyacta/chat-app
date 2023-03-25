@@ -6,13 +6,14 @@ import {
   getDocs,
   serverTimestamp,
   query,
-  orderBy,
   limit,
   startAfter,
   DocumentData,
   QueryDocumentSnapshot,
   QueryConstraint,
   updateDoc,
+  documentId,
+  where,
 } from 'firebase/firestore';
 import { useAtom } from 'jotai';
 
@@ -35,6 +36,7 @@ export const useEditGroup = () => {
   if (groupMemberList) groupMemberListRef.current = groupMemberList;
 
   const getGroupMemberIdList = async (
+    userId: string,
     groupId: string,
     isUsedCache: boolean
   ) => {
@@ -54,7 +56,7 @@ export const useEditGroup = () => {
 
     const groupRef = collection(db, 'groups', groupId, 'members');
     const queryArray: QueryConstraint[] = [
-      orderBy('updatedAt', 'desc'),
+      where(documentId(), '!=', userId),
       limit(20),
     ];
 
@@ -112,5 +114,6 @@ export const useEditGroup = () => {
     groupName,
     isComplete,
     updateGroupDate,
+    groupMemberListRef,
   };
 };

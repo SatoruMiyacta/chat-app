@@ -1,5 +1,6 @@
 .listArea {
-  height: calc(100vh - 222px);
+  height: calc(100vh - 230px);
+  border-top: 1px solid rgb(227, 227, 227);
 }
 
 .groupProfile {
@@ -9,6 +10,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 16px;
+  padding-bottom: 8px;
   background-color: #fff;
 }
 
@@ -53,7 +55,7 @@
   }
 
   .listArea {
-    height: calc(100vh - 166px);
+    height: calc(100vh - 174px);
   }
 
   .groupProfile {

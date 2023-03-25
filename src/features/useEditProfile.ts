@@ -19,6 +19,7 @@ export const useEditProfile = () => {
   const [userIconFile, setUserIconFile] = useState<Blob>();
   const [password, setPassword] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [isPasswordComplete, setIsPasswordComplete] = useState(false);
 
   const isComplete = () => {
     if (!userName) return false;
@@ -87,5 +88,7 @@ export const useEditProfile = () => {
     passwordErrorMessage,
     password,
     userId,
+    isPasswordComplete,
+    setIsPasswordComplete,
   };
 };
