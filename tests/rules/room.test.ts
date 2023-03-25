@@ -158,7 +158,7 @@ describe('/users/{userId}/joinedRooms/{roomId}', () => {
       const roomId = uuidv4();
       await setDataInUsersJoinedRoomsCollection(userId, roomId);
 
-      const context = testEnv.authenticatedContext(uuidv4());
+      const context = testEnv.unauthenticatedContext();
       const db = context.firestore();
       const roomRef = doc(db, 'users', userId, 'joinedRooms', roomId);
       await assertFails(deleteDoc(roomRef));
