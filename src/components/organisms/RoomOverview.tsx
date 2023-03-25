@@ -100,6 +100,7 @@ const RoomOverview = () => {
 
     if (userList.length !== 0) {
       const firstUserIdList = userList.slice(0, 10);
+
       await saveUserData(firstUserIdList);
       if (userList.length > 10) {
         const secondUserIdList = userList.slice(10);
@@ -109,6 +110,7 @@ const RoomOverview = () => {
 
     if (groupList.length !== 0) {
       const firstGroupIdList = groupList.slice(0, 10);
+
       await saveGroupData(firstGroupIdList);
       if (groupList.length > 10) {
         const secondGroupIdList = groupList.slice(10);
@@ -116,102 +118,15 @@ const RoomOverview = () => {
       }
     }
 
-    await saveRoomData(roomIdList);
+    saveRoomData(roomIdList);
 
     await countUnReadMessage(joinedRoomsObject, roomIdList);
 
     return joinedRoomsObject;
   };
 
-  useEffect(() => {
-    if (!userId) return;
-
-    const querySnapshot = collection(db, 'users', userId, 'joinedRooms');
-    const unsubscribe = onSnapshot(
-      query(
-        querySnapshot,
-        where('isVisible', '!=', false),
-        orderBy('isVisible', 'desc'),
-        orderBy('updatedAt', 'desc'),
-        limit(1)
-      ),
-      (snapshot) => {
-        const newRoomIdList: string[] = [];
-        for (const doc of snapshot.docs) {
-          const roomId = doc.id;
-          newRoomIdList.push(roomId);
-
-          setLastRoom(doc);
-        }
-
-        setMyRoomList((prev) => {
-          return Array.from(new Set([...newRoomIdList, ...prev]));
-        });
-
-        getUserAndGroupData(newRoomIdList).then((joinedRoomsObject) => {
-          setJoinedRooms((prev) => ({
-            ...prev,
-            ...joinedRoomsObject,
-          }));
-        });
-      }
-    );
-    return () => unsubscribe();
-  }, [myRoomList.length]);
-
-  useEffect(() => {
-    if (!userId) return;
-
-    const querySnapshot = collection(db, 'users', userId, 'unAuthRoom');
-    const unsubscribe = onSnapshot(
-      query(querySnapshot, orderBy('createdAt', 'desc')),
-      (snapshot) => {
-        const newRoomList: string[] = [];
-        for (const doc of snapshot.docs) {
-          const roomId = doc.id;
-          newRoomList.push(roomId);
-        }
-        if (newRoomList.length === 0) return;
-
-        getUnAuthRoomData(userId, newRoomList).then((unAuthRoomsObject) => {
-          const userList: string[] = [];
-          const groupList: string[] = [];
-          for (const roomId of newRoomList) {
-            if (unAuthRoomsObject) {
-              saveJoinedRooms(roomId, unAuthRoomsObject[roomId]);
-
-              const roomTypeId = unAuthRoomsObject[roomId].id;
-              const roomType = unAuthRoomsObject[roomId].type;
-
-              if (roomType === 'user') {
-                userList.push(roomTypeId);
-              } else if (roomType === 'group') {
-                groupList.push(roomTypeId);
-              }
-            }
-          }
-
-          if (userList.length !== 0) saveUserData(userList);
-
-          if (groupList.length !== 0) saveGroupData(groupList);
-
-          setJoinedRooms((prev) => ({
-            ...prev,
-            ...unAuthRoomsObject,
-          }));
-
-          setMyRoomList((prev) => {
-            return Array.from(new Set([...newRoomList, ...prev]));
-          });
-        });
-      }
-    );
-    return () => unsubscribe();
-  }, [myRoomList.length]);
-
   const getRoomList = async (isUsedCache: boolean) => {
     const roomIdList = await getMyRoomIdList(isUsedCache);
-    // setMyRoomList(roomIdList);
     setMyRoomList((prev) => {
       return Array.from(new Set([...prev, ...roomIdList]));
     });
@@ -233,6 +148,84 @@ const RoomOverview = () => {
       myRoomListRef.current = [];
       setMyRoomList([]);
       setJoinedRooms({});
+      setLastRoom(null);
+
+      const querySnapshot = collection(db, 'users', userId, 'joinedRooms');
+      const unsubscribe = onSnapshot(
+        query(
+          querySnapshot,
+          where('isVisible', '!=', false),
+          orderBy('isVisible', 'desc'),
+          orderBy('updatedAt', 'desc'),
+          limit(1)
+        ),
+        (snapshot) => {
+          const newRoomIdList: string[] = [];
+          for (const doc of snapshot.docs) {
+            const roomId = doc.id;
+            newRoomIdList.push(roomId);
+
+            setLastRoom(doc);
+          }
+
+          getUserAndGroupData(newRoomIdList).then((joinedRoomsObject) => {
+            setJoinedRooms((prev) => ({
+              ...prev,
+              ...joinedRoomsObject,
+            }));
+          });
+
+          setMyRoomList((prev) => {
+            return Array.from(new Set([...newRoomIdList, ...prev]));
+          });
+        }
+      );
+
+      const querySnapshot_ = collection(db, 'users', userId, 'unAuthRoom');
+      const unsubscribeAuthRoom = onSnapshot(
+        query(querySnapshot_, orderBy('createdAt', 'desc')),
+        (snapshot) => {
+          const newRoomList: string[] = [];
+          for (const doc of snapshot.docs) {
+            const roomId = doc.id;
+            newRoomList.push(roomId);
+          }
+          if (newRoomList.length === 0) return;
+
+          getUnAuthRoomData(userId, newRoomList).then((unAuthRoomsObject) => {
+            const userList: string[] = [];
+            const groupList: string[] = [];
+            for (const roomId of newRoomList) {
+              if (unAuthRoomsObject) {
+                saveJoinedRooms(roomId, unAuthRoomsObject[roomId]);
+
+                const roomTypeId = unAuthRoomsObject[roomId].id;
+                const roomType = unAuthRoomsObject[roomId].type;
+
+                if (roomType === 'user') {
+                  userList.push(roomTypeId);
+                } else if (roomType === 'group') {
+                  groupList.push(roomTypeId);
+                }
+              }
+            }
+
+            if (userList.length !== 0) saveUserData(userList);
+
+            if (groupList.length !== 0) saveGroupData(groupList);
+
+            setJoinedRooms((prev) => ({
+              ...prev,
+              ...unAuthRoomsObject,
+            }));
+
+            setMyRoomList((prev) => {
+              return Array.from(new Set([...newRoomList, ...prev]));
+            });
+          });
+        }
+      );
+
       getRoomList(true).then((roomIdList) => {
         if (roomIdList) {
           saveJoinedRoomsList(roomIdList);
@@ -241,6 +234,11 @@ const RoomOverview = () => {
       });
 
       setIsLoading(false);
+
+      return () => {
+        unsubscribe();
+        unsubscribeAuthRoom();
+      };
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -273,6 +271,7 @@ const RoomOverview = () => {
       return;
 
     const roomIdList = await getRoomList(false);
+
     if (roomIdList && roomIdList.length !== 0) {
       saveJoinedRoomsList(roomIdList);
       saveRoomData(roomIdList);
