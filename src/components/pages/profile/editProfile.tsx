@@ -72,6 +72,8 @@ const EditProfile = () => {
     setPassword,
     passwordErrorMessage,
     password,
+    setIsPasswordComplete,
+    isPasswordComplete,
   } = useEditProfile();
 
   const { getUser, saveUser } = useUser();
@@ -185,6 +187,12 @@ const EditProfile = () => {
     }
   };
 
+  useEffect(() => {
+    const isPassword = isValidPassword(password);
+
+    setIsPasswordComplete(isPassword);
+  }, [password.length]);
+
   const renderModal = () => {
     if (!isModal) return;
 
@@ -240,7 +248,7 @@ const EditProfile = () => {
             variant="outlined"
             errorMessage={passwordErrorMessage}
             isFullWidth
-            minLength={10}
+            minLength={8}
             onBlur={() => {
               if (!isValidPassword(password)) {
                 setPasswordErrorMessage('半角英数字で入力してください');
@@ -257,7 +265,7 @@ const EditProfile = () => {
             color="primary"
             onClick={authenticatePassword}
             variant="contained"
-            isDisabled={!isValidPassword(password)}
+            isDisabled={!isPasswordComplete}
             isFullWidth
             size="small"
           >

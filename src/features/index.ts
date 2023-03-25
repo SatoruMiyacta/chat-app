@@ -11,3 +11,4 @@ export * from './useRoom';
 export * from './useGroupProfile';
 export * from './useMessage';
 export * from './useBlock';
+export * from './useEditGroup';

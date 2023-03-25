@@ -142,7 +142,7 @@ describe('/users/{userId}/joinedRooms/{roomId}', () => {
   });
 
   describe('delete', () => {
-    it('本人は削除可。', async () => {
+    it('認証ユーザーは削除可。', async () => {
       const userId = uuidv4();
       const roomId = uuidv4();
       await setDataInUsersJoinedRoomsCollection(userId, roomId);
@@ -153,12 +153,12 @@ describe('/users/{userId}/joinedRooms/{roomId}', () => {
       await assertSucceeds(deleteDoc(roomRef));
     });
 
-    it('本人以外は削除不可。', async () => {
+    it('未認証ユーザーは削除不可。', async () => {
       const userId = uuidv4();
       const roomId = uuidv4();
       await setDataInUsersJoinedRoomsCollection(userId, roomId);
 
-      const context = testEnv.authenticatedContext(uuidv4());
+      const context = testEnv.unauthenticatedContext();
       const db = context.firestore();
       const roomRef = doc(db, 'users', userId, 'joinedRooms', roomId);
       await assertFails(deleteDoc(roomRef));

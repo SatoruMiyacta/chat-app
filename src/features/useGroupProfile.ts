@@ -23,10 +23,11 @@ export const useGroupProfile = () => {
   const [groupsMember] = useAtom(groupsMemberAtom);
   const [memberList, setMemberList] = useState<string[]>([]);
   const [lastGroupMember, setLastGroupMember] =
-    useState<QueryDocumentSnapshot<DocumentData>>();
+    useState<QueryDocumentSnapshot<DocumentData> | null>();
   const { getUser, saveUser } = useUser();
 
-  const lastGroupMemberRef = useRef<QueryDocumentSnapshot<DocumentData>>();
+  const lastGroupMemberRef =
+    useRef<QueryDocumentSnapshot<DocumentData> | null>();
   const memberListRef = useRef<string[]>();
 
   if (lastGroupMemberRef) lastGroupMemberRef.current = lastGroupMember;
@@ -42,6 +43,7 @@ export const useGroupProfile = () => {
       const joinedGroupCacheIdList = groupsMember?.data.data as string[];
       setMemberList(joinedGroupCacheIdList);
 
+      console.log(groupId);
       return joinedGroupCacheIdList;
     }
 
@@ -57,22 +59,21 @@ export const useGroupProfile = () => {
     const lastVisible = querySnapshots.docs[querySnapshots.docs.length - 1];
     if (lastVisible) setLastGroupMember(lastVisible);
 
+    console.log(querySnapshots);
     const groupMemberIdList: string[] = [];
     for (const doc of querySnapshots.docs) {
       const groupId = doc.id;
+      console.log(groupId);
       groupMemberIdList.push(groupId);
     }
 
-    if (!joinedGroupNewIdList) {
-      setMemberList(groupMemberIdList);
+    if (!joinedGroupNewIdList) setMemberList(groupMemberIdList);
 
-      return groupMemberIdList;
-    }
+    setMemberList((prev) => {
+      return Array.from(new Set([...prev, ...groupMemberIdList]));
+    });
 
-    const newList = joinedGroupNewIdList.concat(groupMemberIdList);
-    setMemberList(newList);
-
-    return newList;
+    return groupMemberIdList;
   };
 
   /**
@@ -102,5 +103,7 @@ export const useGroupProfile = () => {
     saveGroupMemberData,
     setMemberList,
     memberList,
+    setLastGroupMember,
+    memberListRef,
   };
 };

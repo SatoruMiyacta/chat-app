@@ -62,19 +62,22 @@ service cloud.firestore {
       allow read: if isAuthenticated();
     }
       match /joinedGroups/{groupId} {
-      allow read, create, update, delete: if isUserAuthenticated(userId);
+      allow read, create, update: if isUserAuthenticated(userId);
+      allow delete: if isAuthenticated();
     }
       match /joinedRooms/{roomId} {
-      allow read, delete: if isUserAuthenticated(userId);
+      allow read: if isUserAuthenticated(userId);
       allow create, update: if isAuthenticated();
+      allow delete: if isAuthenticated();
     }
       match /blockUser/{blockUserId} {
       allow read, delete, update: if isUserAuthenticated(userId);
       allow create: if isAuthenticated();
     }
       match /unAuthRoom/{roomId} {
-      allow delete, update: if isUserAuthenticated(userId);
+      allow update: if isUserAuthenticated(userId);
       allow read, create: if isAuthenticated();
+      allow delete: if isAuthenticated();
     }
     }
 
@@ -108,7 +111,8 @@ service cloud.firestore {
         allow update: if isAuthenticated();
         allow read: if isAuthenticated()
           && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedGroups/$(groupId))
-        allow delete: if isUserAuthenticated(memberId)
+        allow delete: if isAuthenticated()
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid)/joinedGroups/$(groupId))
       }
     }
     
