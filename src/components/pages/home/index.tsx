@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { MenuItem } from '@/components/molecules/Menu';
 import BottomNavigation from '@/components/organisms/BottomNavigation';
-import EditGroupOverview from '@/components/organisms/EditGroupOverView';
+import EditGroupOverview from '@/components/organisms/EditGroupOverview';
 import GroupOverview from '@/components/organisms/GroupOverview';
 import Header from '@/components/organisms/Header';
 import HomeOverview from '@/components/organisms/HomeOverview';

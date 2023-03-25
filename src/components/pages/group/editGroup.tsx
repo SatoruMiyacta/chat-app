@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import EditGroupOverview from '@/components/organisms/EditGroupOverView';
+import EditGroupOverview from '@/components/organisms/EditGroupOverview';
 import Header from '@/components/organisms/Header';
 
 const EditGroup = () => {
