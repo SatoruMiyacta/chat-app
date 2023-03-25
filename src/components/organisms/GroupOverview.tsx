@@ -83,9 +83,9 @@ const GroupOverview = ({ groupId }: GroupProps) => {
 
     let contentsHeight;
     if (isPcWindow) {
-      contentsHeight = window.innerHeight - 262;
+      contentsHeight = window.innerHeight - 270;
     } else {
-      contentsHeight = window.innerHeight - 278;
+      contentsHeight = window.innerHeight - 286;
     }
 
     if (
@@ -141,7 +141,13 @@ const GroupOverview = ({ groupId }: GroupProps) => {
       return (
         <Button
           color="primary"
-          onClick={() => navigate(`/group/${groupId}/edit`)}
+          onClick={() => {
+            if (isPcWindow) {
+              navigate(`/?groupEditId=${groupId}`);
+            } else {
+              navigate(`/group/${groupId}/edit`);
+            }
+          }}
           variant="outlined"
           isFullWidth
           size="medium"

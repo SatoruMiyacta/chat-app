@@ -125,7 +125,7 @@ describe('/users/{userId}/joinedGroups/{groupId}', () => {
   });
 
   describe('delete', () => {
-    it('自分は削除可。', async () => {
+    it('認証ユーザーは削除可。', async () => {
       const userId = uuidv4();
       const groupId = uuidv4();
       await setDataInUsersJoinedGroupsCollection(userId, groupId);
@@ -136,12 +136,12 @@ describe('/users/{userId}/joinedGroups/{groupId}', () => {
       await assertSucceeds(deleteDoc(groupsRef));
     });
 
-    it('自分以外は削除不可。', async () => {
+    it('未認証ユーザーは削除不可。', async () => {
       const userId = uuidv4();
       const groupId = uuidv4();
       await setDataInUsersJoinedGroupsCollection(userId, groupId);
 
-      const context = testEnv.authenticatedContext(uuidv4());
+      const context = testEnv.unauthenticatedContext();
       const db = context.firestore();
       const groupsRef = doc(db, 'users', userId, 'joinedGroups', groupId);
       await assertFails(deleteDoc(groupsRef));
@@ -324,11 +324,12 @@ describe('/groups/{groupId}/members/{memberId}', () => {
   });
 
   describe('delete', () => {
-    it('自分は削除可', async () => {
+    it('認証ユーザーかつ、自分が参加しているグループの場合は削除可', async () => {
       const userId = uuidv4();
       const groupId = uuidv4();
       await setDataInGroupsCollection(userId, groupId);
       await setDataInGroupsMemberCollection(userId, groupId);
+      await setDataInUsersJoinedGroupsCollection(userId, groupId);
 
       const context = testEnv.authenticatedContext(userId);
       const db = context.firestore();
@@ -336,12 +337,25 @@ describe('/groups/{groupId}/members/{memberId}', () => {
       await assertSucceeds(deleteDoc(groupsRef));
     });
 
-    it('自分以外は削除不可', async () => {
+    it('認証ユーザーかつ、自分が参加していないグループの場合は削除不可', async () => {
       const userId = uuidv4();
       const groupId = uuidv4();
       await setDataInGroupsMemberCollection(userId, groupId);
+      await setDataInUsersJoinedGroupsCollection(userId, groupId);
 
       const context = testEnv.authenticatedContext(uuidv4());
+      const db = context.firestore();
+      const groupsRef = doc(db, 'groups', groupId, 'members', userId);
+      await assertFails(deleteDoc(groupsRef));
+    });
+
+    it('未認証ユーザーかつ、自分が参加していないグループの場合は削除不可', async () => {
+      const userId = uuidv4();
+      const groupId = uuidv4();
+      await setDataInGroupsMemberCollection(userId, groupId);
+      await setDataInUsersJoinedGroupsCollection(userId, groupId);
+
+      const context = testEnv.unauthenticatedContext();
       const db = context.firestore();
       const groupsRef = doc(db, 'groups', groupId, 'members', userId);
       await assertFails(deleteDoc(groupsRef));
