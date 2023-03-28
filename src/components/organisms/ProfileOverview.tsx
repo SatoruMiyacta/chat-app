@@ -20,7 +20,7 @@ const ProfileOverview = () => {
   const [userName, setUserName] = useState('');
   const [authUser] = useAtom(authUserAtom);
   const [users] = useAtom(usersAtom);
-  const [friendList, setFriendList] = useState<string[]>([]);
+  const [friendCount, setFriendCount] = useState<number>(0);
   const [myIconUrl, setMyIconUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState(
     '予期せぬエラーが発生しました。お手数ですが、再度ログインしてください。'
@@ -30,7 +30,7 @@ const ProfileOverview = () => {
   const location = useLocation();
 
   const { getUser, saveUser } = useUser();
-  const { getMyFriendIdList } = useFriend();
+  const { getFriendCount } = useFriend();
 
   const userId = authUser?.uid || '';
 
@@ -47,8 +47,8 @@ const ProfileOverview = () => {
         setMyIconUrl(userData.iconUrl);
       });
 
-      getMyFriendIdList(false).then((friendIdList) => {
-        setFriendList(friendIdList);
+      getFriendCount(userId).then((count) => {
+        setFriendCount(count);
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -121,7 +121,7 @@ const ProfileOverview = () => {
               <Heading tag="h1" align="start" isBold size="xl">
                 {userName}
               </Heading>
-              <span>{`友達 ${friendList.length}`}</span>
+              <span>{`友達 ${friendCount}`}</span>
             </section>
             {showEditButton()}
           </div>
