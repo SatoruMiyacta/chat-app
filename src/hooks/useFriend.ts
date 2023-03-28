@@ -137,7 +137,7 @@ export const useFriend = () => {
   };
 
   /**
-   * 友達の人数を返す
+   * ユーザーの友達人数を取得
    */
   const getFriendCount = async (userId: string) => {
     const collectionRef = collection(db, 'users', userId, 'friends');
