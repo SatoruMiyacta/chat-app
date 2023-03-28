@@ -34,8 +34,13 @@ const GroupOverview = ({ groupId }: GroupProps) => {
   const [groupAuthorId, setGroupAuthorId] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const { getGroupMemberList, saveGroupMemberData, memberList } =
-    useGroupProfile();
+  const {
+    getGroupMemberList,
+    saveGroupMemberData,
+    memberList,
+    setMemberList,
+    lastGroupMemberRef,
+  } = useGroupProfile();
 
   const { saveGroupsMemberIdList, getGroups } = useGroup();
 
@@ -45,7 +50,8 @@ const GroupOverview = ({ groupId }: GroupProps) => {
   const getGroupMember = async () => {
     if (!groupId) return;
 
-    const groupMemberIdList = await getGroupMemberList(groupId, true);
+    const groupMemberIdList = await getGroupMemberList(groupId, false);
+
     await saveGroupMemberData(groupMemberIdList);
 
     const groupData = await getGroups(groupId);
@@ -60,6 +66,8 @@ const GroupOverview = ({ groupId }: GroupProps) => {
 
   useEffect(() => {
     try {
+      lastGroupMemberRef.current = null;
+      setMemberList([]);
       getGroupMember();
     } catch (error) {
       if (error instanceof Error) {
