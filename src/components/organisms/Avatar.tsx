@@ -63,7 +63,7 @@ const Avatar = ({
     <>
       {isNotUpload && (
         <div className={`${uploadIconClassList.join(' ')}`}>
-          <img src={iconUrl} />
+          <img src={iconUrl} alt="アバター画像" />
           {hasCameraIcon && (
             <FontAwesomeIcon
               icon={faCamera}
@@ -81,7 +81,7 @@ const Avatar = ({
             className={`${uploadIconClassList.join(' ')}`}
             onClick={() => inputFileRef.current?.click()}
           >
-            <img src={iconUrl} />
+            <img src={iconUrl} alt="アバター画像" />
             {hasCameraIcon && (
               <FontAwesomeIcon
                 icon={faCamera}

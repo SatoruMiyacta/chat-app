@@ -16,7 +16,6 @@ import AvatarList from '@/components/organisms/AvatarList';
 
 import { INITIAL_ICON_URL } from '@/constants';
 import { InitialGroupData, useEditGroup } from '@/features';
-import {} from '@/features/useEditGroup';
 import { useGroup, useUser, UserAndGroupId } from '@/hooks';
 import { storage } from '@/main';
 import { authUserAtom } from '@/store';
@@ -32,6 +31,8 @@ import {
   deleteGroupMember,
   deleteJoinedGroups,
   deleteJoinedRooms,
+  deleteUnAuthRoom,
+  existUnAuthRoom,
 } from '@/utils';
 
 export interface GroupProps {
@@ -47,6 +48,7 @@ const EditGroupOverview = ({ groupId }: GroupProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [groupIconBlob, setGroupIconBlob] = useState<Blob>();
   const [groupIconUrl, setGroupIconUrl] = useState(INITIAL_ICON_URL);
+  const [deleteMemberIdList, setDeleteMemberIdList] = useState<string[]>([]);
 
   const { saveUserData } = useUser();
   const {
@@ -70,11 +72,9 @@ const EditGroupOverview = ({ groupId }: GroupProps) => {
 
     const deleteItemsList = [...groupMemberList];
 
-    await deleteGroupMember(groupId, deleteItemsList[index]);
-    await deleteJoinedGroups(deleteItemsList[index], groupId);
-    await deleteJoinedRooms(deleteItemsList[index], groupId);
-    deleteItemsList.splice(index, 1);
+    setDeleteMemberIdList([...deleteMemberIdList, deleteItemsList[index]]);
 
+    deleteItemsList.splice(index, 1);
     setGroupMemberList(deleteItemsList);
   };
 
@@ -95,6 +95,17 @@ const EditGroupOverview = ({ groupId }: GroupProps) => {
         await setMyJoinedGroups(userAndGroupId);
         const groupData = await fetchGroupsData(groupId);
         if (groupData) saveGroups(groupId, groupData);
+      }
+
+      if (deleteMemberIdList.length !== 0) {
+        for (const deleteId of deleteMemberIdList) {
+          await deleteGroupMember(groupId, deleteId);
+          await deleteJoinedGroups(deleteId, groupId);
+          await deleteJoinedRooms(deleteId, groupId);
+
+          const querySnapshot = await existUnAuthRoom(deleteId, groupId);
+          if (querySnapshot.docs) await deleteUnAuthRoom(deleteId, groupId);
+        }
       }
 
       navigate('/');

@@ -158,7 +158,7 @@ export const setUsersUnAuthRoom = async (
 };
 
 /**
- * 自分のunAuthRoomから該当ルームを消す
+ * unAuthRoomから該当ルームを消す
  */
 export const deleteUnAuthRoom = async (userId: string, roomId: string) => {
   const docRef = doc(db, 'users', userId, 'unAuthRoom', roomId);
