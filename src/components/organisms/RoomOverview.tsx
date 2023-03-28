@@ -231,9 +231,8 @@ const RoomOverview = () => {
           saveJoinedRoomsList(roomIdList);
           saveRoomData(roomIdList);
         }
+        setIsLoading(false);
       });
-
-      setIsLoading(false);
 
       return () => {
         unsubscribe();
@@ -246,6 +245,7 @@ const RoomOverview = () => {
         const errorCode = error.code;
         setErrorMessage(getFirebaseError(errorCode));
       }
+      setIsLoading(false);
 
       setIsOpenErrorModal(true);
     }
@@ -333,6 +333,9 @@ const RoomOverview = () => {
               <Skeleton variant="rectangular" height={64} />
             </div>
             <div className={`${styles.container} pc`}>
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
+              <Skeleton variant="rectangular" height={64} />
               <Skeleton variant="rectangular" height={64} />
               <Skeleton variant="rectangular" height={64} />
               <Skeleton variant="rectangular" height={64} />
