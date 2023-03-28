@@ -43,7 +43,6 @@ export const useGroupProfile = () => {
       const joinedGroupCacheIdList = groupsMember?.data.data as string[];
       setMemberList(joinedGroupCacheIdList);
 
-      console.log(groupId);
       return joinedGroupCacheIdList;
     }
 
@@ -59,11 +58,9 @@ export const useGroupProfile = () => {
     const lastVisible = querySnapshots.docs[querySnapshots.docs.length - 1];
     if (lastVisible) setLastGroupMember(lastVisible);
 
-    console.log(querySnapshots);
     const groupMemberIdList: string[] = [];
     for (const doc of querySnapshots.docs) {
       const groupId = doc.id;
-      console.log(groupId);
       groupMemberIdList.push(groupId);
     }
 
@@ -105,5 +102,6 @@ export const useGroupProfile = () => {
     memberList,
     setLastGroupMember,
     memberListRef,
+    lastGroupMemberRef,
   };
 };

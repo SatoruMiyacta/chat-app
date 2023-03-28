@@ -86,6 +86,24 @@ export const useGroup = () => {
   };
 
   /**
+   * 該当グループが存在していたら返す
+   */
+  const existGroup = async (groupIdList: string[]) => {
+    const existGroupList: string[] = [];
+    const groupRef = collection(db, 'groups');
+    const snapshot = await getDocs(
+      query(groupRef, where(documentId(), 'in', groupIdList))
+    );
+
+    for (const doc of snapshot.docs) {
+      const searchId = doc.id;
+      existGroupList.push(searchId);
+    }
+
+    return existGroupList;
+  };
+
+  /**
    * 検索したリストを受け取り、追加済みグループを返す
    */
   const getSearchedJoinedGroups = async (
@@ -194,5 +212,6 @@ export const useGroup = () => {
     saveGroupData,
     saveGroupsMemberIdList,
     getGroupsMember,
+    existGroup,
   };
 };
