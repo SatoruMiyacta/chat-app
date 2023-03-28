@@ -358,8 +358,8 @@ describe('/rooms/{roomId}/messages/{messageId}', () => {
       const userId = uuidv4();
       const roomId = uuidv4();
       const messageId = uuidv4();
-      await setDataInUsersJoinedRoomsCollection(userId, roomId);
       await setDataInRoomsMessageCollection(userId, roomId, messageId);
+      await setDataInUsersJoinedRoomsCollection(userId, roomId);
 
       const context = testEnv.authenticatedContext(userId);
       const db = context.firestore();
