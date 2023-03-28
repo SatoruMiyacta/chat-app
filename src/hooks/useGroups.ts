@@ -4,6 +4,7 @@ import {
   query,
   where,
   documentId,
+  getCountFromServer,
 } from 'firebase/firestore';
 import { useAtom, useSetAtom } from 'jotai';
 
@@ -127,6 +128,18 @@ export const useGroup = () => {
   };
 
   /**
+   * グループメンバーの人数を返す
+   */
+  const getGroupMemberCount = async (groupId: string) => {
+    const collectionRef = collection(db, 'groups', groupId, 'members');
+
+    const snapshot = await getCountFromServer(collectionRef);
+    const count = snapshot.data().count;
+
+    return count;
+  };
+
+  /**
    * グループデータのキャッシュが古くないか
    * キャッシュが新しければグローバルstateからデータ取得。
    * 古ければfirestoreから取得
@@ -213,5 +226,6 @@ export const useGroup = () => {
     saveGroupsMemberIdList,
     getGroupsMember,
     existGroup,
+    getGroupMemberCount,
   };
 };

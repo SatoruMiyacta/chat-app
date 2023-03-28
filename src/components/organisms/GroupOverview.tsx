@@ -32,6 +32,7 @@ const GroupOverview = ({ groupId }: GroupProps) => {
   const [groupName, setGroupName] = useState('');
   const [groupIconUrl, setGroupIconUrl] = useState('');
   const [groupAuthorId, setGroupAuthorId] = useState('');
+  const [memberCount, setMemberCount] = useState<number>(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -42,7 +43,7 @@ const GroupOverview = ({ groupId }: GroupProps) => {
     lastGroupMemberRef,
   } = useGroupProfile();
 
-  const { saveGroupsMemberIdList, getGroups } = useGroup();
+  const { saveGroupsMemberIdList, getGroups, getGroupMemberCount } = useGroup();
 
   const navigate = useNavigate();
   const userId = authUser?.uid;
@@ -69,6 +70,10 @@ const GroupOverview = ({ groupId }: GroupProps) => {
       lastGroupMemberRef.current = null;
       setMemberList([]);
       getGroupMember();
+
+      getGroupMemberCount(groupId).then((count) => {
+        setMemberCount(count);
+      });
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -187,7 +192,7 @@ const GroupOverview = ({ groupId }: GroupProps) => {
             <Avatar iconUrl={groupIconUrl} isNotUpload uploadIconSize="l" />
             <Heading tag="h2" align="center" isBold size="l">
               <span>{groupName}</span>
-              <span>{`(${memberList.length})`}</span>
+              <span>{`(${memberCount})`}</span>
             </Heading>
           </div>
           <div ref={scrollRef} className={styles.contents}>
