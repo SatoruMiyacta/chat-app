@@ -128,7 +128,7 @@ export const useGroup = () => {
   };
 
   /**
-   * グループメンバーの人数を返す
+   * グループメンバーの人数を取得
    */
   const getGroupMemberCount = async (groupId: string) => {
     const collectionRef = collection(db, 'groups', groupId, 'members');
