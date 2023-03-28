@@ -98,7 +98,14 @@ const EditProfile = () => {
       })
 
       .catch((error) => {
-        console.error(error);
+        if (error instanceof Error) {
+          setModalMessage(error.message);
+        } else if (error instanceof FirebaseError) {
+          const errorCode = error.code;
+          setModalMessage(getFirebaseError(errorCode));
+        }
+
+        setIsModal(true);
       });
   }, [userId]);
 
