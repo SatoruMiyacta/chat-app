@@ -4,105 +4,90 @@
 
 ---
 
-**背景**
+### 背景
 
-日常で一番使っているチャットアプリがどう動いているかを知りたかった
+- 日常で一番使っているチャットアプリがどう動いているかを知りたかった。
+- チャットアプリをユーザーに使用してもらい、ユーザーからのフィードバックで利用者の目線を知りたかった。
+- 世の中でよく使われている React 、TypeScript を使った Web アプリ開発を学びたかった。
 
-**目的**
+### 目的
 
-アカウント認証やメッセージ送信など、チャットアプリの機能を作りながら理解する
+- アカウント認証やメッセージ送信など、チャットアプリの機能を作りながら理解する。
+- デザイン等をオリジナルで作成し、サービスとして公開してユーザーからフィードバックをもらうことで、ユーザーが便利だと感じる機能や見た目を知る。
+- React、TypeScript を理解する。
 
-**アプリケーションの概要**
+### アプリケーションの概要
 
-アカウント認証機能を有した、リアルタイムチャットアプリ。
+- ログイン機能
+- アカウント作成、削除、編集機能
+- パスワードリセット機能
+- お問合せフォーム
+- 友達追加、削除、検索機能
+- ブロック機能
+- グループ作成、編集、退会機能
+- ユーザープロフィール
+- グループプロフィール
+- メッセージ送信機能
+- 未読件数表示
 
 ## 環境
 
 ---
 
-**ハイレベルアーキテクチャ図**
+### ハイレベルアーキテクチャ図
 
 ![ハイレベルアーキテクチャ](https://user-images.githubusercontent.com/89257064/225568391-11a32b52-ff54-40a9-9797-2f7865c3b66f.png 'ハイレベルアーキテクチャ')
 
-**アプリケーション機能一覧**
+### アプリケーション機能一覧
 
-## デモ
+**下記リンクから Youtube で視聴できます**  
+[チャットアプリ](https://www.youtube.com/watch?v=RZAqsJaxlXg)
 
----
+### アプリ URL
 
-**アプリ URL**
+[chat-app](https://chat-app-1d2fe.web.app/)
 
-[Chat]]("Chat")
+### テスト用ログインアカウント
 
-**テストアカウント**
-
-メールアドレス：
-パスワード：
+メールアドレス：test@example.com  
+パスワード：testpass
 
 ## アプリを作る上でのこだわり　
 
-- 環境構築
+---
 
-  - 本番環境と開発環境作成
+### 環境構築
 
-    - 本番環境に直接変更を加えるとバグが発生した際にサービスに悪影響をもたらす。本番環境とは別に開発環境があることで万が一バグが発生してもサービスに影響なく開発することができる。
+- **本番環境と開発環境作成**
 
-  - CI/CD を用いて構文チェック、テスト、ビルド、デプロイを自動化した
+  - 本番環境に直接変更を加えるとバグが発生した際にサービスに悪影響をもたらす。本番環境とは別に開発環境があることで万が一バグが発生してもサービスに影響なく開発することができる。
 
-    - 手動で構文チェックやテストを行うと書き換えた部分しか確認しないためバグの発生に気づけないことがある。一方で自動化するとデプロイまでに毎回全てのコードをテストしているためデプロイ前にバグを見つけることができる。他にも開発スピードが上がり、コードの一貫性も担保される。
+- **CI/CD を用いて構文チェック、テスト、ビルド、デプロイを自動化した**
 
-  - 新しいビルドツールである Vite を使用
+  - 手動で構文チェックやテストを行うと書き換えた部分しか確認しないためバグの発生に気づけないことがある。一方で自動化するとデプロイまでに毎回全てのコードをテストしているためデプロイ前にバグを見つけることができる。他にも開発スピードが上がり、コードの一貫性も担保される。
 
-    - 従来のビルドツールはプロジェクト規模が大きくなるほどバンドル処理に時間がかかっていていた。しかし、Vite は修正や変更が加えられたソースだけをコンパイルしてブラウザで読み込んでいるためプロジェクトの起動や更新を高速で行うことができ、開発スピードが上がる。
+- **新しいビルドツールである Vite を使用**
 
-  - Firebase を使用
-    - バックエンドの管理と保守全般を Firebase で担い、フロントエンドに集中して開発を行うことができる。また、Firebase にはデータベース、認証、ホスティング等に無料枠があり、コストがかからず開発時間を十分に取れるため内容を理解して開発できる.
+  - 従来のビルドツールはプロジェクト規模が大きくなるほどバンドル処理に時間がかかっていていた。しかし、Vite は修正や変更が加えられたソースだけをコンパイルしてブラウザで読み込んでいるためプロジェクトの起動や更新を高速で行うことができ、開発スピードが上がる。
 
-## 環境変数
+- **Firebase を使用**
+  - バックエンドの管理と保守全般を Firebase で担い、フロントエンドに集中して開発を行うことができる。また、Firebase にはデータベース、認証、ホスティング等に無料枠があり、コストがかからず開発時間を十分に取れるため内容を理解して開発できる.
 
-.env
-| key | value |
-| - | - |
-| VITE_SLACK_WEBHOOK_URL | slack の webhook |
-| | |
+### データベース設計＆セキュリティルール
 
-.env.development
+- 他のユーザーのデータアクセスを制限した 例）友達追加していないユーザーのトーク  
 
-| key                      | value                                      |
-| ------------------------ | ------------------------------------------ |
-| VITE_API_KEY             | AIzaSyDy0OiER8cpLuV0HcYaZuIK37B3k3Tt7KE"   |
-| VITE_AUTH_DOMAIN         | chat-app-dev-3baa1.firebaseapp.com"        |
-| VITE_PROJECT_ID          | chat-app-dev-3baa1"                        |
-| VITE_STORAGE_BUCKET      | gs://chat-app-dev-3baa1.appspot.com"       |
-| VITE_MESSAGING_SENDER_ID | 176954607089"                              |
-| VITE_APP_ID              | 1:176954607089:web:8db23c6a70be4fd4ab3050" |
-|                          |                                            |
+- データフェッチする回数を減らせるように一つのドキュメントに対して limit を考慮しつつ、値をなるべくフィールドで持つようにした。
 
-.env.production
+### コンポーネント＆ディレクトリ設計
 
-| key                      | value                                      |
-| ------------------------ | ------------------------------------------ |
-| VITE_API_KEY             | AIzaSyAj2derqHXZCLOOrJWVNc3XAcRBgwgSW1s"   |
-| VITE_AUTH_DOMAIN         | chat-app-1d2fe.firebaseapp.com"            |
-| VITE_PROJECT_ID          | chat-app-1d2fe"                            |
-| VITE_STORAGE_BUCKET      | chat-app-1d2fe.appspot.com"                |
-| VITE_MESSAGING_SENDER_ID | 334251054968"                              |
-| VITE_APP_ID              | 1:334251054968:web:ee3890cefc605cb309da8d" |
-|                          |                                            |
+- Atomic Design に沿ってコンポーネントを分割したため、コンポーネントの分割基準、利用用途が明確になる。そのため、UI の一貫性の担保や開発効率が向上する。
 
-.env.test
-
-| key                      | value                                      |
-| ------------------------ | ------------------------------------------ |
-| VITE_API_KEY             | AIzaSyDy0OiER8cpLuV0HcYaZuIK37B3k3Tt7KE"   |
-| VITE_AUTH_DOMAIN         | chat-app-dev-3baa1.firebaseapp.com"        |
-| VITE_PROJECT_ID          | chat-app-dev-3baa1"                        |
-| VITE_STORAGE_BUCKET      | gs://chat-app-dev-3baa1.appspot.com"       |
-| VITE_MESSAGING_SENDER_ID | 176954607089"                              |
-| VITE_APP_ID              | 1:176954607089:web:8db23c6a70be4fd4ab3050" |
-|                          |                                            |
+- StoryBook を使用して再利用したいコンポーネントの仕様を一覧で確認できるようにしたことで、新規開発者や一年後の自分でも再利用できるコンポーネントが分かる
 
 ## ファイル・ディレクトリ構成
+
+---
 
 - **public/**
   - **css/**
@@ -160,3 +145,49 @@
     - セキュリティルールのテスト
   - **utils**
     - utils のテスト
+
+## 環境変数
+
+---
+
+**.env**
+| key | value |
+| - | - |
+| VITE_SLACK_WEBHOOK_URL | slack の webhook |
+| | |
+
+**.env.development**
+
+| key                      | value                                      |
+| ------------------------ | ------------------------------------------ |
+| VITE_API_KEY             | AIzaSyDy0OiER8cpLuV0HcYaZuIK37B3k3Tt7KE"   |
+| VITE_AUTH_DOMAIN         | chat-app-dev-3baa1.firebaseapp.com"        |
+| VITE_PROJECT_ID          | chat-app-dev-3baa1"                        |
+| VITE_STORAGE_BUCKET      | gs://chat-app-dev-3baa1.appspot.com"       |
+| VITE_MESSAGING_SENDER_ID | 176954607089"                              |
+| VITE_APP_ID              | 1:176954607089:web:8db23c6a70be4fd4ab3050" |
+|                          |                                            |
+
+**.env.production**
+
+| key                      | value                                      |
+| ------------------------ | ------------------------------------------ |
+| VITE_API_KEY             | AIzaSyAj2derqHXZCLOOrJWVNc3XAcRBgwgSW1s"   |
+| VITE_AUTH_DOMAIN         | chat-app-1d2fe.firebaseapp.com"            |
+| VITE_PROJECT_ID          | chat-app-1d2fe"                            |
+| VITE_STORAGE_BUCKET      | chat-app-1d2fe.appspot.com"                |
+| VITE_MESSAGING_SENDER_ID | 334251054968"                              |
+| VITE_APP_ID              | 1:334251054968:web:ee3890cefc605cb309da8d" |
+|                          |                                            |
+
+.env.test
+
+| key                      | value                                      |
+| ------------------------ | ------------------------------------------ |
+| VITE_API_KEY             | AIzaSyDy0OiER8cpLuV0HcYaZuIK37B3k3Tt7KE"   |
+| VITE_AUTH_DOMAIN         | chat-app-dev-3baa1.firebaseapp.com"        |
+| VITE_PROJECT_ID          | chat-app-dev-3baa1"                        |
+| VITE_STORAGE_BUCKET      | gs://chat-app-dev-3baa1.appspot.com"       |
+| VITE_MESSAGING_SENDER_ID | 176954607089"                              |
+| VITE_APP_ID              | 1:176954607089:web:8db23c6a70be4fd4ab3050" |
+|                          |                                            |
